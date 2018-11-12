@@ -57,15 +57,6 @@ async function signout() {
 }
 
 /**
- * @param {string} content
- */
-async function createFreet(content) {
-  return requestApp
-    .post('/api/freets')
-    .send({ content });
-}
-
-/**
  * @param {string} id
  */
 async function deleteUser(id) {
@@ -77,6 +68,5 @@ module.exports = {
   signin,
   createUser,
   signout,
-  createFreet,
   deleteUser
 };
