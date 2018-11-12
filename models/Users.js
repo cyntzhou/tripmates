@@ -28,7 +28,7 @@ class Users {
       const response = await bcrypt.hash(password, saltRounds)
         .then(async function(hash) {
           // Store hash in your password DB.
-          const sql = `INSERT INTO users (username, password) VALUES ('${username}', '${hash}');`;
+          const sql = `INSERT INTO user (username, password) VALUES ('${username}', '${hash}');`;
           const sqlResponse = await database.query(sql);
           return sqlResponse;
       });
@@ -39,13 +39,13 @@ class Users {
   }
 
   /**
-   * Find a User by Name.
+   * Find a User by username.
    * @param {string} username - username of User to find
    * @return {User | undefined} - found User
    */
   static async findOne(username) {
     try {
-      const sql = `SELECT * FROM users WHERE username='${username}';`;
+      const sql = `SELECT * FROM user WHERE username='${username}';`;
       const response = await database.query(sql);
       return response[0];
     } catch (error) {
@@ -60,7 +60,7 @@ class Users {
    */
   static async findOneById(id) {
     try {
-      const sql = `SELECT * FROM users WHERE id='${id}';`;
+      const sql = `SELECT * FROM user WHERE id='${id}';`;
       const response = await database.query(sql);
       return response[0];
     } catch (error) {
@@ -74,7 +74,7 @@ class Users {
    */
   static async findAll() {
     try {
-      const sql = `SELECT * FROM users;`;
+      const sql = `SELECT * FROM user;`;
       const response = await database.query(sql);
       return response;
     } catch (error) {
@@ -90,7 +90,7 @@ class Users {
    */
   static async updateUsernameOne(id, newName) {
     try {
-      const sql = `UPDATE users SET username='${newName}' WHERE id='${id}';`;
+      const sql = `UPDATE user SET username='${newName}' WHERE id='${id}';`;
       const response = await database.query(sql);
       return response;
     } catch (err) { throw err; }
@@ -104,7 +104,7 @@ class Users {
    */
   static async updatePasswordOne(id, password) {
     try {
-      const sql = `UPDATE users SET password='${password}' WHERE id='${id}';`;
+      const sql = `UPDATE user SET password='${password}' WHERE id='${id}';`;
       const response = await database.query(sql);
       return response;
     } catch (err) { throw err; }
@@ -117,35 +117,7 @@ class Users {
    */
   static async deleteOne(id) {
     try {
-      const sql = `DELETE FROM users WHERE id='${id}';`;
-      const response = await database.query(sql);
-      return response;
-    } catch (err) { throw err; }
-  }
-
-  /**
-   * Follow a User
-   * @param {number} follower - id of User that is following
-   * @param {number} followed - id of User that is being followed
-   * @return {Object} - query return
-   */
-  static async followOne(follower, followed) {
-    try {
-      const sql = `INSERT INTO follows (follower, followed) VALUES ('${follower}', '${followed}');`;
-      const response = await database.query(sql);
-      return response;
-    } catch (err) { throw err; }
-  }
-
-  /**
-   * Unfollow a User
-   * @param {number} follower - id of User that is unfollowing
-   * @param {number} followed - id of User that is being unfollowed
-   * @return {Object} - query return
-   */
-  static async unfollowOne(follower, followed) {
-    try {
-      const sql = `DELETE FROM follows WHERE follower='${follower}' AND followed='${followed}';`;
+      const sql = `DELETE FROM user WHERE id='${id}';`;
       const response = await database.query(sql);
       return response;
     } catch (err) { throw err; }
