@@ -3,10 +3,10 @@ require('dotenv').config();
 const mysql = require('mysql');
 
 const config = {
-  host: process.env.DB_HOST,
-  user: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: 'sql.mit.edu',
+  user: 'jellee',
+  password: 'janrice',
+  database: 'jellee+tripmates',
 };
 
 class Database {
@@ -17,8 +17,8 @@ class Database {
   query( sql, args ) {
     return new Promise( ( resolve, reject ) => {
       this.connection.query( sql, args, ( err, rows ) => {
-        if ( err ) { 
-          return reject( err ); 
+        if ( err ) {
+          return reject( err );
         }
         resolve( rows );
       });
@@ -37,57 +37,91 @@ class Database {
   }
 
   async createTables() {
-    /* Add code here, and uncomment the appropriate lines in bin/www,
-     * to create database tables when starting the application
-     *
-     * Hint: use CREATE TABLE IF NOT EXISTS
-     */
 
-    await this.query(`CREATE TABLE IF NOT EXISTS users(
-        id VARCHAR(50) PRIMARY KEY,
-        username VARCHAR(50) UNIQUE NOT NULL,
-        password BINARY(60) NOT NULL
-      );`
+    await this.query(`CREATE TABLE IF NOT EXISTS user (
+      id INT PRIMARY KEY AUTOINCREMENT,
+      Username VARCHAR(20) NOT NULL,
+      password VARCHAR(20) NOT NULL,
+    );`
     ).catch(err => console.log(err));
 
-    // id INT PRIMARY KEY AUTO_INCREMENT,
-    await this.query(`CREATE TABLE IF NOT EXISTS freets(
-        id VARCHAR(50) PRIMARY KEY,
-        content VARCHAR(140) NOT NULL,
-        authorId VARCHAR(50) NOT NULL REFERENCES users(id),
-        originalFreetId VARCHAR(50) REFERENCES freets(id)
-      );`
+    await this.query(`CREATE TABLE IF NOT EXISTS trip (
+	    id INT PRIMARY KEY AUTOINCREMENT,
+	    name VARCHAR(20) NOT NULL,
+      FOREIGN KEY(creatorId) REFERENCES user(id) NOT NULL,
+      startdate DATE NOT NULL,
+      enddate DATE NOT NULL
+    );`
     ).catch(err => console.log(err));
 
-    await this.query(`CREATE TABLE IF NOT EXISTS upvotes(
-        freetId VARCHAR(50) NOT NULL REFERENCES freets(id),
-        userId VARCHAR(50) NOT NULL REFERENCES users(id),
-        primary key(freetId, userId)
-      );`
+    await this.query(`CREATE TABLE IF NOT EXISTS tripmembership (
+      FOREIGN KEY(userId) REFERENCES user(id) NOT NULL,
+      FOREIGN KEY(tripId) REFERENCES trip(id) NOT NULL,
+      PRIMARY KEY (userId, tripId) UNIQUE
+    );`
     ).catch(err => console.log(err));
 
-    await this.query(`CREATE TABLE IF NOT EXISTS downvotes(
-        freetId VARCHAR(50) NOT NULL REFERENCES freets(id),
-        userId VARCHAR(50) NOT NULL REFERENCES users(id),
-        primary key(freetId, userId)
-      );`
+    await this.query(`CREATE TABLE IF NOT EXISTS activity (
+    	id INT PRIMARY KEY AUTOINCREMENT,
+    	name VARCHAR(20) NOT NULL,
+    	suggestedDuration INT,
+    	FOREIGN KEY (placeID) REFERENCES place(id),
+    	FOREIGN KEY (tripId) REFERENCES trip(id) NOT NULL,
+    	category VARCHAR(20)
+    );`
     ).catch(err => console.log(err));
 
-    await this.query(`CREATE TABLE IF NOT EXISTS follows(
-        followerId VARCHAR(50) NOT NULL REFERENCES users(id),
-        followeeId VARCHAR(50) NOT NULL REFERENCES users(id),
-        primary key(followerId, followeeId)
-      );`
+    await this.query(`CREATE TABLE IF NOT EXISTS place (
+	    id INT PRIMARY KEY AUTOINCREMENT,
+	    address VARCHAR(100)
+    );`
+    ).catch(err => console.log(err));
+
+    await this.query(`CREATE TABLE IF NOT EXISTS openHours (
+    	FOREIGN KEY(placeId) REFERENCES place(id),
+    	day INT NOT NULL,
+    	startTime TIME NOT NULL,
+    	duration INT NOT NULL
+    );`
+    ).catch(err => console.log(err));
+
+    await this.query(`CREATE TABLE IF NOT EXISTS itinerary (
+    	id INT PRIMARY KEY AUTOINCREMENT,
+    	name VARCHAR(20) NOT NULL,
+    	FOREIGN KEY(tripId) REFERENCES trip(id) NOT NULL,
+    	Starred BOOLEAN NOT NULL
+    );`
+    ).catch(err => console.log(err));
+
+    await this.query(`CREATE TABLE IF NOT EXISTS event (
+    	id INT PRIMARY KEY AUTOINCREMENT,
+    	FOREIGN KEY(activityId) REFERENCES activity(id) NOT NULL,
+    	startDateTime DATETIME NOT NULL,
+    	endDateTime DATETIME NOT NULL,
+    	FOREIGN KEY (itineraryID) REFERENCES itinerary(id) NOT NULL
+    );`
+    ).catch(err => console.log(err));
+
+    await this.query(`CREATE TABLE IF NOT EXISTS activityVotes (
+    	FOREIGN KEY(activityId) REFERENCES activity(id) NOT NULL,
+    	FOREIGN KEY(userId) REFERENCES user(id) NOT NULL,
+    	value INT NOT NULL,
+    	PRIMARY KEY (activityId, userId) UNIQUE
+    );`
     ).catch(err => console.log(err));
   }
 
   /* Used for testing */
   async clearTables() {
-    await database.query('TRUNCATE TABLE users');
-    await database.query('TRUNCATE TABLE freets');
-    await database.query('TRUNCATE TABLE follows');
-    await database.query('TRUNCATE TABLE upvotes');
-    await database.query('TRUNCATE TABLE downvotes');
+    await database.query('TRUNCATE TABLE user');
+    await database.query('TRUNCATE TABLE trip');
+    await database.query('TRUNCATE TABLE tripmembership');
+    await database.query('TRUNCATE TABLE activity');
+    await database.query('TRUNCATE TABLE place');
+    await database.query('TRUNCATE TABLE openHours');
+    await database.query('TRUNCATE TABLE itinerary');
+    await database.query('TRUNCATE TABLE event');
+    await database.query('TRUNCATE TABLE activityVotes');
   }
 }
 
