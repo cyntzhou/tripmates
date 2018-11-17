@@ -8,6 +8,11 @@
   font-size: 1.8em;
   color: var(--white);
   background-color: var(--dark-green);
+  border: 0;
+}
+
+.add-btn:hover {
+  cursor: pointer;
 }
 
 /* .add-btn:active {
