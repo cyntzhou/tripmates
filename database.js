@@ -65,7 +65,7 @@ class Database {
     	id INT PRIMARY KEY AUTOINCREMENT,
     	name VARCHAR(20) NOT NULL,
     	suggestedDuration INT,
-    	FOREIGN KEY (placeID) REFERENCES place(id),
+    	FOREIGN KEY (placeId) REFERENCES place(id),
     	FOREIGN KEY (tripId) REFERENCES trip(id) NOT NULL,
     	category VARCHAR(20)
     );`
@@ -98,7 +98,7 @@ class Database {
     	FOREIGN KEY(activityId) REFERENCES activity(id) NOT NULL,
     	startDateTime DATETIME NOT NULL,
     	endDateTime DATETIME NOT NULL,
-    	FOREIGN KEY (itineraryID) REFERENCES itinerary(id) NOT NULL
+    	FOREIGN KEY (itineraryId) REFERENCES itinerary(id) NOT NULL
     );`
     ).catch(err => console.log(err));
 
