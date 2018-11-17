@@ -9,6 +9,7 @@ class Login extends React.Component {
         <div>
           <h1>Log in to your account</h1>
           <Button
+            colorClassName="btn-yellow-background"
             label="Log In"
           />
         </div>

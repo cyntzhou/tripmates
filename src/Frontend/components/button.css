@@ -15,5 +15,10 @@
   cursor: pointer;
 }
 
+.btn-yellow-background {
+  color: var(--gray);
+  background-color: var(--yellow);
+}
+
 /* .btn:active {
 } */
