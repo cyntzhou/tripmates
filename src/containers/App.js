@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import Trip from "../Frontend/trip/trip.jsx";
+import Trips from "../Frontend/trip/trips.jsx";
 import Login from "../Frontend/login.jsx";
 import Navbar from "../Frontend/components/nav-bar.jsx";
+import Trip from "../Frontend/trip/trip.jsx";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 const Home = () => (
@@ -30,8 +31,9 @@ export default class App extends Component {
           </header>
           <div>
             <Route exact path="/" component={Home} />
-            <Route exact path="/trips" component={Trip} />
+            <Route exact path="/trips" component={Trips} />
             <Route exact path="/login" component={Login} />
+            <Route path="/trips/:id" component={Trip}/>
           </div>
         </div>
       </Router>

@@ -32,10 +32,10 @@ class CreateNewTrip extends React.Component {
             <input type="text" name="nameValue" onChange={this.onChange}/>
           </label>
           <label>Start Date:
-            <input type="text" name="startValue" onChange={this.onChange}/>
+            <input type="text" name="startValue" placeholder="MM/DD/YYY" onChange={this.onChange}/>
           </label>
           <label>End Date:
-            <input type="text" name="endValue" onChange={this.onChange}/>
+            <input type="text" name="endValue" placeholder="MM/DD/YYY" onChange={this.onChange}/>
           </label>
         </form>
         <Button label="Cancel" onButtonClick={this.props.hideModal}/>
