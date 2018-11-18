@@ -33,3 +33,5 @@ const sanitizer = require('sanitizer');
   }
 
  }
+
+ module.exports = Trips;
