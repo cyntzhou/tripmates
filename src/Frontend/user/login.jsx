@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "./components/button.jsx";
+import Button from "../components/button.jsx";
 import styles from "./login.css";
 
 const TextField = (props) => (
