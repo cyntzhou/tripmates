@@ -1,4 +1,14 @@
-# final-project-juicy-buns
+# Tripmates
+Janice Lee
+u
+i
+Cynthia Zhou
+y
+
+b
+u
+Nancy Luong
+Sophia Kwon
 
 ## Installation
 `npm i`
