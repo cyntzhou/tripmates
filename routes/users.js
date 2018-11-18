@@ -175,7 +175,7 @@ router.put('/password', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   if (req.session.name !== undefined) {
     if (req.session.name === parseInt(req.params.id)) {
-      user = await Users.deleteOne(req.session.name);
+      let user = await Users.deleteOne(req.session.name);
       req.session.name = undefined;
       res.status(200).json(user).end();
     } else {
