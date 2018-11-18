@@ -52,7 +52,7 @@ class Database {
       );`
     ).catch(err => console.log(err));
 
-    await this.query(`CREATE TABLE IF NOT EXISTS tripmembership (
+    await this.query(`CREATE TABLE IF NOT EXISTS tripMembership (
       userId INT REFERENCES user(id),
       tripId INT REFERENCES trip(id),
       PRIMARY KEY (userId, tripId)
@@ -113,7 +113,7 @@ class Database {
   async clearTables() {
     await database.query('TRUNCATE TABLE user');
     await database.query('TRUNCATE TABLE trip');
-    await database.query('TRUNCATE TABLE tripmembership');
+    await database.query('TRUNCATE TABLE tripMembership');
     await database.query('TRUNCATE TABLE activity');
     await database.query('TRUNCATE TABLE place');
     await database.query('TRUNCATE TABLE openHours');

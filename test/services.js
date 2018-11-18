@@ -68,8 +68,8 @@ async function deleteUser(id) {
  * @param {object} trip
  * {
  *    name: string
- *    startDate: date
- *    endDate: date
+ *    startDate: string
+ *    endDate: string
  * }
  */
 async function createTrip(trip) {
@@ -78,11 +78,36 @@ async function createTrip(trip) {
     .send(trip);
 }
 
+/**
+ * @param {number} id - id of trip to update
+ * @param {object} newTrip
+ * {
+ *    newName: string
+ *    newStart: string
+ *    newEnd: string
+ * }
+ */
+async function updateTrip(id, newTrip) {
+  return requestApp
+    .put(`/api/trips/${id}`)
+    .send(newTrip);
+}
+
+/**
+ * @param {number} userId - id of user whose trips you want to find
+ */
+async function findMyTrips(userId) {
+  return requestApp
+    .get(`/api/users/${userId}/trips`);
+}
+
 
 module.exports = {
   signin,
   createUser,
   signout,
   deleteUser,
-  createTrip
+  createTrip,
+  updateTrip,
+  findMyTrips
 };

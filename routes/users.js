@@ -1,6 +1,7 @@
 const express = require('express');
 
 const Users = require('../models/Users');
+const Trips = require('../models/Trips');
 
 const router = express.Router();
 
@@ -259,6 +260,31 @@ router.get('/:id', async (req, res) => {
     res.status(404).json({
       error: `No user with given id.`,
     }).end();
+  }
+});
+
+/**
+ * Given a user, find all trips they are a member of.
+ * @name GET/api/users/:userId/trips
+ * :userId is the user's id
+ * @return {number[]} - IDs of trips of which this user is a member TODO might change the return type based on front end
+ * @throws {401} - if user not logged in
+ * @throws {403} - if userId is not the id of the logged in user
+ */
+router.get('/:userId/trips', async (req, res) => {
+  if (req.session.name === undefined) {
+    res.status(401).json({
+      error: `Must be logged in to access your trips.`,
+    }).end();
+  } else {
+    if (req.session.name !== parseInt(req.params.userId)) {
+      res.status(403).json({
+        error: `You cannot access another user's trips.`,
+      }).end();
+    } else {
+      const trips = await Trips.findMyTrips(req.params.userId);
+      res.status(200).json(trips).end();
+    }
   }
 });
 
