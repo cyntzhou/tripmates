@@ -20,7 +20,4 @@ app.use(session({ secret: 'super-secret-password', saveUninitialized: false, res
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Listening on ${PORT}`));
-
 module.exports = app;

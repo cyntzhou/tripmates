@@ -6,7 +6,9 @@ class AddButton extends React.Component {
     const {onButtonClick} = this.props;
     return (
       <div className="btn-container">
-        <button className="add-btn"><i className="fa fa-plus"></i></button>
+        <button className="add-btn" onClick={onButtonClick}>
+          <i className="fa fa-plus"/>
+        </button>
       </div>
     )
   }
