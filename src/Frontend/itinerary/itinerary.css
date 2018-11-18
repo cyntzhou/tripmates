@@ -1,0 +1,9 @@
+.itinerary-container {
+  width: 70%;
+  height: 100vh;
+}
+
+.itinerary-header {
+  display: flex;
+  justify-content: center;
+}

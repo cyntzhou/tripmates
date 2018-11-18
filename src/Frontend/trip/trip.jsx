@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./trip.css";
 import Activities from "../activity/activities.jsx";
+import Itinerary from "../itinerary/itinerary.jsx";
 import CreateActivityModal from "../activity/create-activity-modal.jsx";
 
 class Trip extends React.Component {
@@ -22,11 +23,11 @@ class Trip extends React.Component {
   render() {
     var tripId = this.props.match.params.id;
     return (
-      <div>
+      <div className="trip-container">
         {this.state.showCreateActivity? (<CreateActivityModal hideModal={this.hideModal}/>) : (
           <React.Fragment>
             <Activities showModal={this.showModal}/>
-            <div>Itineraries go here</div>
+            <Itinerary/>
           </React.Fragment>
         )}
       </div>
