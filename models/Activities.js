@@ -1,8 +1,8 @@
 const database = require('../database');
 
 // Janice notes (can delete later)
-// Create an activity
-// Get an activity
+// x Create an activity
+// x Get an activity
 // x Get all activities
 // x Edit an activity
 // x Delete an activity
@@ -10,9 +10,6 @@ const database = require('../database');
 // x Upvote an activity
 // x Downvote an activity
 // x Filter activities by category
-
-// Create a place
-// Edit a place
 
 /**
  * @typedef Activity
@@ -274,11 +271,6 @@ class Activities {
       throw error;
     }
   }
-
-
-  // ---- Places -----
-  // TODO
-
 }
 
-module.exports = Freets;
+module.exports = Activities;
