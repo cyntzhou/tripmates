@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const mysql = require('mysql');
 
 const config = {
@@ -11,7 +9,7 @@ const config = {
 
 class Database {
   constructor(dbConfig) {
-    this.connection = mysql.createConnection(dbConfig);
+    this.connection = mysql.createPool(dbConfig);
   }
 
   query( sql, args ) {
@@ -39,46 +37,46 @@ class Database {
   async createTables() {
 
     await this.query(`CREATE TABLE IF NOT EXISTS user (
-      id INT PRIMARY KEY AUTOINCREMENT,
+      id INT PRIMARY KEY AUTO_INCREMENT,
       username VARCHAR(20) NOT NULL,
-      password VARCHAR(20) NOT NULL,
-    );`
+      password VARCHAR(20) NOT NULL
+      );`
     ).catch(err => console.log(err));
 
     await this.query(`CREATE TABLE IF NOT EXISTS trip (
-	    id INT PRIMARY KEY AUTOINCREMENT,
+	    id INT PRIMARY KEY AUTO_INCREMENT,
 	    name VARCHAR(20) NOT NULL,
-      FOREIGN KEY(creatorId) REFERENCES user(id) NOT NULL,
-      startdate DATE NOT NULL,
-      enddate DATE NOT NULL
-    );`
+      creatorId INT REFERENCES user(id),
+      startDate DATE NOT NULL,
+      endDate DATE NOT NULL
+      );`
     ).catch(err => console.log(err));
 
     await this.query(`CREATE TABLE IF NOT EXISTS tripmembership (
-      FOREIGN KEY(userId) REFERENCES user(id) NOT NULL,
-      FOREIGN KEY(tripId) REFERENCES trip(id) NOT NULL,
-      PRIMARY KEY (userId, tripId) UNIQUE
+      userId INT REFERENCES user(id),
+      tripId INT REFERENCES trip(id),
+      PRIMARY KEY (userId, tripId)
     );`
     ).catch(err => console.log(err));
 
     await this.query(`CREATE TABLE IF NOT EXISTS activity (
-    	id INT PRIMARY KEY AUTOINCREMENT,
+    	id INT PRIMARY KEY AUTO_INCREMENT,
     	name VARCHAR(20) NOT NULL,
     	suggestedDuration INT,
-    	FOREIGN KEY (placeID) REFERENCES place(id),
-    	FOREIGN KEY (tripId) REFERENCES trip(id) NOT NULL,
+    	placeId INT REFERENCES place(id),
+    	tripId INT REFERENCES trip(id),
     	category VARCHAR(20)
     );`
     ).catch(err => console.log(err));
 
     await this.query(`CREATE TABLE IF NOT EXISTS place (
-	    id INT PRIMARY KEY AUTOINCREMENT,
+	    id INT PRIMARY KEY AUTO_INCREMENT,
 	    address VARCHAR(100)
     );`
     ).catch(err => console.log(err));
 
     await this.query(`CREATE TABLE IF NOT EXISTS openHours (
-    	FOREIGN KEY(placeId) REFERENCES place(id),
+    	placeId INT REFERENCES place(id),
     	day INT NOT NULL,
     	startTime TIME NOT NULL,
     	duration INT NOT NULL
@@ -86,27 +84,27 @@ class Database {
     ).catch(err => console.log(err));
 
     await this.query(`CREATE TABLE IF NOT EXISTS itinerary (
-    	id INT PRIMARY KEY AUTOINCREMENT,
+    	id INT PRIMARY KEY AUTO_INCREMENT,
     	name VARCHAR(20) NOT NULL,
-    	FOREIGN KEY(tripId) REFERENCES trip(id) NOT NULL,
+    	tripId INT REFERENCES trip(id),
     	starred BOOLEAN NOT NULL
     );`
     ).catch(err => console.log(err));
 
     await this.query(`CREATE TABLE IF NOT EXISTS event (
-    	id INT PRIMARY KEY AUTOINCREMENT,
-    	FOREIGN KEY(activityId) REFERENCES activity(id) NOT NULL,
+    	id INT PRIMARY KEY AUTO_INCREMENT,
+    	activityId INT REFERENCES activity(id),
     	startDateTime DATETIME NOT NULL,
     	endDateTime DATETIME NOT NULL,
-    	FOREIGN KEY (itineraryID) REFERENCES itinerary(id) NOT NULL
+    	itineraryId INT REFERENCES itinerary(id)
     );`
     ).catch(err => console.log(err));
 
     await this.query(`CREATE TABLE IF NOT EXISTS activityVotes (
-    	FOREIGN KEY(activityId) REFERENCES activity(id) NOT NULL,
-    	FOREIGN KEY(userId) REFERENCES user(id) NOT NULL,
+    	activityId INT REFERENCES activity(id),
+    	userId INT REFERENCES user(id),
     	value INT NOT NULL,
-    	PRIMARY KEY (activityId, userId) UNIQUE
+    	PRIMARY KEY (activityId, userId)
     );`
     ).catch(err => console.log(err));
   }
