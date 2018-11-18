@@ -1,8 +1,8 @@
 const database = require('../database');
 
 // Janice notes (can delete later)
-// x Create an activity
-// x Get an activity
+// Create an activity
+// Get an activity
 // x Get all activities
 // x Edit an activity
 // x Delete an activity
@@ -82,15 +82,16 @@ class Activities {
     }
     for (let i = 0; i < activity_responses.length; i++) {
       let a = activity_responses[i];
+      let id = a.id;
       let name = a.name;
       let suggestedDir = a.suggestedDir;
       let category = a.category;
       // TODO places info?
       // TODO votes info?
       }
-      all_activities.push({ name, suggestedDir, category });
+      all_activities.push({ id, name, suggestedDir, category });
     }
-    return all_freets;
+    return all_activities;
   }
 
   /**
