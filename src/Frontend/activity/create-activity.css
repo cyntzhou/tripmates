@@ -1,0 +1,11 @@
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--white);
+}
+
+.btns-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5em;
+}

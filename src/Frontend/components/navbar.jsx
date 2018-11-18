@@ -43,7 +43,9 @@ class Navbar extends React.Component {
             <Link to="/trips">
               My Trips
             </Link>
-            <a>Settings</a>
+            <Link to="/settings">
+              Settings
+            </Link>
             <a>Logout</a>
           </div>
         }
