@@ -12,20 +12,12 @@ class Activities extends React.Component {
     }
   }
 
-  showModal = () => {
-    this.setState({show: true});
-  }
-
-  hideModal = () => {
-    this.setState({show: false});
-  }
-
   render() {
     return (
       <div className="activities-container">
         <div className="activity-header">
           <h2>Activities</h2>
-          <AddButton className="add-btn" onButtonClick={this.showModal}/>
+          <AddButton className="add-btn" onButtonClick={this.props.showModal}/>
         </div>
         <ActivityItem activityName="actName here"/>
         <ActivityItem activityName="actName2 here"/>

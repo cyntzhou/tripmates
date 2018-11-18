@@ -9,6 +9,12 @@ class ActivityItem extends React.Component {
     }
   }
 
+  toggleDetails() {
+    this.setState({
+      expand: !this.state.expand
+    })
+  }
+
   render() {
     const {
       activityName,
@@ -17,10 +23,10 @@ class ActivityItem extends React.Component {
       votes
     } = this.props;
     return (
-      <div className="activity-item-container">
+      <div className="activity-item-container" onClick={this.toggleDetails}>
         <h3>{activityName}</h3>
         <div className="details">
-          
+
         </div>
       </div>
     )

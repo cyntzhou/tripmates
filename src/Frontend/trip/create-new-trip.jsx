@@ -10,8 +10,7 @@ class CreateNewTrip extends React.Component {
       startValue: '',
       endValue: ''
     }
-
-    // this.onChange = this.onChange.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
   onChange(event) {
