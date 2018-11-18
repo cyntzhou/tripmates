@@ -19,7 +19,7 @@ class Trip extends React.Component {
   render() {
     return (
       <div className="trip">
-        {this.state.show ? (<CreateTripModal/>) : (
+        {this.state.show ? (<CreateTripModal hideModal={this.hideModal}/>) : (
           <React.Fragment>
             <div className="trip-header">
               <h1>My Trips</h1>

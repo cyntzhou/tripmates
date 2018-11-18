@@ -6,7 +6,7 @@ class Navbar extends React.Component {
   render() {
     return (
       <ul>
-        <li><a class="active" href="/">Tripmates</a></li>
+        <li><a className="active" href="/">Tripmates</a></li>
       </ul>
     )
   }

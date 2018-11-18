@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./create-trip.css";
+import Button from "../components/button.jsx";
 
 class JoinTrip extends React.Component {
   constructor() {
@@ -21,6 +22,7 @@ class JoinTrip extends React.Component {
         <h3>Join Trip</h3>
         <form>
           <input type="text" name="codeValue" onChange={this.onChange}/>
+          <Button label="Cancel" onButtonClick={this.props.hideModal}/>
         </form>
       </div>
     )
