@@ -64,9 +64,25 @@ async function deleteUser(id) {
     .delete('/api/users/' + id);
 }
 
+/**
+ * @param {object} trip
+ * {
+ *    name: string
+ *    startDate: date
+ *    endDate: date
+ * }
+ */
+async function createTrip(trip) {
+  return requestApp
+    .post('/api/trips')
+    .send(trip);
+}
+
+
 module.exports = {
   signin,
   createUser,
   signout,
-  deleteUser
+  deleteUser,
+  createTrip
 };
