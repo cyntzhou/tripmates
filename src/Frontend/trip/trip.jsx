@@ -19,17 +19,21 @@ class Trip extends React.Component {
   render() {
     return (
       <div className="trip">
-        <div className="trip-header">
-          <h1>My Trips</h1>
-          <AddButton onButtonClick={this.showModal}/>
-        </div>
-        <div className="trip-body">
-          <TripItem 
-            tripName="TripName here" 
-            tripDate="tripdate01 - tripdate02"
-            tripUsers="Janicecream, cyndaquil, sopdrop, nanc"
-          />
-        </div>
+        {this.state.show ? (<CreateTripModal/>) : (
+          <React.Fragment>
+            <div className="trip-header">
+              <h1>My Trips</h1>
+              <AddButton onButtonClick={this.showModal}/>
+            </div>
+            <div className="trip-body">
+              <TripItem 
+                tripName="TripName here" 
+                tripDate="tripdate01 - tripdate02"
+                tripUsers="Janicecream, cyndaquil, sopdrop, nanc"
+              />
+            </div>
+          </React.Fragment>
+        )}
       </div>
     )
   }

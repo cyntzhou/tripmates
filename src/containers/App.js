@@ -29,7 +29,7 @@ export default class App extends Component {
           </header>
           <div>
             <Route exact path="/" component={Home} />
-            <Route exact path="/trip" component={Trip} />
+            <Route exact path="/trips" component={Trip} />
             <Route exact path="/login" component={Login} />
           </div>
         </div>

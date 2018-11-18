@@ -5,8 +5,11 @@ class JoinTrip extends React.Component {
   render() {
     return (
       <div className="form-container">
+        <h3>Join Trip</h3>
         <input className="join-input"/>
       </div>
     )
   }
 }
+
+export default JoinTrip;
