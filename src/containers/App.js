@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Trip from "../Frontend/trip.jsx";
+import Trip from "../Frontend/trip/trip.jsx";
 import Login from "../Frontend/login.jsx";
 import Navbar from "../Frontend/components/nav-bar.jsx";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
@@ -9,7 +9,6 @@ const Home = () => (
     Home
   </div>
 )
-
 export default class App extends Component {
   render () {
     return (
@@ -21,7 +20,7 @@ export default class App extends Component {
               <Link to="/">
                 <button>Home</button>
               </Link>
-              <Link to="/trip">
+              <Link to="/trips">
                 <button>Trips</button>
               </Link>
               <Link to="/login">
@@ -31,7 +30,7 @@ export default class App extends Component {
           </header>
           <div>
             <Route exact path="/" component={Home} />
-            <Route exact path="/trip" component={Trip} />
+            <Route exact path="/trips" component={Trip} />
             <Route exact path="/login" component={Login} />
           </div>
         </div>
