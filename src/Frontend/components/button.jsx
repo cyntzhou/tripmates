@@ -13,7 +13,7 @@ class Button extends React.Component {
 
     return (
       <div className="btn-container">
-        <button className={classNames}>
+        <button className={classNames} onClick={onButtonClick}>
           {label}
         </button>
       </div>

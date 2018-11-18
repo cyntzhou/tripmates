@@ -5,11 +5,11 @@ import CreateNewTrip from "./create-new-trip.jsx";
 
 class CreateTripModal extends React.Component {
   render() {
-    const {onCancel} = this.props
+    const {hideModal} = this.props
     return (
       <div className="modal-container">
-        <CreateNewTrip onCancel={onCancel}/>
-        <JoinTrip onCancel={onCancel}/>
+        <CreateNewTrip hideModal={hideModal}/>
+        <JoinTrip hideModal={hideModal}/>
       </div>
     )
   }

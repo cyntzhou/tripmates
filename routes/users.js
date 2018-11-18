@@ -35,13 +35,8 @@ router.post('/', async (req, res) => {
  */
 router.post('/signin', async (req, res) => {
   const user = await Users.findOne(req.body.username);
-  console.log("ayyyWADDUP");
-  console.log(user.password);
-  console.log(req.body.password);
   if (user !== undefined) {
   const match = await bcrypt.compare(req.body.password, user.password);
-    console.log(user)
-    console.log(match);
     if (match) {
       req.session.name = user.id;
       res.status(200).json(user).end();
@@ -180,7 +175,7 @@ router.put('/password', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   if (req.session.name !== undefined) {
     if (req.session.name === parseInt(req.params.id)) {
-      user = await Users.deleteOne(req.session.name);
+      let user = await Users.deleteOne(req.session.name);
       req.session.name = undefined;
       res.status(200).json(user).end();
     } else {
