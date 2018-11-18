@@ -1,8 +1,10 @@
 const database = require('../database');
 
+// Janice notes (can delete later)
 // x Create an activity
 // x Get an activity
-// Edit an activity
+// x Get all activities
+// x Edit an activity
 // x Delete an activity
 
 // Upvote an activity
@@ -50,7 +52,7 @@ class Activities {
    * @param {int} id - id of activity
    * @return {Activity | undefined} - found Activity
    */
-  static async findActivity(id) {
+  static async getActivity(id) {
     try {
       const sql = `SELECT * FROM activity WHERE id='${id}';`;
       const response = await database.query(sql);
@@ -61,6 +63,34 @@ class Activities {
     } catch (error) {
       throw error;
     }
+  }
+
+  /**
+   * Return an array of all of the activites.
+   * @return {Activity[]}
+   */
+  static async getAllTripActivities(tripId) {
+    let all_activities = [];
+    let activity_responses = [];
+
+    try {
+      const sql = `SELECT * FROM activity WHERE tripId='${tripId}';`;
+      const response = await database.query(sql);
+      activity_responses = response;
+    } catch (error) {
+      throw error;
+    }
+    for (let i = 0; i < activity_responses.length; i++) {
+      let a = activity_responses[i];
+      let name = a.name;
+      let suggestedDir = a.suggestedDir;
+      let category = a.category;
+      // TODO places info
+      // TODO votes info
+      }
+      all_activities.push({ name, suggestedDir, category, votes, is_refreet, original_author });
+    }
+    return all_freets;
   }
 
   /**
@@ -77,8 +107,6 @@ class Activities {
     }
   }
 
-  const sql = `UPDATE Freets SET content='${content}' WHERE fID='${id}';`;
-
   /**
    * Update an activity.
    * @param {int} id - id of activity to edit
@@ -90,13 +118,14 @@ class Activities {
   static async editActivity(id, name=null, tripId=null, suggestedDuration=null, placeId=null, category=null) {
     let tripID = await Trips.getCurrentTripId().then(res => res);
     try {
-      const sql = `UPDATE activity SET (name, suggestedDuration, placeId, tripId, category) VALUES ('${name}', '${suggestedDuration}', '${placeId}', '${tripId}', '${category}');`;
+      const sql = `UPDATE activity SET name='${name}', suggestedDuration='${suggestedDuration}', placeId='${placeId}', tripId='${tripId}', category='${category}' WHERE id='${id}';`;
       const response = await database.query(sql);
       return response;
     } catch (error) {
       throw error;
     }
   }
+
 
 
 
@@ -143,58 +172,6 @@ class Activities {
   }
 
 
-
-  /**
-   * Delete Freets by author.
-   * @param {string} author - username of the author of the Freets
-   * @return {Freet[] | undefined} - array of Freets
-   */
-  static async deleteFreets(author) {
-    let user_id = await Freets.getIdByUsername(author).then(res => res);
-    try {
-      const sql = `DELETE FROM Freets WHERE uID='${user_id}' OR originalAuthorID='${user_id}';`;
-      const response = await database.query(sql);
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  /**
-   * Return an array of all of the Freets.
-   * @return {Freet[]}
-   */
-  static async findAll() {
-    let all_freets = [];
-    let freet_responses = [];
-
-    try {
-      const sql = `SELECT * FROM Freets;`;
-      const response = await database.query(sql);
-      freet_responses = response;
-    } catch (error) {
-      throw error;
-    }
-    for (let i = 0; i < freet_responses.length; i++) {
-      let freet = freet_responses[i];
-      let id = freet.fID;
-      let author = await Freets.getUsernameById(freet.uID).then(res => res);
-      let content = freet.content;
-      let original_author_id = freet.originalAuthorID;
-      let original_author = "";
-      if (original_author_id) {
-        original_author = await Freets.getUsernameById(original_author_id).then(res => res);
-      }
-
-      // votes
-      let upvotes = await Freets.num_upvotes(freet.fID).then(res => res);
-      let downvotes = await Freets.num_downvotes(freet.fID).then(res => res);
-      let votes = upvotes - downvotes;
-      let is_refreet = freet.isRefreet;
-      all_freets.push({ id, author, content, votes, is_refreet, original_author });
-    }
-    return all_freets;
-  }
 
   /**
    * Update a Freet.
