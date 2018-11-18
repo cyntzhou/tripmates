@@ -23,3 +23,11 @@
 .fa-users {
   padding: 0.5em;
 }
+
+a {
+  text-decoration: none;
+}
+
+/* a:visited {
+  text-decoration: none;
+} */
