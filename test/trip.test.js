@@ -39,12 +39,17 @@ describe('Test /api/trips', () => {
 
 	test('Create a trip with POST /api/trips', async () => {
 		const userResponse = await signin(user);
+		expect(userResponse.statusCode).toBe(200);
 		const response = await createTrip(trip);
 		expect(response.statusCode).toBe(200);
 		expect(response.body.name).toBe(trip.name);
 		expect(response.body.creatorId).toBe(userResponse.body.id);
 		expect(response.body.startDate).toBe(trip.startDate);
 		expect(response.body.endDate).toBe(trip.endDate);
+	});
+
+	test('This always passes', async () => {
+		expect(200).toBe(200);
 	});
 });
 
