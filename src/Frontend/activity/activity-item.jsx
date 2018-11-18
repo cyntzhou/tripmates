@@ -9,7 +9,8 @@ class ActivityItem extends React.Component {
     }
   }
 
-  toggleDetails() {
+  toggleDetails = () => {
+    console.log('expand')
     this.setState({
       expand: !this.state.expand
     })
@@ -25,9 +26,12 @@ class ActivityItem extends React.Component {
     return (
       <div className="activity-item-container" onClick={this.toggleDetails}>
         <h3>{activityName}</h3>
-        <div className="details">
-
-        </div>
+        {this.state.expand && 
+          <div className="details">
+            <p>Category</p>
+            <i onClick={this.showEdit} className="fa fa-edit"/>
+          </div>
+        }
       </div>
     )
   }
