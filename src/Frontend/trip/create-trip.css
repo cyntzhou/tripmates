@@ -1,0 +1,7 @@
+.modal-container {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--white);
+  width: 75%;
+  padding: 1.5em;
+}
