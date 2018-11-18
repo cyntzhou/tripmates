@@ -35,13 +35,8 @@ router.post('/', async (req, res) => {
  */
 router.post('/signin', async (req, res) => {
   const user = await Users.findOne(req.body.username);
-  console.log("ayyyWADDUP");
-  console.log(user.password);
-  console.log(req.body.password);
   if (user !== undefined) {
   const match = await bcrypt.compare(req.body.password, user.password);
-    console.log(user)
-    console.log(match);
     if (match) {
       req.session.name = user.id;
       res.status(200).json(user).end();
