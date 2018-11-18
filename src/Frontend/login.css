@@ -1,0 +1,36 @@
+* {
+  box-sizing: border-box;
+}
+
+.row {
+  display: flex;
+}
+
+/* Create two equal columns that sits next to each other */
+.column {
+  flex: 50%;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
+}
+
+.login-form {
+  background-color: var(--dark-green);
+  color: var(--white);
+  text-align: center;
+}
+
+.signup-form {
+  background-color: var(--white);
+  color: var(--gray);
+  text-align: center;
+}
+
+.login-form-textfield {
+  height: 3em;
+  margin: .5em;
+  width: 20em;
+}
+
+.login-button {
+  margin: .5em;
+}
