@@ -1,6 +1,7 @@
 const express = require('express');
 
-const Users = require('../models/Trips');
+const Users = require('../models/Users');
+const Trips = require('../models/Trips');
 
 const router = express.Router();
 

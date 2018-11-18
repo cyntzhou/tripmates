@@ -6,6 +6,7 @@ const session = require('express-session');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const tripsRouter = require('./routes/trips');
 
 const app = express();
 
@@ -19,5 +20,6 @@ app.use(session({ secret: 'super-secret-password', saveUninitialized: false, res
 
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/trips', tripsRouter);
 
 module.exports = app;
