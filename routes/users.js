@@ -114,12 +114,12 @@ router.put('/:id/username', async (req, res) => {
 });
 
 /**
- * This endpoint doesn't actually modify anything, 
+ * This endpoint doesn't actually modify anything,
  * it sends an error message if the user tries to update username without typing in id
- * @name PUT/api/users/username/
+ * @name PUT/api/users/username
  * @throws {404} - because user did not enter an id
  */
-router.put('/username/', async (req, res) => {
+router.put('/username', async (req, res) => {
   res.status(404).json({
     error: `Must type in user ID.`,
   }).end();
@@ -153,12 +153,12 @@ router.put('/:id/password', async (req, res) => {
 });
 
 /**
- * This endpoint doesn't actually modify anything, 
+ * This endpoint doesn't actually modify anything,
  * it sends an error message if the user tries to update password without typing in id
- * @name PUT/api/users/password/
+ * @name PUT/api/users/password
  * @throws {404} - because user did not enter an id
  */
-router.put('/password/', async (req, res) => {
+router.put('/password', async (req, res) => {
   res.status(404).json({
     error: `Must type in user ID.`,
   }).end();
@@ -191,7 +191,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 /**
- * This endpoint doesn't actually delete anything, 
+ * This endpoint doesn't actually delete anything,
  * it sends an error message if the user tries to delete without id
  * @name DELETE/api/users/
  * @throws {404} - because user did not enter an id
