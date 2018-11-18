@@ -3,7 +3,11 @@ import styles from "./trip-item.css";
 
 class TripItem extends React.Component {
   render() {
-    const {tripDate, tripName, tripUsers} = this.props;
+    const {
+      tripDate, 
+      tripName, 
+      tripUsers
+    } = this.props;
     return (
       <div className="trip-item-container">
         <div className="date">{tripDate}</div>
