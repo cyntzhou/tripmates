@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./trip.css";
+import Activities from "../activity/activities.jsx";
 
 class Trip extends React.Component {
   constructor() {
@@ -21,7 +22,7 @@ class Trip extends React.Component {
     var tripId = this.props.match.params.id;
     return (
       <div>
-        <div>Activities go here</div>
+        <Activities/>
         <div>Itineraries go here</div>
       </div>
     )
