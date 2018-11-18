@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./trips.css";
 import AddButton from "../components/add-button.jsx";
-import TripItem from "../components/trip-item.jsx";
+import TripItem from "./trip-item.jsx";
 import CreateTripModal from "./create-trip-modal.jsx";
 
 
@@ -16,13 +16,9 @@ class Trips extends React.Component {
     this.setState({show: false});
   }
 
-  selectTrip(id) {
-
-  }
-
   render() {
     return (
-      <div className="trip">
+      <div className="trips">
         {this.state.show ? (<CreateTripModal hideModal={this.hideModal}/>) : (
           <React.Fragment>
             <div className="trip-header">
