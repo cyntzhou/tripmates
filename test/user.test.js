@@ -12,15 +12,20 @@ const injectionUser = {
   // username: `hi'; DELETE FROM users WHERE username='hi`,
   password: `bye`
 };
-const user = {
-  username: `hi`,
-  password: `bye`
+
+const og_user = {
+  username: 'sophia',
+  password: 'lee'
 };
 
 describe('Test /api/users', () => {
   beforeAll(async () => {
     await database.createTables();
   });
+
+  // beforeEach(async () => {
+  //   await createUser(og_user);
+  // });
 
   afterEach(async() => {
     await signout();
@@ -31,16 +36,10 @@ describe('Test /api/users', () => {
   });
 
   // tests create, sign in, delete account - should pass
-  test('POST /users/signin should reject attempt to sign in directly with queried username and password', async () => {
-    let og_user = {
-      username: 'sophia',
-      password: 'lee'
-    };
-
+  test('POST /users/signin should allow creating user and signing in', async () => {
     const createResponse = await createUser(og_user);
     expect(createResponse.statusCode).toBe(200);
-
-    const signInResponse = await signin(user);
+    const signInResponse = await signin(og_user);
     expect(signInResponse.statusCode).toBe(200);
 
     await expect(database.query(`SELECT * FROM user WHERE username='sophia'`)).resolves.toBeDefined();
