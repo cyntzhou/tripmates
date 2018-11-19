@@ -16,8 +16,8 @@ const router = express.Router();
 // x Downvote an activity
 // x Filter activities by category
 
-// Create hours
-// Delete hours
+// x Create hours
+// x Delete hours
 
 // x Create a place
 // x Get place
@@ -182,7 +182,7 @@ router.get('/category/:category', async (req, res) => {
   * @return {Place} - the place updated
   */
   router.put('/:id', async (req, res) => {
-    const place = editPlace(parseInt(req.params.id), req.body.address);
+    const place = await Places.editPlace(parseInt(req.params.id), req.body.address);
     res.status(200).json(place).end();
   });
 
@@ -193,13 +193,32 @@ router.get('/category/:category', async (req, res) => {
    * @return {Place} - the place updated
    */
    router.delete('/:id', async (req, res) => {
-     const place = deletePlace(parseInt(req.params.id));
+     const place = await Places.deletePlace(parseInt(req.params.id));
      res.status(200).json(place).end();
    });
 
+ // open hours
 
+ /**
+  * Create hours (1 segment) for a day
+  * @name POST/api/places/hours
+  * @param {string} address - address
+  * @return {Place} - the place created
+  */
+  router.post('/hours', async (req, res) => {
+    const hours = await OpenHours.addOpenHours(req.body.placeId, req.body.day, req.boreq.body.startTime, req.boduration);
+    res.status(200).json(hours).end();
+  });
 
- // openHours TODO
-
+ /**
+  * Delete hours for a day
+  * @name DELETE/api/places/:placeId/hours
+  * @param {int} id - id of place
+  * @return {Place} - the place updated
+  */
+  router.delete(':placeId/hours', async (req, res) => {
+    const hours = await OpenHours.deleteOpenHoursOnDay(req.params.placeId, req.body.day);
+    res.status(200).json(hours).end();
+  });
 
 module.exports = router;
