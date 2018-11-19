@@ -122,6 +122,7 @@ class Activities {
     try {
       const sql = `DELETE FROM activity WHERE id='${id}';`;
       const response = await database.query(sql);
+      // TODO delete respective votes in table
       return response;
     } catch (error) {
       throw error;
@@ -138,7 +139,7 @@ class Activities {
    */
   static async editActivity(id, name=null, suggestedDuration=null, placeId=null, category=null) {
     try {
-      const sql = `UPDATE activity SET name='${name}', suggestedDuration='${suggestedDuration}', placeId='${placeId}', tripId='${tripId}', category='${category}' WHERE id='${id}';`;
+      const sql = `UPDATE activity SET name='${name}', suggestedDuration='${suggestedDuration}', placeId='${placeId}', category='${category}' WHERE id='${id}';`;
       const response = await database.query(sql);
       return response;
     } catch (error) {
@@ -207,7 +208,7 @@ class Activities {
       const sql = `SELECT userId FROM activityVotes WHERE id='${id}' AND value='1';`;
       const response = await database.query(sql);
       for (let i = 0; i < response.length; i++) {
-        upvoters.push(response[i].userId);
+        upvoters.push(parseInt(response[i].userId));
       }
       return upvoters;
     } catch (error) {
@@ -226,7 +227,7 @@ class Activities {
       const sql = `SELECT userId FROM activityVotes WHERE id='${id}' AND value='-1';`;
       const response = await database.query(sql);
       for (let i = 0; i < response.length; i++) {
-        downvoters.push(response[i].userId);
+        downvoters.push(parseInt(response[i].userId));
       }
       return downvoters;
     } catch (error) {

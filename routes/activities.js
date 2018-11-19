@@ -5,28 +5,142 @@ const Activities = require('../models/Activities');
 const router = express.Router();
 
 // Janice notes (can delete later)
-// Create an activity
-// Get an activity
-// Get all activities
-// Edit an activity
-// Delete an activity
 
-// Upvote an activity
-// Downvote an activity
+// x Create an activity
+// x Get an activity
+// x Get all activities
+// x Edit an activity
+// x Delete an activity
+
+// x Upvote an activity
+// x Downvote an activity
 // Filter activities by category
+
+// Create hours
+// Delete hours
+
+// Create a places
+// Edit a place
+// Delete a place
 
 /**
  * Create an activity.
  * @name POST/api/activities
  * @param {string} name - name of activity
+ * @param {int} tripId - id of trip
  * @param {int} suggestedDuration - suggested duration of activity
- * @param {string} password - new user's password
+ * @param {int} placeId - id of place
  * @param {string} category - category of the activity
- * @throws {400} - if name is already taken
+ * @return {Activity} - the activity created
  */
-router.post('/', async (req, res) => {
+ router.post('/', async (req, res) => {
+   const activity = await Acitivities.addActivity(req.body.name, req.body.tripId, req.body.suggestedDuration, req.body.placeId, req.body.category);
+   res.status(200).json(activity).end();
+ });
 
-  res.status(200).json(activity).end();
+ /**
+  * Get all activities of a trip
+  * @name GET/api/activities/:tripId
+  * @param {int} tripId - id of trip
+  * @return {Activity[]} - all activities
+  */
+ router.get('/:tripId', (req, res) => {
+   const all_activities = await Acitivities.getAllTripActivities(req.params.tripId);
+   res.status(200).json(all_activities).end();
+ });
+
+ /**
+  * Get an activity.
+  * @name GET/api/activities/:id
+  * @param {int} id - id of activity
+  * @return {Activity} - activity
+  */
+ router.get('/:id', (req, res) => {
+   const activity = await Acitivities.getActivity(parseInt(req.params.id));
+   res.status(200).json(activity).end();
+ });
+
+ /**
+  * Update an activity
+  * @name PUT/api/activities/:id
+  * @param {int} id - id of activity
+  * @param {string} name - name of activity
+  * @param {int} suggestedDuration - suggested duration of activity
+  * @param {int} placeId - id of place
+  * @param {string} category - category of the activity
+  * @return {Activity} - the activity created
+  */
+ router.put('/:id', async (req, res) => {
+   const activity = editActivity(parseInt(req.params.id), req.body.name, req.body.suggestedDuration, req.body.placeId, req.body.category);
+   res.status(200).json(activity).end();
+ });
+
+ /**
+  * Delete an activity.
+  * @name DELETE/api/activities/:id
+  * @param {int} id - id of activity
+  */
+ router.delete('/:id', async (req, res) => {
+   const activity = deleteActivity(parseInt(req.params.id));
+   res.status(200).json(activity).end();
+ });
+
+ /**
+ * Upvote an activity.
+ * @name POST/api/activities/upvote
+ * @param {string} id - id of the activity
+ * @param {string} userId - id of the user
+ * @return {Vote} - the vote
+ */
+router.post('/upvote', async (req, res) => {
+  let id = req.body.id;
+  let userId = req.body.userId;
+  let upvoters = Activities.getUpvoters(id);
+  let downvoters = Activities.getDownvoters(id);
+  if (upvoters.includes(id)) {
+    res.status(400).json({
+      error: `Activity already upvoted.`,
+    }).end();
+  }
+  elif (downvoters.includes(id)) {
+    let upvote = Activities.removeDownvote(id, userId);
+    res.status(200).json(upvote).end();
+  } else {
+    let upvote = Activities.upvote(id, userId);
+    res.status(200).json(upvote).end();
+  }
 });
+
+/**
+* Downvote an activity.
+* @name POST/api/activities/downvote
+* @param {string} id - id of the activity
+* @param {string} userId - id of the user
+* @return {Vote} - the vote
+*/
+router.post('/upvote', async (req, res) => {
+ let id = req.body.id;
+ let userId = req.body.userId;
+ let upvoters = Activities.getUpvoters(id);
+ let downvoters = Activities.getDownvoters(id);
+ if (downvoters.includes(id)) {
+   res.status(400).json({
+     error: `Activity already downvoted.`,
+   }).end();
+ }
+ elif (upvoters.includes(id)) {
+   let downvote = Activities.removeUpvote(id, userId);
+   res.status(200).json(downvote).end();
+ } else {
+   let downvote = Activities.downvote(id, userId);
+   res.status(200).json(downvote).end();
+ }
+});
+
+ // places TODO
+
+
+ // openHours TODO
+
 
 module.exports = router;
