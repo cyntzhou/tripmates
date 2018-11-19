@@ -265,6 +265,7 @@ class Login extends React.Component {
   }
 
   redirectToHomepage = () => {
+    console.log(this.props);
     this.props.history.push("/");
   }
 

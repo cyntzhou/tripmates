@@ -7,26 +7,19 @@ import Trip from "../Frontend/trip/trip.jsx";
 import Navbar from "../Frontend/components/navbar.jsx";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
+import { withCookies } from 'react-cookie';
 
-const Home = () => (
-  <div>
-    Home
-  </div>
-)
-export default class App extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isAuthenticated: false,
-      user: null
-    };
+    // this.state = {
+    //   isAuthenticated: false,
+    //   user: null
+    // };
   }
 
   userHasAuthenticated = (user) => {
-    this.setState({
-      isAuthenticated: true,
-      user: user
-    });
+    this.props.cookies.set('username', user.username, { path: '/' });
     console.log("User logged in");
     console.log(user);
   }
@@ -34,19 +27,16 @@ export default class App extends Component {
   logout = () => {
     axios.post('api/users/signout')
       .then(() => {
-        this.setState({
-          isAuthenticated: false,
-          user: null
-        })
+        this.props.cookies.remove("username");
+        console.log(this.props);
         // eventBus.$emit('signout-success', true);
       })
   }
 
   render () {
     const {
-      isAuthenticated,
-      user
-    } = this.state;
+      cookies
+    } = this.props;
 
     return (
       <Router>
@@ -61,17 +51,15 @@ export default class App extends Component {
             <Route exact path="/login" 
               render={(props) => <Login 
                 {...props}
+                cookies={cookies}
                 userHasAuthenticated={this.userHasAuthenticated} 
               />}
             />
 
             <Route exact path="/" 
               render={(props) => (
-                isAuthenticated ? (
-                  <Trips 
-                    {...props}
-                    user={user} 
-                  />
+                cookies.get("username") ? (
+                  <Redirect to="/trips"/>
                 ) : (
                   <Redirect to="/login"/>
                 )
@@ -79,10 +67,10 @@ export default class App extends Component {
             />
             <Route exact path="/trips" 
               render={(props) => (
-                isAuthenticated ? (
+                cookies.get("username") ? (
                   <Trips 
                     {...props}
-                    user={user} 
+                    cookies={cookies}
                   />
                 ) : (
                   <Redirect to="/login"/>
@@ -91,10 +79,10 @@ export default class App extends Component {
             />
             <Route exact path="/settings" 
               render={(props) => (
-                isAuthenticated ? (
+                cookies.get("username") ? (
                   <Settings 
                     {...props}
-                    user={user} 
+                    cookies={cookies}
                   />
                 ) : (
                   <Redirect to="/login"/>
@@ -103,10 +91,10 @@ export default class App extends Component {
             />
             <Route path="/trips/:id"
               render={(props) => (
-                isAuthenticated ? (
+                cookies.get("username") ? (
                 <Trip 
                   {...props}
-                  user={user} 
+                  cookies={cookies}
                 />
                 ) : (
                   <Redirect to="/login"/>
@@ -119,3 +107,5 @@ export default class App extends Component {
     )
   }
 }
+
+export default withCookies(App);
