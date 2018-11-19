@@ -1,25 +1,46 @@
 import React from "react";
+import axios from "axios";
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import 'react-day-picker/lib/style.css';
 import styles from "./create-trip.css";
 import Button from "../components/button.jsx";
+
+var moment = require('moment');
 
 class CreateNewTrip extends React.Component {
   constructor() {
     super();
     this.state = {
-      nameValue: '',
-      startValue: '',
-      endValue: ''
+      name: '',
+      startDate: '',
+      endDate: ''
     }
-    this.onChange = this.onChange.bind(this);
   }
 
-  onChange(event) {
+  setStartDate = (day) => {
+    const dateString = moment(day).format("YYYY-MM-DD");
     this.setState({
-      [event.target.name]: event.target.value
+      startDate: dateString,
     })
   }
 
-  onSave() {
+  setEndDate = (day) => {
+    const dateString = moment(day).format("YYYY-MM-DD");
+    this.setState({
+      endDate: dateString,
+    })
+  }
+
+  onSave = () => {
+    const {name, startDate, endDate} = this.state;
+    const bodyContext = {name, startDate, endDate};
+
+    axios.post('api/trips', bodyContext).then(res => {
+      this.props.getTrips();
+      this.props.hideModal();
+    }).catch(
+      err => console.log(err)
+    );
   }
 
   render() {
@@ -31,10 +52,10 @@ class CreateNewTrip extends React.Component {
             <input type="text" name="nameValue" onChange={this.onChange}/>
           </label>
           <label>Start Date:
-            <input type="text" name="startValue" placeholder="MM/DD/YYY" onChange={this.onChange}/>
+            <DayPickerInput onDayChange={this.setStartDate}/>
           </label>
           <label>End Date:
-            <input type="text" name="endValue" placeholder="MM/DD/YYY" onChange={this.onChange}/>
+            <DayPickerInput onDayChange={this.setEndDate}/>
           </label>
         </form>
         <Button label="Cancel" onButtonClick={this.props.hideModal}/>

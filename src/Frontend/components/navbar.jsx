@@ -30,7 +30,7 @@ class Navbar extends React.Component {
               onMouseEnter={this.toggleUserDropdown} 
               onMouseLeave={this.toggleUserDropdown}
             >
-              <i className="fa fa-user-circle"/>
+              <i className="fa fa-user-circle fa-2x"/>
             </a>
           </li>
         </ul>
