@@ -29,7 +29,7 @@ class ActivityItem extends React.Component {
         {this.state.expand && 
           <div className="details">
             <p>Category</p>
-            <i onClick={this.showEdit} className="fa fa-edit"/>
+            <i onClick={this.props.showEdit} className="fa fa-edit"/>
           </div>
         }
       </div>

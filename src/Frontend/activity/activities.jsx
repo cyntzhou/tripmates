@@ -5,22 +5,15 @@ import AddButton from "../components/add-button.jsx";
 
 
 class Activities extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      show: false
-    }
-  }
-
   render() {
     return (
       <div className="activities-container">
         <div className="activity-header">
           <h2>Activities</h2>
-          <AddButton className="add-btn" onButtonClick={this.props.showModal}/>
+          <AddButton className="add-btn" onButtonClick={this.props.showCreateModal}/>
         </div>
-        <ActivityItem activityName="actName here"/>
-        <ActivityItem activityName="actName2 here"/>
+        <ActivityItem showEditModal={this.props.showEditModal} activityName="actName here"/>
+        <ActivityItem showEditModal={this.props.showEditModal} activityName="actName2 here"/>
       </div>
     )
   }

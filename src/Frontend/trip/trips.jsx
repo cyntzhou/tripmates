@@ -20,7 +20,7 @@ class Trips extends React.Component {
     return (
       <div className="trips">
         {this.state.show ? (<CreateTripModal hideModal={this.hideModal}/>) : (
-          <React.Fragment>
+          <>
             <div className="trip-header">
               <h1>My Trips</h1>
               <AddButton onButtonClick={this.showModal}/>
@@ -33,7 +33,7 @@ class Trips extends React.Component {
                 tripId="idNumber"
               />
             </div>
-          </React.Fragment>
+          </>
         )}
       </div>
     )
