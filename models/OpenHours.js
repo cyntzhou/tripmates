@@ -30,6 +30,21 @@ class OpenHours {
     }
   }
 
+  /**
+   * Delete open hours for a place on a day (for editing hours)
+   * @param {int} placeId - id of place
+   * @param {int} day - day of week
+   */
+  static async deleteOpenHoursOnDay(placeId, day) {
+    try {
+      const sql = `DELETE FROM openHours WHERE placeId='${placeId}';`;
+      const response = await database.query(sql);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 }
 
 module.exports = OpenHours;
