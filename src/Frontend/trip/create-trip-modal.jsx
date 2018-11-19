@@ -5,10 +5,10 @@ import CreateNewTrip from "./create-new-trip.jsx";
 
 class CreateTripModal extends React.Component {
   render() {
-    const {hideModal} = this.props
+    const {hideModal, getTrips} = this.props
     return (
       <div className="modal-container">
-        <CreateNewTrip hideModal={hideModal}/>
+        <CreateNewTrip hideModal={hideModal} getTrips={this.getTrips}/>
         <JoinTrip hideModal={hideModal}/>
       </div>
     )

@@ -130,6 +130,14 @@ async function starItinerary(id) {
     .put(`/api/itineraries/${id}/star`);
 }
 
+/**
+ * @param {number} id - id of itinerary to unstar
+ */
+async function unstarItinerary(id) {
+  return requestApp
+    .put(`/api/itineraries/${id}/unstar`);
+}
+
 
 module.exports = {
   signin,
@@ -141,5 +149,6 @@ module.exports = {
   findMyTrips,
   deleteTrip,
   createItinerary,
-  starItinerary
+  starItinerary,
+  unstarItinerary
 };

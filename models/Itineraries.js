@@ -62,6 +62,23 @@ class Itineraries {
     }
   }
 
+  /**
+   * Unstar an Itinerary.
+   * @param {number} id - id of itinerary to unstar
+   * @return {Itinerary} - unstarred itinerary
+   */
+  static async unstarOne(id) {
+  	try {
+  		const sql = `UPDATE itinerary SET starred='0' WHERE id='${id}';`;
+      const updateResponse = await database.query(sql);
+      const selectSQL = `SELECT * FROM itinerary WHERE id='${id}';`;
+      const response = await database.query(selectSQL).then(res => res);
+      return response[0];
+  	} catch (error) {
+      throw error;
+    }
+  }
+
 }
 
 module.exports = Itineraries;
