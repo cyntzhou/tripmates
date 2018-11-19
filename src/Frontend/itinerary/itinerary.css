@@ -1,9 +1,39 @@
 .itinerary-container {
-  width: 70%;
-  height: 100vh;
+  width: 77%;
+  height: 82vh;
+  margin: 1%;
 }
 
 .itinerary-header {
   display: flex;
   justify-content: center;
+  height: 7vh;
+}
+
+.center-vertically {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.itinerary-header h2 {
+  margin-right: 1em;
+}
+
+.rbc-calendar {
+  background-color: var(--white);
+}
+
+.itinerary-dropdown-button {
+  width: 2em;
+  border-radius: 5%;
+  font-size: 1em;
+  color: var(--white);
+  background-color: var(--dark-green);
+  border: 0;
+  text-align: center;
+}
+
+.itinerary-dropdown-button:hover {
+  cursor: pointer;
 }

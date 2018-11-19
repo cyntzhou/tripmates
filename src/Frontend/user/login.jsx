@@ -7,7 +7,7 @@ const TextField = (props) => (
 );
 
 const SignupForm = () => (
-  <div className="column signup-form">
+  <div className="login-column signup-form">
     <h1>New to Tripmates?</h1>
     <TextField placeholder="username"/>
     <TextField placeholder="password"/>
@@ -20,7 +20,7 @@ const SignupForm = () => (
 );
 
 const LoginForm = () => (
-  <div className="column login-form">
+  <div className="login-column login-form">
     <h1>Log in to your account</h1>
     <TextField placeholder="username"/>
     <TextField placeholder="password"/>
@@ -36,9 +36,12 @@ const LoginForm = () => (
 class Login extends React.Component {
   render() {
     return (
-      <div className="row">
-        <LoginForm/>
-        <SignupForm/>
+      <div className="login">
+        <h2>Tripmates</h2>
+        <div className="login-forms">
+          <LoginForm/>
+          <SignupForm/>
+        </div>
       </div>
     )
   }

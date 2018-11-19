@@ -1,16 +1,21 @@
-* {
+.login {
+  text-align: center;
+}
+
+.login-forms {
+  display: flex;
   box-sizing: border-box;
 }
 
-.row {
-  display: flex;
-}
-
-/* Create two equal columns that sits next to each other */
-.column {
+.login-column {
   flex: 50%;
   padding: 10px;
-  height: 300px; /* Should be removed. Only for demonstration */
+  height: 60vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .login-form {

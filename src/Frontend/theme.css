@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Arimo');
+
 :root {
   --dark-brown: #505050;
   --dark-green: #1F9792;
@@ -10,4 +12,6 @@
 
 body {
   background-color: var(--light-green);
+  font-family: Arimo;
+  margin: 0;
 }
