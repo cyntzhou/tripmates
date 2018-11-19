@@ -10,24 +10,29 @@ class Trip extends React.Component {
     super();
     this.state = {
       showCreateActivity: false,
-      showEditActivity: false
+      showEditActivity: false,
+      showCreateItinerary: false
     }
   }
 
-  showCreateModal = () => {
+  showCreateActivityModal = () => {
     this.setState({showCreateActivity: true});
   }
 
-  showEditModal = () => {
+  showEditActivityModal = () => {
     this.setState({showEditActivity: true});
   }
 
-  hideCreateModal = () => {
+  hideCreateActivityModal = () => {
     this.setState({showCreateActivity: false});
   }
 
-  hideEditModal = () => {
+  hideEditActivityModal = () => {
     this.setState({showEditActivity: false});
+  }
+
+  toggleCreateItineraryModal = () => {
+    this.setState({showCreateItinerary: !this.state.showCreateItinerary});
   }
 
   render() {
@@ -44,10 +49,12 @@ class Trip extends React.Component {
       return (
         <div className="trip-container">
           <Activities 
-            showCreateModal={this.showCreateModal}
-            showEditModal={this.showEditModal}
+            showCreateModal={this.showCreateActivityModal}
+            showEditModal={this.showEditActivityModal}
           />
-          <Itinerary/>
+          <Itinerary
+            toggleModal={this.toggleCreateItineraryModal}
+          />
         </div>
       )
     }
