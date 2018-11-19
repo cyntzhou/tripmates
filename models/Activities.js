@@ -270,15 +270,15 @@ class Activities {
 
   /**
    * Find activities by category.
-   * @param {int} id - id of activity
    * @param {int} tripId - trip id
+   * @param {string} category - category of activities to filter by
    * @return {Activity[] | undefined} - array of activities
    */
-  static async filterByCategory(id, tripId, category) {
+  static async filterByCategory(tripId, category) {
     let activities = [];
 
     try {
-      const sql = `SELECT * FROM activity WHERE id='${id}' AND tripId='${tripId}' AND category='${category}';`;
+      const sql = `SELECT * FROM activity WHERE tripId='${tripId}' AND category='${category}';`;
       const response = await database.query(sql);
       for (let i = 0; i < response.length; i++) {
         let a = response[i];

@@ -57,7 +57,7 @@ class Places {
   /**
    * Delete a place by id.
    * @param {int} id - id of place
-   * @return {Activity | undefined} - found Activity
+   * @return {Place} - place
    */
   static async deletePlace(id) {
     try {
