@@ -1,16 +1,5 @@
 const database = require('../database');
 
-// Janice notes (can delete later)
-// x Create an activity
-// x Get an activity
-// x Get all activities
-// x Edit an activity
-// x Delete an activity
-
-// x Upvote an activity
-// x Downvote an activity
-// x Filter activities by category
-
 /**
  * @typedef Activity
  * @prop {int} id - id of activity
@@ -34,7 +23,6 @@ class Activities {
    * @param {string} category - category of the activity
    */
   static async addActivity(name, tripId, suggestedDuration=null, placeId=null, category=null) {
-    let tripID = await Trips.getCurrentTripId().then(res => res);
     try {
       const sql = `INSERT INTO activity (name, suggestedDuration, placeId, tripId, category) VALUES ('${name}', '${suggestedDuration}', '${placeId}', '${tripId}', '${category}');`;
       const response = await database.query(sql);
@@ -56,10 +44,32 @@ class Activities {
       if (response.length === 0) {
         return undefined;
       }
-      return response;
     } catch (error) {
       throw error;
     }
+
+    let a = response[0];
+
+    // activity
+    let id = a.id;
+    let name = a.name;
+    let suggestedDir = a.suggestedDir;
+    let category = a.category;
+    let placeId = a.placeId;
+
+    // place
+    const address_query = `SELECT address FROM place WHERE placeId='${placeId}';`;
+    let address = address_query[0].address;
+
+    // openHours
+    const openHours = `SELECT * FROM openHours WHERE placeId='${placeId}';`;
+
+    // votes
+    let votes = numVotes(id);
+    let upvoters = getUpvoters(id);
+    let downvoters = getDownvoters(id);
+    }
+    return { id, name, suggestedDir, category, placeId, address, openHours, votes, upvoters, downvoters };
   }
 
   /**
@@ -79,14 +89,27 @@ class Activities {
     }
     for (let i = 0; i < activity_responses.length; i++) {
       let a = activity_responses[i];
+
+      // activity
       let id = a.id;
       let name = a.name;
       let suggestedDir = a.suggestedDir;
       let category = a.category;
-      // TODO places info?
-      // TODO votes info?
+      let placeId = a.placeId;
+
+      // place
+      const address_query = `SELECT address FROM place WHERE placeId='${placeId}';`;
+      let address = address_query[0].address;
+
+      // openHours
+      const openHours = `SELECT * FROM openHours WHERE placeId='${placeId}';`;
+
+      // votes
+      let votes = numVotes(id);
+      let upvoters = getUpvoters(id);
+      let downvoters = getDownvoters(id);
       }
-      all_activities.push({ id, name, suggestedDir, category });
+      all_activities.push({ id, name, suggestedDir, category, placeId, address, openHours, votes, upvoters, downvoters });
     }
     return all_activities;
   }
@@ -113,8 +136,7 @@ class Activities {
    * @param {int} placeId - id of place
    * @param {string} category - category of the activity
    */
-  static async editActivity(id, name=null, tripId=null, suggestedDuration=null, placeId=null, category=null) {
-    let tripID = await Trips.getCurrentTripId().then(res => res);
+  static async editActivity(id, name=null, suggestedDuration=null, placeId=null, category=null) {
     try {
       const sql = `UPDATE activity SET name='${name}', suggestedDuration='${suggestedDuration}', placeId='${placeId}', tripId='${tripId}', category='${category}' WHERE id='${id}';`;
       const response = await database.query(sql);
@@ -185,7 +207,7 @@ class Activities {
       const sql = `SELECT userId FROM activityVotes WHERE id='${id}' AND value='1';`;
       const response = await database.query(sql);
       for (let i = 0; i < response.length; i++) {
-        upvoters.push(response[i]);
+        upvoters.push(response[i].userId);
       }
       return upvoters;
     } catch (error) {
@@ -204,7 +226,7 @@ class Activities {
       const sql = `SELECT userId FROM activityVotes WHERE id='${id}' AND value='-1';`;
       const response = await database.query(sql);
       for (let i = 0; i < response.length; i++) {
-        downvoters.push(response[i]);
+        downvoters.push(response[i].userId);
       }
       return downvoters;
     } catch (error) {
@@ -259,12 +281,27 @@ class Activities {
       const response = await database.query(sql);
       for (let i = 0; i < response.length; i++) {
         let a = response[i];
+
+        // activity
         let name = a.name;
         let suggestedDir = a.suggestedDir;
         let category = a.category;
-        // TODO places info
-        // TODO votes info
-        activities.push({ name, suggestedDir, category });
+        let placeId = a.placeId;
+
+        // place
+        const address_query = `SELECT address FROM place WHERE placeId='${placeId}';`;
+        let address = address_query[0].address;
+
+        // openHours
+        const openHours = `SELECT * FROM openHours WHERE placeId='${placeId}';`;
+
+        // votes
+        let votes = numVotes(id);
+        let upvoters = getUpvoters(id);
+        let downvoters = getDownvoters(id);
+        }
+
+        activities.push({ id, name, suggestedDir, category, placeId, address, openHours, votes, upvoters, downvoters });
       }
       return activities;
     } catch (error) {

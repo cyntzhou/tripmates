@@ -15,9 +15,6 @@ const router = express.Router();
 // Downvote an activity
 // Filter activities by category
 
-// Create a place
-// Edit a place
-
 /**
  * Create an activity.
  * @name POST/api/activities
