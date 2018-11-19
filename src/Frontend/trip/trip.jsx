@@ -12,60 +12,52 @@ class Trip extends React.Component {
     this.state = {
       showCreateActivity: false,
       showEditActivity: false,
-      showEditTrip: false
+      showEditTrip: false,
+      showCreateItinerary: false
     }
   }
 
-  showCreateModal = () => {
-    this.setState({showCreateActivity: true});
+  toggleCreateActivityModal = () => {
+    this.setState({showCreateActivity: !this.state.showCreateActivity});
   }
-
-  showEditModal = () => {
-    this.setState({showEditActivity: true});
+  toggleEditActivityModal = () => {
+    this.setState({showEditActivity: !this.state.showEditActivity});
   }
-
-  showEditTripModal = () => {
-    this.setState({showEditTrip: true});
+  toggleEditTripModal = () => {
+    this.setState({showEditTrip: !this.state.showEditTrip});
   }
-
-  hideCreateModal = () => {
-    this.setState({showCreateActivity: false});
-  }
-
-  hideEditModal = () => {
-    this.setState({showEditActivity: false});
-  }
-
-  hideEditTripModal = () => {
-    this.setState({showEditTrip: false});
+  toggleCreateItineraryModal = () => {
+    this.setState({showCreateItinerary: !this.state.showCreateItinerary});
   }
 
   render() {
     var tripId = this.props.match.params.id;
     if (this.state.showCreateActivity) {
       return (
-        <CreateActivityModal hideCreateModal={this.hideCreateModal}/>
+        <CreateActivityModal hideCreateModal={this.toggleCreateActivityModal}/>
       )
     } else if (this.state.showEditActivity) {
       return (
-        <EditActivityModal hideEditModal={this.hideEditModal} tripId={tripId}/>
+        <EditActivityModal hideEditModal={this.toggleEditActivityModal} tripId={tripId}/>
       )
     } else if (this.state.showEditTrip) {
       return (
-        <EditTripModal hideModal={this.hideEditTripModal}/>
+        <EditTripModal hideModal={this.toggleEditTripModal}/>
       )
     } else {
       return (
         <div className="trip-container">
           <div className="edit-trip">
             <p>Click to edit trip: </p>
-            <i onClick={this.showEditTripModal} className="fa fa-edit"/>
+            <i onClick={this.toggleEditTripModal} className="fa fa-edit"/>
           </div>
           <Activities 
-            showCreateModal={this.showCreateModal}
-            showEditModal={this.showEditModal}
+            showCreateModal={this.toggleCreateActivityModal}
+            showEditModal={this.toggleEditActivityModal}
           />
-          <Itinerary/>
+          <Itinerary
+            toggleModal={this.toggleCreateItineraryModal}
+          />
         </div>
       )
     }

@@ -2,6 +2,7 @@ import React from "react";
 import moment from 'moment';
 import styles from "./itinerary.css";
 import Calendar from './calendar.jsx';
+import AddButton from "../components/add-button.jsx";
 
 const existingEvents = [
   {
@@ -17,25 +18,70 @@ class Itinerary extends React.Component {
     super(props)
     this.state = {
       existingEvents: existingEvents,
+      showDropdown: false
     }
+  }
+
+  toggleDropdown = () => {
+    this.setState({
+      showDropdown: !this.state.showDropdown
+    });
   }
 
   render() {
     const {
-      existingEvents
+      existingEvents,
+      showDropdown
     } = this.state;
+
+    const {
+      toggleModal
+    } = this.props;
+
+    const itineraries = [
+      {
+        name: "Itinerary 1"
+      },
+      {
+        name: "Itinerary 2"
+      }
+    ];
+
+    const itineraryComponents = itineraries.map(itinerary => {
+      return (
+        <div className="itinerary-item-container">
+          <h3>{itinerary.name}</h3>
+        </div>
+      )
+    });
+
     return (
       <div className="itinerary-container">
         <div className="itinerary-header">
-          <span className="center-vertically">
+
+          <span className="itinerary-name center-vertically">
             <h2>Itinerary</h2>
           </span>
-          <span className="center-vertically">
-            <button className="itinerary-dropdown-button">
+
+          <span className="itinerary-edit center-vertically">
+            <i onClick={this.toggleEditUsername} className="fa fa-edit fa-lg"/>
+          </span>
+
+          <span className="itinerary-caret center-vertically">
+            <button className="itinerary-dropdown-button" onClick={this.toggleDropdown}>
               <i className="fa fa-caret-down" aria-hidden="true"/>
             </button>
+
+            {showDropdown &&
+              <div className="itinerary-dropdown">
+                {itineraryComponents}
+                <AddButton onButtonClick={toggleModal}/>
+              </div>
+            }
           </span>
+
         </div>
+
         <Calendar
           existingEvents={existingEvents}
         />
