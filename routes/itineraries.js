@@ -57,4 +57,29 @@ router.put('/:id/star', async (req, res) => {
 	}
 });
 
+/**
+ * Unstar an itinerary
+ * @name PUT/api/itineraries/:id/unstar
+ * :id is the id of the itinerary to unstar
+ * @return {Itinerary} - the unstarred itinerary
+ * @throws {401} - if user not logged in
+ * @throws {403} - if user is not a member of trip
+ */
+router.put('/:id/unstar', async (req, res) => {
+	if (req.session.name === undefined) {
+		res.status(401).json({
+	      error: `Must be logged in to unstar itinerary.`,
+	    }).end();
+	} else {
+		if (Trips.checkMembership(req.session.name, req.params.id)) {
+			const itin = await Itineraries.unstarOne(req.params.id);
+			res.status(200).json(itin).end();
+		} else {
+			res.status(403).json({
+				error: `Must be member of trip to unstar itinerary.`,
+			}).end();
+		}
+	}
+});
+
 module.exports = router;
