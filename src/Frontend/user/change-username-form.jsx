@@ -53,11 +53,15 @@ class ChangeUsernameForm extends React.Component {
       return;
     }
     
-    const bodyContent = { username: username };
+    const bodyContent = { username: username, oldPassword: password };
     axios
       .put(`/api/users/${userId}/username`, bodyContent)
       .then(res => {
-        this.setState({ showSuccessMessage: true });
+        this.setState({ 
+          errors: [],
+          showSuccessMessage: true 
+        });
+        this.props.usernameChanged(username);
         // eventBus.$emit('change-username-success', true);
       })
       .catch(err => {

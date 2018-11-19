@@ -66,12 +66,15 @@ class ChangePasswordForm extends React.Component {
       return;
     }
     
-    const bodyContent = { password: newPassword };
+    const bodyContent = { password: newPassword, oldPassword: currentPassword };
     axios
       .put(`/api/users/${userId}/password`, bodyContent)
       .then(res => {
         console.log(res);
-        this.setState({ showSuccessMessage: true });
+        this.setState({ 
+          errors: [],
+          showSuccessMessage: true 
+        });
         // eventBus.$emit('change-username-success', true);
       })
       .catch(err => {
