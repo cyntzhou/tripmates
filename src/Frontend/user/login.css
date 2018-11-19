@@ -39,3 +39,16 @@
 .login-button {
   margin: .5em;
 }
+
+.login-error-message {
+  color: red;
+}
+
+.login-success-message {
+  color: var(--dark-green);
+}
+
+.login ul {
+  list-style-type: none;
+  text-align: left;
+}
