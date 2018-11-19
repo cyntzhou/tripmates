@@ -27,5 +27,6 @@ app.use('/api/trips', tripsRouter);
 app.use('/api/itineraries', itinerariesRouter);
 app.use('/api/events', eventsRouter);
 app.use('/api/activities', activitiesRouter);
+app.use('/api/places', activitiesRouter);
 
 module.exports = app;

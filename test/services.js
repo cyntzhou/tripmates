@@ -166,6 +166,7 @@ async function deleteEvent(id) {
 }
 
 // activities
+
 /**
  * @param {string} address - address of activity
  */
