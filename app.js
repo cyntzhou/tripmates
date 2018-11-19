@@ -8,6 +8,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const tripsRouter = require('./routes/trips');
 const itinerariesRouter = require('./routes/itineraries');
+const eventsRouter = require('./routes/events');
 
 const app = express();
 
@@ -23,5 +24,6 @@ app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/trips', tripsRouter);
 app.use('/api/itineraries', itinerariesRouter);
+app.use('/api/events', eventsRouter);
 
 module.exports = app;

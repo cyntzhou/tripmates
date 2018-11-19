@@ -9,7 +9,8 @@ const {
   deleteTrip,
   createItinerary,
   starItinerary,
-  unstarItinerary
+  unstarItinerary,
+  createActivity
 } = require('./services');
 
 const database = require('../database.js');
@@ -113,6 +114,35 @@ describe('Test /api/itineraries', () => {
 		expect(unstarResponse.body.name).toBe(name);
 		expect(unstarResponse.body.tripId).toBe(tripId);
 		expect(unstarResponse.body.starred).toBe(0);
+	});
+
+	// TODO:  Delete this later
+	test.skip('Create an activity using POST /api/activities', async () => {
+		const userResponse = await signin(user);
+		expect(userResponse.statusCode).toBe(200);
+
+		const tripResponse = await createTrip(trip);
+		expect(tripResponse.statusCode).toBe(200);
+		const tripId = tripResponse.body.id;
+
+		const name = "My itinerary";
+		const itin = {
+			name: name,
+			tripId: tripId
+		};
+		const itinResponse = await createItinerary(itin);
+		expect(itinResponse.statusCode).toBe(200);
+
+		const activity = {
+			name: "My activity",
+			tripId: tripId,
+			suggestedDuration: null,
+			placeId: null,
+			category: null
+		};
+		const activityResponse = await createActivity(activity);
+		expect(activityResponse.statusCode).toBe(200);
+		expect(activityResponse.body.name).toBe("My activity");
 	});
 
 });
