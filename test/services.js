@@ -118,8 +118,54 @@ async function starItinerary(id) {
     .put(`/api/itineraries/${id}/star`);
 }
 
-// activities
+/**
+ * @param {number} id - id of itinerary to unstar
+ */
+async function unstarItinerary(id) {
+  return requestApp
+    .put(`/api/itineraries/${id}/unstar`);
+}
 
+// events
+
+/**
+ * @param {object} event
+ * {
+ *    itineraryId: number
+ *    activityId: number
+ *    start: string
+ *    end: string
+ * }
+ */
+async function createEvent(event) {
+  return requestApp
+    .post(`/api/events`)
+    .send(event);
+}
+
+/**
+ * @param {number} id - id of event to update
+ * @param {object} newTimes
+ * {
+ *    newStart: string
+ *    newEnd: string
+ * }
+ */
+async function updateEvent(id, newTimes) {
+  return requestApp
+    .put(`/api/events/${id}`)
+    .send(newTimes);
+}
+
+/**
+ * @param {number} id - id of event to delete
+ */
+async function deleteEvent(id) {
+  return requestApp
+    .delete(`/api/events/${id}`);
+}
+
+// activities
 /**
  * @param {string} address - address of activity
  */
@@ -156,7 +202,7 @@ async function addHours(hours, placeId) {
  */
 async function createActivity(activity) {
   return requestApp
-    .post('/api/activities')
+    .post(`/api/activities`)
     .send(activity);
 }
 
@@ -205,6 +251,10 @@ module.exports = {
   deleteTrip,
   createItinerary,
   starItinerary,
+  unstarItinerary,
+  createEvent,
+  updateEvent,
+  deleteEvent,
   createPlace,
   addHours,
   createActivity,

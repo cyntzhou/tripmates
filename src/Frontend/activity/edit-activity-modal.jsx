@@ -1,35 +1,10 @@
 import React from "react";
-import styles from "./create-activity.css";
-import Button from "../components/button.jsx";
 
-class CreateActivityModal extends React.Component{
-  constructor() {
-    super()
-    this.state = {
-      nameValue: '',
-      categoryValue: '',
-      suggestedHoursValue: '',
-      suggestedMinsValue: '',
-      addressValue: '',
-      openHours: []
-    }
-    this.onChange = this.onChange.bind(this);
-  }
-
-  onChange(event) {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  }
-
-  onSave() {
-
-  }
-
+class EditActivityModal extends React.Component {
   render() {
     return (
       <div className="modal-container">
-        <h3>Create Activity</h3>
+        <h3>Edit Activity</h3>
         <form>
           <label>Activity Name:
             <input type="text" name="nameValue" onChange={this.onChange}/>
@@ -51,11 +26,11 @@ class CreateActivityModal extends React.Component{
         </form>
         <div className="btns-container">
           <Button label="Cancel" onButtonClick={this.props.hideCreateModal}/>
-          <Button label="Create" onButtonClick={this.onSave}/>
+          <Button label="Save" onButtonClick={this.onSave}/>
         </div>
       </div>
     )
   }
 }
 
-export default CreateActivityModal;
+export default EditActivityModal;

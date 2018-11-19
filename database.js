@@ -94,10 +94,10 @@ class Database {
     await this.query(`CREATE TABLE IF NOT EXISTS event (
     	id INT PRIMARY KEY AUTO_INCREMENT,
     	activityId INT REFERENCES activity(id),
-    	startDateTime DATETIME NOT NULL,
-    	endDateTime DATETIME NOT NULL,
+    	startDateTime VARCHAR(16) NOT NULL,
+    	endDateTime VARCHAR(16) NOT NULL,
     	itineraryId INT REFERENCES itinerary(id)
-    );`
+    );` // startDateTime and endDateTime formatted as YYYY-MM-DD HH:MM
     ).catch(err => console.log(err));
 
     await this.query(`CREATE TABLE IF NOT EXISTS activityVotes (

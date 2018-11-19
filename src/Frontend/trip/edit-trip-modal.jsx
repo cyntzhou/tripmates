@@ -1,26 +1,49 @@
 import React from "react";
+import axios from "axios";
+import {withRouter} from "react-router-dom";
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import 'react-day-picker/lib/style.css';
 import styles from "./edit-trip.css";
 import Button from "../components/button.jsx";
 
+var moment = require('moment');
+
 class EditTripModal extends React.Component {
-  constructor(props) {
+  constructor() {
     super();
     this.state = {
-      nameValue: this.props.tripName,
-      startValue: '',
-      endValue: ''
+      name: '',
+      startDate: '',
+      endDate: ''
     }
-
-    // this.onChange = this.onChange.bind(this);
   }
-
-  onChange(event) {
+  setStartDate = (day) => {
+    const dateString = moment(day).format("YYYY-MM-DD");
     this.setState({
-      [event.target.name]: event.target.value
+      startDate: dateString,
     })
   }
 
-  onSave() {
+  setEndDate = (day) => {
+    const dateString = moment(day).format("YYYY-MM-DD");
+    this.setState({
+      endDate: dateString,
+    })
+  }
+
+  onSave = () => {
+    const {name, startDate, endDate} = this.state;
+    const bodyContext = {name, startDate, endDate};
+
+    axios.put(`api/trips/${this.props.tripId}`, bodyContext).then(res => {
+      this.props.hideModal();
+    }).catch(err => console.log(err))
+  }
+
+  onDelete = () => {
+    axios.delete(`api/trips/${this.props.tripId}`).then(() => {
+      this.props.history.push('/trips');
+    }).catch(err => console.log(err))
   }
 
   render() {
@@ -35,13 +58,13 @@ class EditTripModal extends React.Component {
         <h3>Edit Trip Details</h3>
         <form>
           <label>Trip Name:
-            <input type="text" name="nameValue" placeholder={tripName} onChange={this.onChange}/>
+            <input type="text" name="nameValue" onChange={this.onChange}/>
           </label>
           <label>Start Date:
-            <input type="text" name="startValue" placeholder={tripDate} onChange={this.onChange}/>
+            <DayPickerInput onDayChange={this.setStartDate}/>
           </label>
           <label>End Date:
-            <input type="text" name="endValue" placeholder={tripDate} onChange={this.onChange}/>
+            <DayPickerInput onDayChange={this.setEndDate}/>
           </label>
         </form>
         <div className="trip-users">
@@ -50,9 +73,10 @@ class EditTripModal extends React.Component {
         </div>
         <Button label="Cancel" onButtonClick={hideModal}/>
         <Button label="Save" onButtonClick={this.onSave}/>
+        <Button label="Delete" onButtonClick={this.onDelete}/>
       </div>
     )
   }
 }
 
-export default EditTripModal;
+export default withRouter(EditTripModal);

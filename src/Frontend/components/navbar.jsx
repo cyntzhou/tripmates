@@ -14,6 +14,11 @@ class Navbar extends React.Component {
     ));
   }
 
+  handleLogout = () => {
+    this.props.logout();
+    // this.props.history.push("/");
+  }
+
   render() {
     const {showUserDropdown} = this.state;
     return (
@@ -30,7 +35,7 @@ class Navbar extends React.Component {
               onMouseEnter={this.toggleUserDropdown} 
               onMouseLeave={this.toggleUserDropdown}
             >
-              <i className="fa fa-user-circle"/>
+              <i className="fa fa-user-circle fa-2x"/>
             </a>
           </li>
         </ul>
@@ -46,7 +51,7 @@ class Navbar extends React.Component {
             <Link to="/settings">
               Settings
             </Link>
-            <a>Logout</a>
+            <a onClick={this.handleLogout}>Logout</a>
           </div>
         }
 
