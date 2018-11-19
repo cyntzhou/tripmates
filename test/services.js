@@ -191,6 +191,20 @@ async function deleteEvent(id) {
     .delete(`/api/events/${id}`);
 }
 
+/**
+ * @param {number} id - id of itinerary to rename
+ * @param {object} newName
+ * {
+ *    newName: string
+ * }
+ */
+async function renameItinerary(id, newName) {
+  console.log("renameItinerary called with newName " + newName);
+  return requestApp
+    .put(`/api/itineraries/${id}/name`)
+    .send(newName);
+}
+
 
 module.exports = {
   signin,
@@ -207,5 +221,6 @@ module.exports = {
   createActivity,
   createEvent,
   updateEvent,
-  deleteEvent
+  deleteEvent,
+  renameItinerary
 };

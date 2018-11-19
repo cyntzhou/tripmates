@@ -35,6 +35,8 @@ class Database {
   }
 
   async createTables() {
+    // TODO: maybe we should make the names for things longer? (20 chars is pretty short)
+    // Also, the front end should prevent the user from making names longer than the char max
 
     await this.query(`CREATE TABLE IF NOT EXISTS user (
       id INT PRIMARY KEY AUTO_INCREMENT,

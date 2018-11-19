@@ -46,7 +46,8 @@ router.put('/:id/star', async (req, res) => {
 	      error: `Must be logged in to star itinerary.`,
 	    }).end();
 	} else {
-		if (Trips.checkMembership(req.session.name, req.params.id)) {
+		const itinerary = await Itineraries.findOneById(req.params.id);
+		if (Trips.checkMembership(req.session.name, itinerary.tripId)) {
 			const itin = await Itineraries.starOne(req.params.id);
 			res.status(200).json(itin).end();
 		} else {
@@ -71,12 +72,41 @@ router.put('/:id/unstar', async (req, res) => {
 	      error: `Must be logged in to unstar itinerary.`,
 	    }).end();
 	} else {
-		if (Trips.checkMembership(req.session.name, req.params.id)) {
+		const itinerary = await Itineraries.findOneById(req.params.id);
+		if (Trips.checkMembership(req.session.name, itinerary.tripId)) {
 			const itin = await Itineraries.unstarOne(req.params.id);
 			res.status(200).json(itin).end();
 		} else {
 			res.status(403).json({
 				error: `Must be member of trip to unstar itinerary.`,
+			}).end();
+		}
+	}
+});
+
+/**
+ * Change the name of an itinerary
+ * @name PUT/api/itineraries/:id/name
+ * :id is the id of the itinerary to rename
+ * @param {string} newName - new name to change to
+ * @return {Itinerary} - the renamed itinerary
+ * @throws {401} - if user not logged in
+ * @throws {403} - if user is not a member of trip
+ */
+router.put('/:id/name', async (req, res) => {
+	console.log("/api/itineraries/:id/name called with newName " + req.body.newName);
+	if (req.session.name === undefined) {
+		res.status(401).json({
+	      error: `Must be logged in to rename itinerary.`,
+	    }).end();
+	} else {
+		const itinerary = await Itineraries.findOneById(req.params.id);
+		if (Trips.checkMembership(req.session.name, itinerary.tripId)) {
+			const itin = await Itineraries.updateNameOne(req.params.id, req.body.newName);
+			res.status(200).json(itin).end();
+		} else {
+			res.status(403).json({
+				error: `Must be member of trip to rename itinerary.`,
 			}).end();
 		}
 	}
