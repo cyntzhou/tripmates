@@ -11,7 +11,7 @@ const router = express.Router();
  * @param {string} name - trip name
  * @param {date} startDate - start date of trip
  * @param {date} endDate - end date of trip
- * @return {User} - the created user
+ * @return {Trip} - the created trip
  * @throws {401} - if user not logged in
  * @throws {400} - if date range is invalid
  */
@@ -47,10 +47,9 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
 	if (req.session.name === undefined) {
 		res.status(401).json({
-	      error: `Must be logged in to change trip name.`,
+	      error: `Must be logged in to change trip details.`,
 	    }).end();
 	} else {
-		let user = await Users.findOneById(req.session.name);
 		if (Trips.checkMembership(req.session.name, req.params.id)) {
 			if (Trips.validDateRange(req.body.newStart, req.body.newEnd)) {
 				const trip = await Trips.updateOne(req.params.id, req.body.newName, req.body.newStart, req.body.newEnd);
@@ -62,7 +61,7 @@ router.put('/:id', async (req, res) => {
 			}
 		} else {
 			res.status(403).json({
-				error: `Must be member of trip to change trip name.`,
+				error: `Must be member of trip to change trip details.`,
 			}).end();
 		}
 	}

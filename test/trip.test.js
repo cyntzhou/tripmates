@@ -3,10 +3,10 @@ const {
 	signout,
 	createUser,
 	deleteUser,
-  createTrip,
-  updateTrip,
-  findMyTrips,
-  deleteTrip
+	createTrip,
+	updateTrip,
+	findMyTrips,
+	deleteTrip
 } = require('./services');
 
 const database = require('../database.js');
@@ -25,7 +25,6 @@ describe('Test /api/trips', () => {
 
 	beforeAll(async () => {
 		await database.createTables();
-		// await createUser(user);
 	});
 
 	beforeEach(async () => {
@@ -37,7 +36,7 @@ describe('Test /api/trips', () => {
 	});
 
 	afterAll(async () => {
-		// await database.clearTables();
+		await database.clearTables();
 	});
 
 	// TODO: test the situations in which you should get errors (not logged in, not member of trip, all the different cases for dates, etc.)

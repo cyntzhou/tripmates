@@ -3,7 +3,7 @@ const database = require('../database');
 const sanitizer = require('sanitizer');
 
 /**
- * @class Trip
+ * @class Trips
  * Stores all Trips.
  * Note that all methods are static.
  * Wherever you import this class, you will be accessing the same data.

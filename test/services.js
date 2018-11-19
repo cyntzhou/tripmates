@@ -109,6 +109,27 @@ async function deleteTrip(id) {
     .delete(`/api/trips/${id}`);
 }
 
+/**
+ * @param {object} itin
+ * {
+ *    name: string
+ *    tripId: number
+ * }
+ */
+async function createItinerary(itin) {
+  return requestApp
+    .post(`/api/itineraries`)
+    .send(itin);
+}
+
+/**
+ * @param {number} id - id of itinerary to star
+ */
+async function starItinerary(id) {
+  return requestApp
+    .put(`/api/itineraries/${id}/star`);
+}
+
 
 module.exports = {
   signin,
@@ -118,5 +139,7 @@ module.exports = {
   createTrip,
   updateTrip,
   findMyTrips,
-  deleteTrip
+  deleteTrip,
+  createItinerary,
+  starItinerary
 };
