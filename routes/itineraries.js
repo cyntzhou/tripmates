@@ -94,7 +94,6 @@ router.put('/:id/unstar', async (req, res) => {
  * @throws {403} - if user is not a member of trip
  */
 router.put('/:id/name', async (req, res) => {
-	console.log("/api/itineraries/:id/name called with newName " + req.body.newName);
 	if (req.session.name === undefined) {
 		res.status(401).json({
 	      error: `Must be logged in to rename itinerary.`,

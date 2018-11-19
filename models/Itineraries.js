@@ -87,7 +87,6 @@ class Itineraries {
    */
   static async updateNameOne(id, newName) {
   	try {
-  		console.log("updateNameOne called with name " + newName);
   		const sanitizedName = sanitizer.sanitize(newName);
   		const sql = `UPDATE itinerary SET name='${sanitizedName}' WHERE id='${id}';`;
       const updateResponse = await database.query(sql);

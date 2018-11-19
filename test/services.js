@@ -134,7 +134,6 @@ async function unstarItinerary(id) {
  * }
  */
 async function renameItinerary(id, newName) {
-  console.log("renameItinerary called with newName " + newName);
   return requestApp
     .put(`/api/itineraries/${id}/name`)
     .send(newName);

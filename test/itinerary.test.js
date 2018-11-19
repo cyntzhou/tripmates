@@ -117,35 +117,6 @@ describe('Test /api/itineraries', () => {
 		expect(unstarResponse.body.starred).toBe(0);
 	});
 
-	// TODO:  Delete this later
-	test.skip('Create an activity using POST /api/activities', async () => {
-		const userResponse = await signin(user);
-		expect(userResponse.statusCode).toBe(200);
-
-		const tripResponse = await createTrip(trip);
-		expect(tripResponse.statusCode).toBe(200);
-		const tripId = tripResponse.body.id;
-
-		const name = "My itinerary";
-		const itin = {
-			name: name,
-			tripId: tripId
-		};
-		const itinResponse = await createItinerary(itin);
-		expect(itinResponse.statusCode).toBe(200);
-
-		const activity = {
-			name: "My activity",
-			tripId: tripId,
-			suggestedDuration: null,
-			placeId: null,
-			category: null
-		};
-		const activityResponse = await createActivity(activity);
-		expect(activityResponse.statusCode).toBe(200);
-		expect(activityResponse.body.name).toBe("My activity");
-	});
-
 	test('Rename an itinerary using PUT /api/itineraries/:id/name', async () => {
 		const userResponse = await signin(user);
 		expect(userResponse.statusCode).toBe(200);
@@ -166,7 +137,6 @@ describe('Test /api/itineraries', () => {
 			newName: "Newly named itin"
 		};
 		const renameResponse = await renameItinerary(createResponse.body.id, newName);
-		console.log(renameResponse.body);
 
 		expect(renameResponse.statusCode).toBe(200);
 		expect(renameResponse.body.name).toBe(newName.newName);
