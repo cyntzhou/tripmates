@@ -1,10 +1,9 @@
 import React from "react";
 import Button from "../components/button.jsx";
+import TextField from "../components/textfield.jsx";
+import ChangeUsernameForm from "./change-username-form.jsx";
+import ChangePasswordForm from "./change-password-form.jsx";
 import styles from "./settings.css";
-
-const TextField = (props) => (
-  <input className="login-form-textfield" type="text" placeholder={props.placeholder}/>
-);
 
 class Settings extends React.Component {
   constructor(props) {
@@ -15,54 +14,6 @@ class Settings extends React.Component {
     };
   }
   
-  UsernameForm = () => (
-    <div className="settings-form">
-      <div>
-        <label>new username:</label>
-        <TextField placeholder="new username"/>
-      </div>
-      <div>
-      <label>confirm password:</label>
-      <TextField placeholder="password"/>
-      </div>
-      <div className="settings-buttons">
-        <Button
-          label="cancel"
-          onButtonClick={this.toggleEditUsername}
-        />
-        <Button
-          label="save"
-        />
-      </div>
-    </div>
-  );
-
-  PasswordForm = () => (
-    <div className="settings-form">
-      <div>
-        <label>current password:</label>
-        <TextField placeholder="current password"/>
-      </div>
-      <div>
-        <label>new password:</label>
-        <TextField placeholder="new password"/>
-      </div>
-      <div>
-        <label>confirm new password:</label>
-        <TextField placeholder="new password"/>
-      </div>
-      <div className="settings-buttons">
-        <Button
-          label="cancel"
-          onButtonClick={this.toggleEditPassword}
-        />
-        <Button
-          label="save"
-        />
-      </div>
-    </div>
-  );
-
   toggleEditUsername = () => {
     this.setState(previousState => (
       { showEditUsername: !previousState.showEditUsername }
@@ -81,6 +32,8 @@ class Settings extends React.Component {
       showEditUsername
     } = this.state;
 
+    const { cookies } = this.props;
+
     const username = "JuiCy buNS";
     const password = "ilove6170";
 
@@ -91,13 +44,19 @@ class Settings extends React.Component {
           Username: {username} <i onClick={this.toggleEditUsername} className="fa fa-edit"/>
         </div>
         {showEditUsername &&
-          <this.UsernameForm/>
+          <ChangeUsernameForm 
+            toggleEditUsername={this.toggleEditUsername}
+            userId={cookies.get("user-id")}
+          />
         }
         <div>
           Password: {password} <i onClick={this.toggleEditPassword} className="fa fa-edit"/>
         </div>
         {showEditPassword &&
-          <this.PasswordForm/>
+          <ChangePasswordForm
+            toggleEditPassword={this.toggleEditPassword}
+            userId={cookies.get("user-id")}
+          />
         }
       </div>
     )

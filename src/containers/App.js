@@ -20,6 +20,7 @@ class App extends Component {
 
   userHasAuthenticated = (user) => {
     this.props.cookies.set('username', user.username, { path: '/' });
+    this.props.cookies.set('user-id', user.id, { path: "/" });
     console.log("User logged in");
     console.log(user);
   }
@@ -28,6 +29,7 @@ class App extends Component {
     axios.post('api/users/signout')
       .then(() => {
         this.props.cookies.remove("username");
+        this.props.cookies.remove('user-id');
         console.log(this.props);
         // eventBus.$emit('signout-success', true);
       })

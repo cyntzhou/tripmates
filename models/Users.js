@@ -104,9 +104,13 @@ class Users {
    */
   static async updatePasswordOne(id, password) {
     try {
-      const sql = `UPDATE user SET password='${password}' WHERE id='${id}';`;
-      const response = await database.query(sql);
-      return response;
+      const response = await bcrypt.hash(password, saltRounds)
+        .then(async function(hash) {
+          // Store hash in your password DB.
+          const sql = `UPDATE user SET password='${hash}' WHERE id='${id}';`;
+          const sqlResponse = await database.query(sql);
+          return sqlResponse;
+      });
     } catch (err) { throw err; }
   }
 
