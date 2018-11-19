@@ -5,7 +5,8 @@ const {
 	deleteUser,
   createTrip,
   updateTrip,
-  findMyTrips
+  findMyTrips,
+  deleteTrip
 } = require('./services');
 
 const database = require('../database.js');
@@ -74,7 +75,7 @@ describe('Test /api/trips', () => {
 		expect((response.body.endDate).slice(0, 10)).toBe(newEnd);
 	});
 
-	// Currently this only tests for trips you created, since join trips hasn't been implemented yet
+	// This only tests for trips you created, since join trips hasn't been implemented yet
 	test('Get IDs of all trips you are a member of with GET /api/users/:userId/trips', async () => {
 		const userResponse = await signin(user);
 		expect(userResponse.statusCode).toBe(200);
@@ -92,7 +93,26 @@ describe('Test /api/trips', () => {
 		const tripId2 = createResponse2.body.id;
 
 		const response = await findMyTrips(userResponse.body.id);
+		expect(response.statusCode).toBe(200);
 		expect(response.body).toEqual(expect.arrayContaining([{tripId: tripId0}, {tripId: tripId1}, {tripId: tripId2}]));
+	});
+
+	test('Delete a trip using DELETE /api/trips/:id', async () => {
+		const userResponse = await signin(user);
+		expect(userResponse.statusCode).toBe(200);
+
+		const createResponse = await createTrip(trip);
+		expect(createResponse.statusCode).toBe(200);
+		const tripId = createResponse.body.id;
+
+		const response = await deleteTrip(tripId);
+		expect(response.statusCode).toBe(200);
+
+		const tripFindResults = await database.query(`SELECT * FROM trip WHERE id='${tripId}';`);
+		expect(tripFindResults.length).toBe(0);
+
+		const findResponse = await findMyTrips(userResponse.body.id);
+		expect(findResponse.body).toEqual(expect.not.arrayContaining([{tripId: tripId}]));
 	});
 
 });

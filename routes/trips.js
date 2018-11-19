@@ -68,4 +68,37 @@ router.put('/:id', async (req, res) => {
 	}
 });
 
+/**
+ * Delete a trip.
+ * @name DELETE/api/trips/:id
+ * :id is the id of the trip to delete
+ * @return {Trip} - the deleted trip
+ * @throws {401} - if user not logged in
+ * @throws {404} - if trip with given id not found
+ * @throws {403} - if user is not the creator of the trip
+ */
+router.delete('/:id', async (req, res) => {
+	if (req.session.name === undefined) {
+		res.status(401).json({
+			error: `Must be logged in to delete trip.`,
+		}).end();
+	} else {
+		const trip = await Trips.findOneById(req.params.id);
+		if (trip === undefined) {
+			res.status(404).json({
+				error: `Trip not found.`,
+			}).end();
+		} else {
+			if (req.session.name !== trip.creatorId) {
+				res.status(403).json({
+					error: `You cannot delete a trip you did not create.`,
+				}).end();
+			} else {
+				const deleted = await Trips.deleteOne(req.params.id);
+				res.status(200).json(deleted).end();
+			}
+		}
+	}
+});
+
 module.exports = router;

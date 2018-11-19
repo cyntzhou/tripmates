@@ -145,6 +145,25 @@ const sanitizer = require('sanitizer');
     }
   }
 
+  /**
+   * Delete a Trip, from both the trips table and the membership table
+   * @param {number} id - id of Trip to delete
+   * @return {Trip | undefined} - deleted Trip
+   */
+  static async deleteOne(id) {
+  	try {
+      const tripSql = `DELETE FROM trip WHERE id='${id}';`;
+      const tripResponse = await database.query(tripSql);
+
+      const membershipSql = `DELETE FROM tripMembership WHERE tripId='${id}';`;
+      const membershipResponse = await database.query(membershipSql);
+
+      return tripResponse[0];
+    } catch (err) {
+    	throw err;
+    }
+  }
+
  }
 
  module.exports = Trips;

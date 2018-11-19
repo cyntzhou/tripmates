@@ -101,6 +101,14 @@ async function findMyTrips(userId) {
     .get(`/api/users/${userId}/trips`);
 }
 
+/**
+ * @param {number} id - id of trip to delete
+ */
+async function deleteTrip(id) {
+  return requestApp
+    .delete(`/api/trips/${id}`);
+}
+
 
 module.exports = {
   signin,
@@ -109,5 +117,6 @@ module.exports = {
   deleteUser,
   createTrip,
   updateTrip,
-  findMyTrips
+  findMyTrips,
+  deleteTrip
 };
