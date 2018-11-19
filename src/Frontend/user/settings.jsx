@@ -25,7 +25,7 @@ class Settings extends React.Component {
       <label>confirm password:</label>
       <TextField placeholder="password"/>
       </div>
-      <div>
+      <div className="settings-buttons">
         <Button
           label="cancel"
           onButtonClick={this.toggleEditUsername}
@@ -51,7 +51,7 @@ class Settings extends React.Component {
         <label>confirm new password:</label>
         <TextField placeholder="new password"/>
       </div>
-      <div>
+      <div className="settings-buttons">
         <Button
           label="cancel"
           onButtonClick={this.toggleEditPassword}
