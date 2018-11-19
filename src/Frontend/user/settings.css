@@ -6,3 +6,7 @@
   display: flex;
   justify-content: center;
 }
+
+.settings-error-message {
+  color: red;
+}

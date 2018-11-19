@@ -19,24 +19,25 @@ class App extends Component {
   }
 
   userHasAuthenticated = (user) => {
-    this.props.cookies.set('username', user.username, { path: '/' });
+    const { cookies } = this.props;
+    cookies.set('username', user.username, { path: '/' });
+    cookies.set('user-id', user.id, { path: "/" });
     console.log("User logged in");
     console.log(user);
   }
 
   logout = () => {
+    const { cookies } = this.props;
     axios.post('api/users/signout')
       .then(() => {
-        this.props.cookies.remove("username");
-        console.log(this.props);
+        cookies.remove("username");
+        cookies.remove('user-id');
         // eventBus.$emit('signout-success', true);
       })
   }
 
   render () {
-    const {
-      cookies
-    } = this.props;
+    const { cookies } = this.props;
 
     return (
       <Router>

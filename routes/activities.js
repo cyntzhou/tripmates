@@ -5,24 +5,25 @@ const Activities = require('../models/Activities');
 const router = express.Router();
 
 // Janice notes (can delete later)
+// checks: TODO all only possible if logged in
 
-// x Create an activity
-// x Get an activity
-// x Get all activities
-// x Edit an activity
-// x Delete an activity
+// Create an activity
+// Get an activity
+// Get all activities
+// Edit an activity TODO only if activity is part of trip user is in
+// Delete an activity TODO only if activity is part of trip user is in
 
-// x Upvote an activity
-// x Downvote an activity
-// x Filter activities by category
+// Upvote an activity TODO only if activity is part of trip user is in
+// Downvote an activity TODO only if activity is part of trip user is in
+// Filter activities by category
 
-// x Create hours
-// x Delete hours
+// Create hours
+// Delete hours
 
-// x Create a place
-// x Get place
-// x Edit a place
-// x Delete a place
+// Create a place
+// Get place
+// Edit a place
+// Delete a place
 
 /**
  * Create an activity.
@@ -45,7 +46,7 @@ const router = express.Router();
   * @param {int} tripId - id of trip
   * @return {Activity[]} - all activities
   */
-  router.get('/trip/:tripId', (req, res) => {
+  router.get('/trip/:tripId', async (req, res) => {
     const all_activities = await Activities.getAllTripActivities(req.params.tripId);
     res.status(200).json(all_activities).end();
   });
@@ -56,7 +57,7 @@ const router = express.Router();
   * @param {int} id - id of activity
   * @return {Activity} - activity
   */
-  router.get('/:id', (req, res) => {
+  router.get('/:id', async (req, res) => {
     const activity = await Activities.getActivity(parseInt(req.params.id));
     res.status(200).json(activity).end();
   });
@@ -72,7 +73,7 @@ const router = express.Router();
   * @return {Activity} - the activity created
   */
   router.put('/:id', async (req, res) => {
-    const activity = editActivity(parseInt(req.params.id), req.body.name, req.body.suggestedDuration, req.body.placeId, req.body.category);
+    const activity = Activities.editActivity(parseInt(req.params.id), req.body.name, req.body.suggestedDuration, req.body.placeId, req.body.category);
     res.status(200).json(activity).end();
   });
 
@@ -82,7 +83,7 @@ const router = express.Router();
   * @param {int} id - id of activity
   */
   router.delete('/:id', async (req, res) => {
-    const activity = deleteActivity(parseInt(req.params.id));
+    const activity = Activities.deleteActivity(parseInt(req.params.id));
     res.status(200).json(activity).end();
   });
 
@@ -103,7 +104,7 @@ const router = express.Router();
        error: `Activity already upvoted.`,
      }).end();
    }
-   elif (downvoters.includes(id)) {
+   else if (downvoters.includes(id)) {
      let upvote = Activities.removeDownvote(id, userId);
      res.status(200).json(upvote).end();
    } else {
@@ -129,7 +130,7 @@ const router = express.Router();
        error: `Activity already downvoted.`,
      }).end();
    }
-   elif (upvoters.includes(id)) {
+   else if (upvoters.includes(id)) {
      let downvote = Activities.removeUpvote(id, userId);
      res.status(200).json(downvote).end();
    } else {
@@ -169,7 +170,7 @@ router.get('/category/:category', async (req, res) => {
   * @param {int} id - id of place
   * @return {Place} - place
   */
-  router.get('/:id', (req, res) => {
+  router.get('/:id', async (req, res) => {
     const place = await Places.getPlace(parseInt(req.params.id));
     res.status(200).json(place).end();
   });
@@ -201,18 +202,21 @@ router.get('/category/:category', async (req, res) => {
 
  /**
   * Create hours (1 segment) for a day
-  * @name POST/api/places/hours
-  * @param {string} address - address
+  * @name POST/api/places/hours/:placeId
+  * @param {int} placeId - id of places
+  * @param {int} day - day
+  * @param {string} startTime - start time
+  * @param {int} duration - duration in minutes
   * @return {Place} - the place created
   */
   router.post('/hours', async (req, res) => {
-    const hours = await OpenHours.addOpenHours(req.body.placeId, req.body.day, req.boreq.body.startTime, req.boduration);
+    const hours = await OpenHours.addOpenHours(req.params.placeId, req.body.day, req.body.startTime, req.body.duration);
     res.status(200).json(hours).end();
   });
 
  /**
   * Delete hours for a day
-  * @name DELETE/api/places/:placeId/hours
+  * @name DELETE/api/places/hours/:placeId
   * @param {int} id - id of place
   * @return {Place} - the place updated
   */
