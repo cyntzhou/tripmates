@@ -7,6 +7,8 @@ const app = require('../app');
 
 const requestApp = request(app);
 
+// users
+
 /**
  * @param {object} user
  *  {
@@ -18,24 +20,6 @@ async function signin(user) {
   return requestApp
     .post('/api/users/signin')
     .send(user);
-  // const bodyContent = {
-  //   username: user.username,
-  //   password: user.password
-  // };
-  // return axios
-  //   .post("/api/users/signin", bodyContent)
-  //   .then(res => {
-  //     console.log(res);
-  //     // eventBus.$emit('signin-success', res.data);
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //     // this.errors.push(err.response.data.error);
-  //   })
-  //   .then(() => {
-  //     // this.resetForm();
-  //     // this.clearMessages();
-  //   });
 }
 
 /**
@@ -63,6 +47,8 @@ async function deleteUser(id) {
   return requestApp
     .delete('/api/users/' + id);
 }
+
+// trips
 
 /**
  * @param {object} trip
@@ -109,6 +95,8 @@ async function deleteTrip(id) {
     .delete(`/api/trips/${id}`);
 }
 
+// itineraries
+
 /**
  * @param {object} itin
  * {
@@ -130,6 +118,81 @@ async function starItinerary(id) {
     .put(`/api/itineraries/${id}/star`);
 }
 
+// activities
+
+/**
+ * @param {string} address - address of activity
+ */
+async function createPlace(address) {
+  return requestApp
+    .post('/api/places')
+    .send(address);
+}
+
+/**
+ * @param {int} placeId
+ * @param {object} hours
+ * {
+ *    day: int
+ *    startTime: string
+ *    duration: int
+ * }
+ */
+async function addHours(hours, placeId) {
+  return requestApp
+    .post(`/api/places/hours/${placeId}`)
+    .send(hours);
+}
+
+/**
+ * @param {object} activity
+ * {
+ *    name: string
+ *    tripId: int
+ *    suggestedDuration: int
+ *    placeId: int
+ *    category: string
+ * }
+ */
+async function createActivity(activity) {
+  return requestApp
+    .post('/api/activities')
+    .send(activity);
+}
+
+/**
+ * @param {string} id
+ */
+async function deleteActivity(id) {
+  return requestApp
+    .delete(`/api/activities/${id}`);
+}
+
+/**
+ * @param {object} voteInfo
+ * {
+ *    id: int
+ *    userId: int
+ * }
+ */
+async function upvote(voteInfo) {
+  return requestApp
+    .post('/api/activities/upvote')
+    .send(voteInfo);
+}
+
+/**
+ * @param {object} voteInfo
+ * {
+ *    id: int
+ *    userId: int
+ * }
+ */
+async function downvote(voteInfo) {
+  return requestApp
+    .post('/api/activities/downvote')
+    .send(voteInfo);
+}
 
 module.exports = {
   signin,
@@ -141,5 +204,11 @@ module.exports = {
   findMyTrips,
   deleteTrip,
   createItinerary,
-  starItinerary
+  starItinerary,
+  createPlace,
+  addHours,
+  createActivity,
+  deleteActivity,
+  upvote,
+  downvote
 };

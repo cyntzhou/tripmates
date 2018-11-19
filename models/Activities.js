@@ -51,7 +51,6 @@ class Activities {
     let a = response[0];
 
     // activity
-    let id = a.id;
     let name = a.name;
     let suggestedDir = a.suggestedDir;
     let category = a.category;
@@ -68,7 +67,7 @@ class Activities {
     let votes = numVotes(id);
     let upvoters = getUpvoters(id);
     let downvoters = getDownvoters(id);
-    }
+
     return { id, name, suggestedDir, category, placeId, address, openHours, votes, upvoters, downvoters };
   }
 
@@ -108,7 +107,7 @@ class Activities {
       let votes = numVotes(id);
       let upvoters = getUpvoters(id);
       let downvoters = getDownvoters(id);
-      }
+
       all_activities.push({ id, name, suggestedDir, category, placeId, address, openHours, votes, upvoters, downvoters });
     }
     return all_activities;
@@ -300,7 +299,6 @@ class Activities {
         let votes = numVotes(id);
         let upvoters = getUpvoters(id);
         let downvoters = getDownvoters(id);
-        }
 
         activities.push({ id, name, suggestedDir, category, placeId, address, openHours, votes, upvoters, downvoters });
       }
