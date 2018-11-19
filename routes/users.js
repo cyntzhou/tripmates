@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
 router.post('/signin', async (req, res) => {
   const user = await Users.findOne(req.body.username);
   if (user !== undefined) {
-  const match = await bcrypt.compare(req.body.password, user.password);
+    const match = await bcrypt.compare(req.body.password, user.password);
     if (match) {
       req.session.name = user.id;
       res.status(200).json(user).end();
@@ -85,9 +85,10 @@ router.get('/byname/:username', async (req, res) => {
  * @name PUT/api/users/:id/username
  * :id is the id of the user to update
  * @param {string} username - the new username to change to
+ * @param {string} oldPassword - the old password to confirm user's identity
  * @return {User} - the updated user
  * @throws {400} - if name is already taken
- * @throws {403} - if user ID does not match current user
+ * @throws {403} - if user ID does not match current user, or if old password isn't correct
  * @throws {401} - if user not logged in
  */
 router.put('/:id/username', async (req, res) => {
@@ -95,8 +96,15 @@ router.put('/:id/username', async (req, res) => {
     if (await Users.findOne(req.body.username) === undefined) {
       let user = await Users.findOneById(req.session.name);
       if (user.id === parseInt(req.params.id)) {
-        user = await Users.updateUsernameOne(req.session.name, req.body.username);
-        res.status(200).json(user).end();
+        const match = await bcrypt.compare(req.body.oldPassword, user.password);
+        if (match) {
+          user = await Users.updateUsernameOne(req.session.name, req.body.username);
+          res.status(200).json(user).end();
+        } else {
+          res.status(403).json({
+            error: `Incorrect password`,
+          }).end();
+        }
       } else {
         res.status(403).json({
           error: `Please enter your own user ID number`,
@@ -131,16 +139,24 @@ router.put('/username', async (req, res) => {
  * @name PUT/api/users/:id/password
  * :id is the id of the user to update
  * @param {string} password - the new password to change to
+ * @param {string} oldPassword - the old password to confirm user's identity
  * @return {User} - the updated user
- * @throws {403} - if user ID does not match current user
+ * @throws {403} - if user ID does not match current user, or if old password isn't correct
  * @throws {401} - if user not logged in
  */
 router.put('/:id/password', async (req, res) => {
   if (req.session.name !== undefined) {
     let user = await Users.findOneById(req.session.name);
     if (user.id === parseInt(req.params.id)) {
-      user = await Users.updatePasswordOne(req.session.name, req.body.password);
-      res.status(200).json(user).end();
+      const match = await bcrypt.compare(req.body.oldPassword, user.password);
+      if (match) {
+        user = await Users.updatePasswordOne(req.session.name, req.body.password);
+        res.status(200).json(user).end();
+      } else {
+        res.status(403).json({
+          error: `Incorrect password`,
+        }).end();
+      }
     } else {
       res.status(403).json({
         error: `Please enter your own user ID number`,

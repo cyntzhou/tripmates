@@ -126,6 +126,19 @@ async function unstarItinerary(id) {
     .put(`/api/itineraries/${id}/unstar`);
 }
 
+/**
+ * @param {number} id - id of itinerary to rename
+ * @param {object} newName
+ * {
+ *    newName: string
+ * }
+ */
+async function renameItinerary(id, newName) {
+  return requestApp
+    .put(`/api/itineraries/${id}/name`)
+    .send(newName);
+}
+
 // events
 
 /**
@@ -253,6 +266,7 @@ module.exports = {
   createItinerary,
   starItinerary,
   unstarItinerary,
+  renameItinerary,
   createEvent,
   updateEvent,
   deleteEvent,
