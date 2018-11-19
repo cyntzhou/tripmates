@@ -111,4 +111,37 @@ router.put('/:id/name', async (req, res) => {
 	}
 });
 
+/**
+ * Delete an itinerary.
+ * @name DELETE/api/itineraries/:id
+ * :id is the id of the itinerary to delete
+ * @return {Itinerary} - the deleted itinerary
+ * @throws {401} - if user not logged in
+ * @throws {404} - if itinerary with given id not found
+ * @throws {403} - if user is not a member of the trip
+ */
+router.delete('/:id', async (req, res) => {
+  if (req.session.name === undefined) {
+    res.status(401).json({
+      error: `Must be logged in to delete itinerary.`,
+    }).end();
+  } else {
+    const itin = await Itineraries.findOneById(req.params.id);
+    if (itin === undefined) {
+      res.status(404).json({
+        error: `Itinerary not found.`,
+      }).end();
+    } else {
+      if (Trips.checkMembership(req.session.name, itin.tripId)) {
+        const deleted = await Itineraries.deleteOne(req.params.id);
+        res.status(200).json(deleted).end();
+      } else {
+        res.status(403).json({
+          error: `You cannot delete an itinerary for a trip you are not in.`,
+        }).end();
+      }
+    }
+  }
+});
+
 module.exports = router;

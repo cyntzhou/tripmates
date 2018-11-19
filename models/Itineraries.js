@@ -98,6 +98,25 @@ class Itineraries {
     }
   }
 
+  /**
+   * Delete an Itinerary, from both the itinerary table and the events table
+   * @param {number} id - id of Itinerary to delete
+   * @return {Itinerary | undefined} - deleted Itinerary
+   */
+  static async deleteOne(id) {
+  	try {
+      const itinSql = `DELETE FROM itinerary WHERE id='${id}';`;
+      const itinResponse = await database.query(itinSql);
+
+      const eventSql = `DELETE FROM event WHERE itineraryId='${id}';`;
+      const eventResponse = await database.query(eventSql);
+
+      return itinResponse[0];
+    } catch (err) {
+    	throw err;
+    }
+  }
+
 }
 
 module.exports = Itineraries;
