@@ -37,21 +37,14 @@ class Itinerary extends React.Component {
 
     const {
       toggleCreateModal,
-      toggleEditModal
+      toggleEditModal,
+      itinerary,
+      itineraries
     } = this.props;
 
-    const itineraries = [
-      {
-        name: "Itinerary 1"
-      },
-      {
-        name: "Itinerary 2"
-      }
-    ];
-
-    const itineraryComponents = itineraries.map(itinerary => {
+    const itinerariesList = itineraries.map((itinerary, i) => {
       return (
-        <div className="itinerary-item-container">
+        <div className="itinerary-item-container" key={i}>
           <h3>{itinerary.name}</h3>
         </div>
       )
@@ -62,31 +55,48 @@ class Itinerary extends React.Component {
         <div className="itinerary-header">
 
           <span className="itinerary-name center-vertically">
-            <h2>Itinerary</h2>
+            <h2 className="center-vertically">Itineraries</h2>
+            <AddButton onButtonClick={toggleCreateModal}/>
           </span>
 
-          <span className="itinerary-edit center-vertically">
-            <i onClick={toggleEditModal} className="fa fa-edit fa-lg"/>
-          </span>
+          {itineraries.length > 0 &&
+            <>
+              <hr/>
 
-          <span className="itinerary-caret center-vertically">
-            <button className="itinerary-dropdown-button" onClick={this.toggleDropdown}>
-              <i className="fa fa-caret-down" aria-hidden="true"/>
-            </button>
+              <span className="itinerary-name center-vertically">
+                <h2 className="center-vertically">{itinerary.name}</h2>
+                <span className="itinerary-edit center-vertically">
+                  <i onClick={toggleEditModal} className="fa fa-edit fa-lg"/>
+                </span>
+              </span>
 
-            {showDropdown &&
-              <div className="itinerary-dropdown">
-                {itineraryComponents}
-                <AddButton onButtonClick={toggleCreateModal}/>
-              </div>
-            }
-          </span>
+              <span className="itinerary-caret center-vertically">
+                <button className="itinerary-dropdown-button" onClick={this.toggleDropdown}>
+                  <i className="fa fa-caret-down" aria-hidden="true"/>
+                </button>
+
+                {showDropdown &&
+                  <div className="itinerary-dropdown">
+                    {itinerariesList}
+                  </div>
+                }
+              </span>
+            </>
+          }
 
         </div>
 
-        <Calendar
-          existingEvents={existingEvents}
-        />
+        {itineraries.length > 0 &&
+          <Calendar
+            existingEvents={existingEvents}
+          />
+        }
+
+        {itineraries.length === 0 &&
+          <div>
+            Create an itinerary to get started!
+          </div>
+        }
       </div>
     )
   }
