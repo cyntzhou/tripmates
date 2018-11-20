@@ -22,8 +22,12 @@ http://juicy-buns-tripmates.herokuapp.com/
 
 ## Authorship of files:
 Sophia Kwon: All files in models, routes, and test, relating to events, itineraries, and trips
-Nancy Luong: All files in `src/Frontend/activity`, `src/Frontend/trip` and contributed to some of the components found in `src/Frontend/components`.
-Cynthia Zhou: All files in `src/Frontend/itinerary`, `src/Frontend/user`, and some of `src/Frontend/components`.
+
+Nancy Luong: All files in `src/Frontend/activity`, `src/Frontend/trip` and contributed to some of the components found in `src/Frontend/components`
+
+Cynthia Zhou: All files in `src/Frontend/itinerary`, `src/Frontend/user`, and some of `src/Frontend/components`
+
+Janice Lee: All files in models, routes, and test, relating to users, activities, places, open hours
 
 ## Installation
 `npm i`
