@@ -95,6 +95,14 @@ async function deleteTrip(id) {
     .delete(`/api/trips/${id}`);
 }
 
+/**
+ * @param {number} id - id of trip to get details of
+ */
+async function getTripDetails(id) {
+  return requestApp
+    .get(`/api/trips/${id}`);
+}
+
 // itineraries
 
 /**
@@ -271,6 +279,7 @@ module.exports = {
   updateTrip,
   findMyTrips,
   deleteTrip,
+  getTripDetails,
   createItinerary,
   starItinerary,
   unstarItinerary,
