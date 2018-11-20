@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import styles from "./trip.css";
 import Activities from "../activity/activities.jsx";
 import Itinerary from "../itinerary/itinerary.jsx";
@@ -16,8 +17,33 @@ class Trip extends React.Component {
       showEditActivity: false,
       showEditTrip: false,
       showCreateItinerary: false,
-      showEditItinerary: false
+      showEditItinerary: false,
+      itineraries: [],
+      itinerary: null
     }
+  }
+
+  componentDidMount() {
+    this.getItineraries();
+  }
+
+  getItineraries = (itinerary) => {
+    const tripId = this.props.match.params.id;
+    axios.get(`/api/trips/${tripId}/itineraries`).then(res => {
+      console.log('itineraries', res);
+      const newState = {
+        itineraries: res.data
+      }
+      if (res.data.length > 0 && !itinerary) {
+        newState["itinerary"] = res.data[0];
+      } else {
+        newState["itinerary"] = itinerary;
+      }
+      console.log(newState);
+      // TODO: allow a default itinerary?
+      // TODO: if no itineraries
+      this.setState(newState);
+    })
   }
 
   toggleCreateActivityModal = () => {
@@ -36,9 +62,20 @@ class Trip extends React.Component {
     this.setState({showEditItinerary: !this.state.showEditItinerary});
   }
 
+  editItinerariesDone = (itinerary) => {
+    this.getItineraries(itinerary);
+  }
+
   render() {
     var trip = this.props.location.state.trip
     var tripId = this.props.match.params.id;
+
+    // for now
+    const {
+      itineraries,
+      itinerary
+    } = this.state;
+
     if (this.state.showCreateActivity) {
       return (
         <CreateActivityModal hideCreateModal={this.toggleCreateActivityModal}/>
@@ -69,17 +106,22 @@ class Trip extends React.Component {
           <Itinerary
             toggleCreateModal={this.toggleCreateItineraryModal}
             toggleEditModal={this.toggleEditItineraryModal}
+            itinerary={itinerary}
+            itineraries={itineraries}
           />
 
           <CreateItineraryModal
             showModal={this.state.showCreateItinerary}
             toggleModal={this.toggleCreateItineraryModal}
             tripId={tripId}
+            editItinerariesDone={this.editItinerariesDone}
           />
 
           <EditItineraryModal
             showModal={this.state.showEditItinerary}
             toggleModal={this.toggleEditItineraryModal}
+            itinerary={itinerary}
+            editItinerariesDone={this.editItinerariesDone}
           />
         </div>
       )

@@ -24,7 +24,7 @@ class CreateItineraryModal extends React.Component {
 
   handleCreate = () => {
     const { name } = this.state;
-    const { tripId, toggleModal } = this.props;
+    const { tripId, toggleModal, editItinerariesDone } = this.props;
     const errors = [];
     if (name.length === 0) {
       errors.push("Please enter a name.");
@@ -38,8 +38,10 @@ class CreateItineraryModal extends React.Component {
     axios
       .post(`/api/itineraries`, bodyContent)
       .then(res => {
-        console.log(res);
+        const itinerary = res.data;
+        console.log(itinerary);
         toggleModal();
+        editItinerariesDone(itinerary);
         // eventBus.$emit('change-username-success', true);
       })
       .catch(err => {
