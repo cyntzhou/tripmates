@@ -261,13 +261,16 @@ async function getAllActivities(tripId) {
 }
 
 /**
- * @param {int} tripId
+ * @param {object} tripId
+ * {
+ *    tripId: int
+ * }
  * @param {string} category
  */
 async function filterActivities(tripId, category) {
   return requestApp
     .get(`/api/activities/category/${category}`)
-    .send(tripId.toString());
+    .send(tripId);
 }
 
 /**

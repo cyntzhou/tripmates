@@ -148,9 +148,10 @@ const router = express.Router();
  * @return {Activity[]} - all activities with category
  */
 router.get('/category/:category', async (req, res) => {
-  console.log("RRRRRRRjnjnjnjnjnjnjnj");
+  console.log(req.body.tripId);
+  console.log("TRIP ID ABOVE");
   let activities = await Activities.filterByCategory(req.body.tripId, req.params.category);
-  console.log(activities);
+  // console.log(activities);
   res.status(200).json(activities).end();
 });
 

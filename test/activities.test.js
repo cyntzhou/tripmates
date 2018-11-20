@@ -163,11 +163,8 @@ describe('Test /api/activities', () => {
 
   // test filtering
   test('GET /activities/category/:category should get all activities within the trip with the category', async () => {
-    // const allActivities = await getAllActivities(3);
-    // console.log(allActivities.body);
-    // 
-    // const filteredActivities = await filterActivities(3, 'food');
-    // expect(filteredActivities.body.length).toBe(2);
+    const filteredActivities = await filterActivities({ tripId: 3 }, 'food');
+    expect(filteredActivities.body.length).toBe(2);
   });
 
 });
