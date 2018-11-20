@@ -89,23 +89,16 @@ describe('Test /api/activities', () => {
   // tests create activity with null place, delete activity
   test('POST /activities/places should allow creating activity', async () => {
     const createResponse = await createActivity(activity);
-    // console.log(createResponse);
     expect(createResponse.statusCode).toBe(200);
 
-    await expect(database.query(`SELECT * FROM activity WHERE name='hiking'`)).resolves.toBeDefined();
-    await expect(database.query(`SELECT * FROM activity WHERE name='hiking' AND tripId='2'`)).resolves.toBeDefined();
-
-    // start sophia code
     const foundActivitiesH = await database.query(`SELECT * FROM activity WHERE name='hiking'`);
-    console.log("THE NUMBER OF ACTIVITIES WITH NAME HIKING IS:");
-    console.log(foundActivitiesH.length);
+    // console.log("THE NUMBER OF ACTIVITIES WITH NAME HIKING IS:");
+    // console.log(foundActivitiesH.length);
 
     const foundActivitiesB = await database.query(`SELECT * FROM activity WHERE name='boating'`);
-    console.log("THE NUMBER OF ACTIVITIES WITH NAME BOATING IS:");
-    console.log(foundActivitiesB.length);
-    await expect(database.query(`SELECT * FROM activity WHERE name='boating'`)).resolves.toBeDefined(); // This line passes, which means lines 59-60 are not an actual check of whether the activity was inserted into the database table
+    // console.log("THE NUMBER OF ACTIVITIES WITH NAME BOATING IS:");
+    // console.log(foundActivitiesB.length);
 
-    // One potential way to actually check whether the activity was created:
     const createdActivity = foundActivitiesH[0];
     expect(createdActivity.id).toBe(createResponse.body.insertId);
     expect(createdActivity.name).toBe(activity.name);
@@ -113,10 +106,8 @@ describe('Test /api/activities', () => {
     expect(createdActivity.placeId).toBe(0);
     expect(createdActivity.tripId).toBe(activity.tripId);
     expect(createdActivity.category).toBe(activity.category);
-    // end sophia code
 
     let query = await database.query(`SELECT id FROM activity WHERE name='hiking' AND tripId='2'`);
-    // console.log(query);
     let id = query[0].id;
 
     const deleteResponse = await deleteActivity(id);
@@ -131,7 +122,11 @@ describe('Test /api/activities', () => {
     const placeResponse = await createPlace(address);
     expect(placeResponse.statusCode).toBe(200);
 
-    console.log(placeResponse._data);
+    const foundPlace = await database.query(`SELECT * FROM place WHERE address='toronto'`);
+    console.log(foundPlace);
+    const createdPlace = foundPlace[0];
+    expect(createdPlace.id).toBe(placeResponse.body.insertId);
+    expect(createdPlace.address).toBe(address.address);
 
     // await expect(database.query(`SELECT * FROM activity WHERE name='hiking'`)).resolves.toBeDefined();
     // await expect(database.query(`SELECT * FROM activity WHERE name='hiking' AND tripId='2'`)).resolves.toBeDefined();
