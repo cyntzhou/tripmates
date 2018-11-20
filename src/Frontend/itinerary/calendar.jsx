@@ -15,12 +15,13 @@ class Calendar extends React.Component {
     this.state = {
       events: props.existingEvents,
     }
-
-    this.moveEvent = this.moveEvent.bind(this)
-    this.newEvent = this.newEvent.bind(this)
   }
 
-  moveEvent({ event, start, end, isAllDay: droppedOnAllDaySlot }) {
+  componentWillReceiveProps(nextProps) {
+    this.setState({ events: nextProps.existingEvents });
+  }
+
+  moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
     const { events } = this.state
 
     const idx = events.indexOf(event)
@@ -60,19 +61,10 @@ class Calendar extends React.Component {
     //alert(`${event.title} was resized to ${start}-${end}`)
   }
 
-  newEvent(event) {
-    // let idList = this.state.events.map(a => a.id)
-    // let newId = Math.max(...idList) + 1
-    // let hour = {
-    //   id: newId,
-    //   title: 'New Event',
-    //   allDay: event.slots.length == 1,
-    //   start: event.start,
-    //   end: event.end,
-    // }
-    // this.setState({
-    //   events: this.state.events.concat([hour]),
-    // })
+  createEvent = ({ start, end }) => {
+    const startDateTime = new Date(start).toISOString().slice(0,16);
+    const endDateTime = new Date(start).toISOString().slice(0,16);
+    this.props.toggleCreateEventModal(startDateTime, endDateTime);
   }
 
   render() {
@@ -85,7 +77,8 @@ class Calendar extends React.Component {
         onEventDrop={this.moveEvent}
         resizable
         onEventResize={this.resizeEvent}
-        onSelectSlot={this.newEvent}
+        onSelectSlot={this.createEvent}
+        onSelectEvent={event => alert(event.title)}
         defaultView={BigCalendar.Views.MONTH}
         // defaultDate={new Date(2015, 3, 12)}
         defaultDate={new Date(2018, 10, 20)}
