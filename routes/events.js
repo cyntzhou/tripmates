@@ -8,7 +8,6 @@ const Events = require('../models/Events');
 const router = express.Router();
 
  // TODO: check that the event time range is within the trip time range,
- // check that event time range is valid,
  // check for conflicts with other events in itinerary (next milestone?)
  // check that activity is in trip activities
 
@@ -23,6 +22,7 @@ const router = express.Router();
  * @throws {401} - if user not logged in
  * @throws {403} - if user is not a member of the trip
  * @throws {400} - if date/time range is invalid
+ * @throws {400} - if activity and itinerary aren't in the same trip
  */
 router.post('/', async (req, res) => {
   if (req.session.name === undefined) {
