@@ -22,6 +22,7 @@ const router = express.Router();
  * @return {Event} - the created event
  * @throws {401} - if user not logged in
  * @throws {403} - if user is not a member of the trip
+ * @throws {400} - if date/time range is invalid
  */
 router.post('/', async (req, res) => {
   if (req.session.name === undefined) {
@@ -31,8 +32,14 @@ router.post('/', async (req, res) => {
   } else {
     const itinerary = await Itineraries.findOneById(req.body.itineraryId);
     if (Trips.checkMembership(req.session.name, itinerary.tripId)) {
-      const event = await Events.addOne(req.body.itineraryId, req.body.activityId, req.body.start, req.body.end);
-      res.status(200).json(event).end();
+      if (Trips.validDateTimeRange(req.body.start, req.body.end)) {
+        const event = await Events.addOne(req.body.itineraryId, req.body.activityId, req.body.start, req.body.end);
+        res.status(200).json(event).end();
+      } else {
+        res.status(400).json({
+          error: `Invalid date/time range`,
+        }).end();
+      }
     } else {
       res.status(403).json({
         error: `Cannot create event for a trip you're not in.`,

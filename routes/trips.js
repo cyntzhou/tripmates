@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
 	      error: `Must be logged in to create trip.`,
 	    }).end();
 	} else {
-	  	if (Trips.validDateRange(req.body.startDate, req.body.endDate)) {
+	  	if (Trips.validDateTimeRange(req.body.startDate, req.body.endDate)) {
 	  		const trip = await Trips.addOne(req.body.name, req.session.name, req.body.startDate, req.body.endDate);
 		  	res.status(200).json(trip).end();
 	  	} else {
@@ -52,7 +52,7 @@ router.put('/:id', async (req, res) => {
 	    }).end();
 	} else {
 		if (Trips.checkMembership(req.session.name, req.params.id)) {
-			if (Trips.validDateRange(req.body.newStart, req.body.newEnd)) {
+			if (Trips.validDateTimeRange(req.body.newStart, req.body.newEnd)) {
 				const trip = await Trips.updateOne(req.params.id, req.body.newName, req.body.newStart, req.body.newEnd);
 				res.status(200).json(trip).end();
 			} else {

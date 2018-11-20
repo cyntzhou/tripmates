@@ -74,20 +74,35 @@ const Users = require('../models/Users');
 	}
 
 	/**
-   * Check whether a certain date range is valid (i.e. end date is after start date)
-   * @param {string} startDate - start date
-   * @param {string} endDate - end date
-   * @return {boolean} - whether this date range is valid
+   * Check whether a certain date range or date/time range is valid (i.e. end is after start)
+   * This function assumes that start and end are in correct format: either both YYYY-MM-DD or both YYYY-MM-DD HH:MM
+   * Having the start and end be the same date or date/time is valid.
+   * @param {string} start - start date or date/time
+   * @param {string} end - end date or date/time
+   * @return {boolean} - whether this date or date/time range is valid
    */
-	static async validDateRange(startDate, endDate) {
+	static async validDateTimeRange(start, end) {
 	 	try {
-	    const startYear = parseInt(startDate.slice(0,4));
-	    const startMonth = parseInt(startDate.slice(5,7));
-	    const startDay = parseInt(startDate.slice(8,10));
+	    const startYear = parseInt(start.slice(0,4));
+	    const startMonth = parseInt(start.slice(5,7));
+	    const startDay = parseInt(start.slice(8,10));
 
-	    const endYear = parseInt(endDate.slice(0,4));
-	    const endMonth = parseInt(endDate.slice(5,7));
-	    const endDay = parseInt(endDate.slice(8,10));
+	    const endYear = parseInt(end.slice(0,4));
+	    const endMonth = parseInt(end.slice(5,7));
+	    const endDay = parseInt(end.slice(8,10));
+
+      let startHour = 0;
+      let startMinute = 0;
+      let endHour = 0;
+      let endMinute = 0;
+
+      if (start.length >= 16 && end.length >= 16) {
+        startHour = parseInt(start.slice(11,13));
+        startMinute = parseInt(start.slice(14,16));
+
+        endHour = parseInt(end.slice(11,13));
+        endMinute = parseInt(end.slice(14,16));
+      }
 
 	    if (startYear > endYear) {
 	    	return false;
@@ -101,9 +116,27 @@ const Users = require('../models/Users');
 	    	} else { // start and end in same month
 	    		if (startDay > endDay) {
 	    			return false;
-	    		} else { // Note: this assumes having the same start and end dates is fine
-	    			return true;
-	    		}
+	    		} else if (startDay < endDay) {
+            return true;
+          } else { // start and end on same day
+            if (!(start.length >= 16 && end.length >= 16)) { // start and end don't include times
+              return true; // Note: this assumes having the same start and end dates is valid
+            } else { // start and end do include times
+              if (startHour > endHour) {
+                return false;
+              } else if (startHour < endHour) {
+                return true;
+              } else { // start and end in same hour
+                if (startMinute > endMinute) {
+                  return false;
+                } else if (startMinute < endMinute) {
+                  return true;
+                } else { // start and end in same minute
+                  return true; // Note: this assumes having the same start and end date/times is valid
+                }
+              }
+            }
+          }
 	    	}
 	    }
 	  } catch (error) {

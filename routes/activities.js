@@ -165,28 +165,28 @@ const router = express.Router();
   * @throws {401} - if user not logged in
   */
   router.post('/downvote', async (req, res) => {
-   if (req.session.name !== undefined) {
-     let id = req.body.id;
-     let userId = req.body.userId;
-     let upvoters = await Activities.getUpvoters(id);
-     let downvoters = await Activities.getDownvoters(id);
-     if (downvoters.includes(id)) {
-       res.status(400).json({
-         error: `Activity already downvoted.`,
-       }).end();
-     }
-     else if (upvoters.includes(id)) {
-       let downvote = await Activities.removeUpvote(id, userId);
-       res.status(200).json(downvote).end();
-     } else {
-       let downvote = await Activities.downvote(id, userId);
-       res.status(200).json(downvote).end();
-     }
-   } else {
-     res.status(401).json({
-       error: `Must be logged in to downvote activity.`,
-     }).end();
-   }
+    if (req.session.name !== undefined) {
+      let id = req.body.id;
+      let userId = req.body.userId;
+      let upvoters = await Activities.getUpvoters(id);
+      let downvoters = await Activities.getDownvoters(id);
+      if (downvoters.includes(id)) {
+        res.status(400).json({
+          error: `Activity already downvoted.`,
+        }).end();
+      }
+      else if (upvoters.includes(id)) {
+        let downvote = await Activities.removeUpvote(id, userId);
+        res.status(200).json(downvote).end();
+      } else {
+        let downvote = await Activities.downvote(id, userId);
+        res.status(200).json(downvote).end();
+      }
+    } else {
+      res.status(401).json({
+        error: `Must be logged in to downvote activity.`,
+      }).end();
+    }
   });
 
 /**
