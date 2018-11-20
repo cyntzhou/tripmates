@@ -232,7 +232,7 @@ async function createPlace(address) {
  */
 async function addHours(hours, placeId) {
   return requestApp
-    .post(`/api/places/hours/${placeId}`)
+    .post(`/api/places/${placeId}/hours`)
     .send(hours);
 }
 
