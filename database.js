@@ -2,9 +2,12 @@ const mysql = require('mysql');
 
 const config = {
   host: 'sql.mit.edu',
-  user: 'jellee',
-  password: 'janrice',
-  database: 'jellee+tripmates',
+  // user: 'jellee',
+  // password: 'janrice',
+  // database: 'jellee+tripmates',
+  user: 'cynthiaz',
+  password: 'lan05xeg',
+  database: 'cynthiaz+tripmates'
 };
 
 class Database {
@@ -35,9 +38,6 @@ class Database {
   }
 
   async createTables() {
-    // TODO: maybe we should make the names for things longer? (20 chars is pretty short)
-    // Also, the front end should prevent the user from making names longer than the char max
-
     await this.query(`CREATE TABLE IF NOT EXISTS user (
       id INT PRIMARY KEY AUTO_INCREMENT,
       username VARCHAR(20) NOT NULL UNIQUE,

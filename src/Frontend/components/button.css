@@ -20,5 +20,10 @@
   background-color: var(--yellow);
 }
 
+.btn-red {
+  color: var(--white);
+  background-color: red;
+}
+
 /* .btn:active {
 } */
