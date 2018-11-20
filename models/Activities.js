@@ -57,11 +57,17 @@ class Activities {
     let placeId = a.placeId;
 
     // place
-    const address_query = `SELECT address FROM place WHERE placeId='${placeId}';`;
-    let address = address_query[0].address;
+    const address_query = `SELECT address FROM place WHERE id='${placeId}';`;
+    const address_response = await database.query(address_query);
+    let address = null;
+    if (address_response.length != 0) {
+      address = address_response[0].address;
+    }
 
     // openHours
-    const openHours = `SELECT * FROM openHours WHERE placeId='${placeId}';`;
+    const openhours_query = `SELECT * FROM openHours WHERE placeId='${placeId}'`;
+    const openhours_response = await database.query(openhours_query);
+    let openHours = openhours_response;
 
     // votes
     let votes = await Activities.numVotes(id);
@@ -97,11 +103,17 @@ class Activities {
       let placeId = a.placeId;
 
       // place
-      const address_query = `SELECT address FROM place WHERE placeId='${placeId}';`;
-      let address = address_query[0].address;
+      const address_query = `SELECT address FROM place WHERE id='${placeId}';`;
+      const address_response = await database.query(address_query);
+      let address = null;
+      if (address_response.length != 0) {
+        address = address_response[0].address;
+      }
 
       // openHours
-      const openHours = `SELECT * FROM openHours WHERE placeId='${placeId}';`;
+      const openhours_query = `SELECT * FROM openHours WHERE placeId='${placeId}'`;
+      const openhours_response = await database.query(openhours_query);
+      let openHours = openhours_response;
 
       // votes
       let votes = await Activities.numVotes(id);
@@ -289,11 +301,17 @@ class Activities {
         let placeId = a.placeId;
 
         // place
-        const address_query = `SELECT address FROM place WHERE placeId='${placeId}';`;
-        let address = address_query[0].address;
+        const address_query = `SELECT address FROM place WHERE id='${placeId}';`;
+        const address_response = await database.query(address_query);
+        let address = null;
+        if (address_response.length != 0) {
+          address = address_response[0].address;
+        }
 
         // openHours
-        const openHours = `SELECT * FROM openHours WHERE placeId='${placeId}';`;
+        const openhours_query = `SELECT * FROM openHours WHERE placeId='${placeId}'`;
+        const openhours_response = await database.query(openhours_query);
+        let openHours = openhours_response;
 
         // votes
         let votes = await Activities.numVotes(id);
@@ -302,6 +320,8 @@ class Activities {
 
         activities.push({ id, name, suggestedDir, category, placeId, address, openHours, votes, upvoters, downvoters });
       }
+      console.log("yo");
+      console.log(activities);
       return activities;
     } catch (error) {
       throw error;
