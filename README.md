@@ -12,12 +12,15 @@ Things that aren't quite done yet:
 A couple additional checks on details to raise errors in the events api (if someone tries to create an event with an activity that's not in the trip, or with a time range that doesn't fall within the trip dates).
 Writing more tests to test situations in which we should expect errors (not logged in, etc).
 
+Currently activity details (during create and edit) do not include places' open hours. Will implement this (in the UI) during the next milestone. An activity's place is not displayed when expending the activity view in a trip.
+
 ## Deployed app
 http://juicy-buns-tripmates.herokuapp.com/
 
 ## Authorship of files:
 Sophia Kwon: All files in models, routes, and test, relating to events, itineraries, and trips
-Cynthia Zhou: All files in `src/Frontend/itinerary`, `src/Frontend/user`, and parts of other frontend files.
+Nancy Luong: All files in `src/Frontend/activity`, `src/Frontend/trip` and contributed to some of the components found in `src/Frontend/components`.
+Cynthia Zhou: All files in `src/Frontend/itinerary`, `src/Frontend/user`, and some of `src/Frontend/components`.
 
 ## Installation
 `npm i`
