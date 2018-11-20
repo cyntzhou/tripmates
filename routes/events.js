@@ -9,7 +9,7 @@ const router = express.Router();
 
  // TODO: check that the event time range is within the trip time range,
  // check that event time range is valid,
- // check for conflicts with other events in itinerary
+ // check for conflicts with other events in itinerary (next milestone?)
  // check that activity is in trip activities
 
 /**

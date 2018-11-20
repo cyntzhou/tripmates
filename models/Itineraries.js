@@ -117,6 +117,21 @@ class Itineraries {
     }
   }
 
+  /**
+   * Find all Itineraries for a specific trip
+   * @param {number} tripId - id of Trip for which you want to find itineraries
+   * @return {Itinerary[]} - Itineraries for this trip
+   */
+  static async findAllForTrip(tripId) {
+  	try {
+      const selectSQL = `SELECT * FROM itinerary WHERE tripId='${tripId}';`;
+      const response = await database.query(selectSQL).then(res => res);
+      return response;
+  	} catch (error) {
+      throw error;
+    }
+  }
+
 }
 
 module.exports = Itineraries;
