@@ -100,4 +100,22 @@ router.delete('/:id', async (req, res) => {
 	}
 });
 
+/**
+  * Get a trip's details
+  * @name GET/api/trips/:id
+  * :id is the id of the trip to delete
+  * @return {Trip} - an object with the trip's details in the following form:
+  * {
+  *    name: string,
+  *    startDate: string,
+  *    endDate: string,
+  *    members: string[] (array of usernames)
+  * }
+  */
+router.get('/:id', async (req, res) => {
+  const tripDetails = await Trips.getTripDetails(req.params.id);
+  res.status(200).json(tripDetails).end();
+});
+
+
 module.exports = router;

@@ -283,7 +283,7 @@ router.get('/:id', async (req, res) => {
  * Given a user, find all trips they are a member of.
  * @name GET/api/users/:userId/trips
  * :userId is the user's id
- * @return {number[]} - IDs of trips of which this user is a member TODO might change the return type based on front end
+ * @return {number[]} - IDs of trips of which this user is a member
  * @throws {401} - if user not logged in
  * @throws {403} - if userId is not the id of the logged in user
  */

@@ -2,6 +2,8 @@ const database = require('../database');
 
 const sanitizer = require('sanitizer');
 
+const Users = require('../models/Users');
+
 /**
  * @class Trips
  * Stores all Trips.
@@ -133,7 +135,7 @@ const sanitizer = require('sanitizer');
   /**
    * Given a user, find all trips they are a member of.
    * @param {number} userId - id of user
-   * @return {number[]} - IDs of trips of which this user is a member TODO might change the return type based on front end
+   * @return {number[]} - IDs of trips of which this user is a member
    */
   static async findMyTrips(userId) {
   	try {
@@ -161,6 +163,44 @@ const sanitizer = require('sanitizer');
       return tripResponse[0];
     } catch (err) {
     	throw err;
+    }
+  }
+
+  /**
+   * Given a trip id, find the details of that trip (name, date range, members).
+   * @param {number} id - id of trip
+   * @return {Object} - Details of trip in format:
+   * {
+   *    name: string,
+   *    startDate: string,
+   *    endDate: string,
+   *    members: string[] (array of usernames)
+   * }
+   */
+  static async getTripDetails(id) {
+    try {
+      let tripDetails = new Object();
+
+      const tripSql = `SELECT * FROM trip WHERE id='${id}';`;
+      const tripResponse = await database.query(tripSql);
+      tripDetails.name = tripResponse[0].name;
+      tripDetails.startDate = tripResponse[0].startDate;
+      tripDetails.endDate = tripResponse[0].endDate;
+
+      const memberSql = `SELECT * FROM tripMembership WHERE tripId='${id}';`;
+      const memberResponse = await database.query(memberSql).then(res => res);
+      let members = [];
+      for (let i=0; i<memberResponse.length; i++) {
+        const memberId = memberResponse[i].userId;
+        // get user's username from their id somehow
+        const user = await Users.findOneById(memberId);
+        members.push(user.username);
+      }
+      tripDetails.members = members;
+
+      return tripDetails;
+    } catch (err) {
+      throw err;
     }
   }
 

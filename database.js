@@ -40,7 +40,7 @@ class Database {
 
     await this.query(`CREATE TABLE IF NOT EXISTS user (
       id INT PRIMARY KEY AUTO_INCREMENT,
-      username VARCHAR(20) NOT NULL,
+      username VARCHAR(20) NOT NULL UNIQUE,
       password VARCHAR(60) NOT NULL
       );`
     ).catch(err => console.log(err));
@@ -49,8 +49,8 @@ class Database {
 	    id INT PRIMARY KEY AUTO_INCREMENT,
 	    name VARCHAR(20) NOT NULL,
       creatorId INT REFERENCES user(id),
-      startDate DATE NOT NULL,
-      endDate DATE NOT NULL
+      startDate VARCHAR(10) NOT NULL,
+      endDate VARCHAR(10) NOT NULL
       );`
     ).catch(err => console.log(err));
 

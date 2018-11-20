@@ -6,7 +6,8 @@ const {
 	createTrip,
 	updateTrip,
 	findMyTrips,
-	deleteTrip
+	deleteTrip,
+	getTripDetails
 } = require('./services');
 
 const database = require('../database.js');
@@ -49,8 +50,8 @@ describe('Test /api/trips', () => {
 		expect(response.statusCode).toBe(200);
 		expect(response.body.name).toBe(trip.name);
 		expect(response.body.creatorId).toBe(userResponse.body.id);
-		expect((response.body.startDate).slice(0, 10)).toBe(trip.startDate);
-		expect((response.body.endDate).slice(0, 10)).toBe(trip.endDate);
+		expect(response.body.startDate).toBe(trip.startDate);
+		expect(response.body.endDate).toBe(trip.endDate);
 	});
 
 	test('Edit trip details with PUT /api/trips/:id', async () => {
@@ -70,8 +71,8 @@ describe('Test /api/trips', () => {
 		expect(response.statusCode).toBe(200);
 		expect(response.body.name).toBe(newName);
 		expect(response.body.creatorId).toBe(userResponse.body.id);
-		expect((response.body.startDate).slice(0, 10)).toBe(newStart);
-		expect((response.body.endDate).slice(0, 10)).toBe(newEnd);
+		expect(response.body.startDate).toBe(newStart);
+		expect(response.body.endDate).toBe(newEnd);
 	});
 
 	// This only tests for trips you created, since join trips hasn't been implemented yet
@@ -112,6 +113,23 @@ describe('Test /api/trips', () => {
 
 		const findResponse = await findMyTrips(userResponse.body.id);
 		expect(findResponse.body).toEqual(expect.not.arrayContaining([{tripId: tripId}]));
+	});
+
+	test('Get trip details using GET /api/trips/:id', async () => {
+		const userResponse = await signin(user);
+		expect(userResponse.statusCode).toBe(200);
+
+		const createResponse = await createTrip(trip);
+		expect(createResponse.statusCode).toBe(200);
+		const tripId = createResponse.body.id;
+
+		const tripDetails = await getTripDetails(tripId);
+		expect(tripDetails.statusCode).toBe(200);
+		expect(tripDetails.body.name).toBe(trip.name);
+		expect(tripDetails.body.startDate).toBe(trip.startDate);
+		expect(tripDetails.body.endDate).toBe(trip.endDate);
+		expect(tripDetails.body.members).toEqual(expect.arrayContaining([user.username]));
+		expect(tripDetails.body.members.length).toBe(1);
 	});
 
 });
