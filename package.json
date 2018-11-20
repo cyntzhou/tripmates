@@ -8,7 +8,7 @@
     "server": "node bin/www",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "jest test --runInBand",
-    "start": "npm run server",
+    "start": "node bin/www",
     "heroku-postbuild": "webpack -p --config ./webpack/webpack.dev.config.js"
   },
   "author": "",
