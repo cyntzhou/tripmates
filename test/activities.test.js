@@ -123,7 +123,7 @@ describe('Test /api/activities', () => {
     expect(placeResponse.statusCode).toBe(200);
 
     const foundPlace = await database.query(`SELECT * FROM place WHERE address='toronto'`);
-    console.log(foundPlace);
+    // console.log(foundPlace);
     const createdPlace = foundPlace[0];
     expect(createdPlace.id).toBe(placeResponse.body.insertId);
     expect(createdPlace.address).toBe(address.address);

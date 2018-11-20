@@ -192,7 +192,6 @@ const Users = require('../models/Users');
       let members = [];
       for (let i=0; i<memberResponse.length; i++) {
         const memberId = memberResponse[i].userId;
-        // get user's username from their id somehow
         const user = await Users.findOneById(memberId);
         members.push(user.username);
       }
