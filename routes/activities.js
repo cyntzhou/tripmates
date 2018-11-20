@@ -121,7 +121,7 @@ const router = express.Router();
   * @param {string} userId - id of the user
   * @return {Vote} - the vote
   */
-  router.post('/upvote', async (req, res) => {
+  router.post('/downvote', async (req, res) => {
    let id = req.body.id;
    let userId = req.body.userId;
    let upvoters = Activities.getUpvoters(id);
