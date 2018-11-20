@@ -3,6 +3,7 @@ import moment from 'moment';
 import styles from "./itinerary.css";
 import Calendar from './calendar.jsx';
 import AddButton from "../components/add-button.jsx";
+import CreateItineraryModal from "./create-itinerary-modal.jsx";
 
 const existingEvents = [
   {
@@ -35,7 +36,8 @@ class Itinerary extends React.Component {
     } = this.state;
 
     const {
-      toggleModal
+      toggleCreateModal,
+      toggleEditModal
     } = this.props;
 
     const itineraries = [
@@ -64,7 +66,7 @@ class Itinerary extends React.Component {
           </span>
 
           <span className="itinerary-edit center-vertically">
-            <i onClick={this.toggleEditUsername} className="fa fa-edit fa-lg"/>
+            <i onClick={toggleEditModal} className="fa fa-edit fa-lg"/>
           </span>
 
           <span className="itinerary-caret center-vertically">
@@ -75,7 +77,7 @@ class Itinerary extends React.Component {
             {showDropdown &&
               <div className="itinerary-dropdown">
                 {itineraryComponents}
-                <AddButton onButtonClick={toggleModal}/>
+                <AddButton onButtonClick={toggleCreateModal}/>
               </div>
             }
           </span>

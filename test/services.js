@@ -253,6 +253,24 @@ async function deleteActivity(id) {
 }
 
 /**
+ * @param {int} tripId
+ */
+async function getAllActivities(tripId) {
+  return requestApp
+    .get(`/api/activities/trip/${tripId}`);
+}
+
+/**
+ * @param {int} tripId
+ * @param {string} category
+ */
+async function filterActivities(tripId, category) {
+  return requestApp
+    .get(`/api/activities/category/${category}`)
+    .send(tripId);
+}
+
+/**
  * @param {object} voteInfo
  * {
  *    id: int
@@ -301,6 +319,8 @@ module.exports = {
   addHours,
   createActivity,
   deleteActivity,
+  getAllActivities,
+  filterActivities,
   upvote,
   downvote
 };
