@@ -52,7 +52,7 @@ class Activities {
 
     // activity
     let name = a.name;
-    let suggestedDir = a.suggestedDir;
+    let suggestedDuration = a.suggestedDuration;
     let category = a.category;
     let placeId = a.placeId;
 
@@ -74,7 +74,7 @@ class Activities {
     let upvoters = await Activities.getUpvoters(id);
     let downvoters = await Activities.getDownvoters(id);
 
-    return { id, name, suggestedDir, category, placeId, address, openHours, votes, upvoters, downvoters };
+    return { id, name, suggestedDuration, category, placeId, address, openHours, votes, upvoters, downvoters };
   }
 
   /**
@@ -98,7 +98,7 @@ class Activities {
       // activity
       let id = a.id;
       let name = a.name;
-      let suggestedDir = a.suggestedDir;
+      let suggestedDuration = a.suggestedDuration;
       let category = a.category;
       let placeId = a.placeId;
 
@@ -107,7 +107,7 @@ class Activities {
       const address_response = await database.query(address_query);
       let address = null;
       if (address_response.length != 0) {
-        address = address_response[0].address;
+        // address = address_response[0].address;
       }
 
       // openHours
@@ -120,7 +120,7 @@ class Activities {
       let upvoters = await Activities.getUpvoters(id);
       let downvoters = await Activities.getDownvoters(id);
 
-      all_activities.push({ id, name, suggestedDir, category, placeId, address, openHours, votes, upvoters, downvoters });
+      all_activities.push({ id, name, suggestedDuration, category, placeId, address, openHours, votes, upvoters, downvoters });
     }
     return all_activities;
   }
@@ -287,7 +287,6 @@ class Activities {
    */
   static async filterByCategory(tripId, category) {
     let activities = [];
-
     try {
       const sql = `SELECT * FROM activity WHERE tripId='${tripId}' AND category='${category}';`;
       const response = await database.query(sql);
@@ -295,8 +294,9 @@ class Activities {
         let a = response[i];
 
         // activity
+        let id = a.id;
         let name = a.name;
-        let suggestedDir = a.suggestedDir;
+        let suggestedDuration = a.suggestedDuration;
         let category = a.category;
         let placeId = a.placeId;
 
@@ -318,10 +318,10 @@ class Activities {
         let upvoters = await Activities.getUpvoters(id);
         let downvoters = await Activities.getDownvoters(id);
 
-        activities.push({ id, name, suggestedDir, category, placeId, address, openHours, votes, upvoters, downvoters });
+        activities.push({ id, name, suggestedDuration, category, placeId, address, openHours, votes, upvoters, downvoters });
       }
-      console.log("yo");
-      console.log(activities);
+      // console.log("filtered activities:");
+      // console.log(activities);
       return activities;
     } catch (error) {
       throw error;

@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import Modal from "../components/modal.jsx";
 import Textfield from "../components/textfield.jsx";
 import Button from "../components/button.jsx";
@@ -21,35 +22,54 @@ class EditItineraryModal extends React.Component {
     this.setState({ name: event.target.value });
   }
 
-  handleCreate = () => {
+  handleSave = () => {
     const { name } = this.state;
-    const { tripId, toggleModal } = this.props;
+    const { tripId, toggleModal, itinerary, editItinerariesDone } = this.props;
     const errors = [];
     if (name.length === 0) {
-      errors.push("Please enter a name.");
+      errors.push("Please enter a new name.");
     }
     if (errors.length > 0) {
       this.setState({ errors: errors });
       return;
     }
     
-    const bodyContent = { name: name, tripId: tripId };
+    const bodyContent = { newName: name };
     axios
-      .post(`/api/itineraries`, bodyContent)
+      .put(`/api/itineraries/${itinerary.id}/name`, bodyContent)
       .then(res => {
-        console.log(res);
-        handleClose();
+        const itinerary = res.data;
+        console.log(itinerary);
+        toggleModal();
+        editItinerariesDone(itinerary);
         // eventBus.$emit('change-username-success', true);
       })
       .catch(err => {
+        console.log(err);
         const errors = [err.response.data.error];
-        this.setState({
-          errors: errors
-        })
+        this.setState({ errors: errors });
       })
       .then(() => {
         this.resetForm();
       });
+  }
+
+  handleDelete = () => {
+    const { itinerary, toggleModal, editItinerariesDone } = this.props;
+    axios
+      .delete(`/api/itineraries/${itinerary.id}`)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+        const errors = [err.response.data.error];
+        this.setState({ errors: errors });
+      })
+      .then(() => {
+        toggleModal();
+        editItinerariesDone(null);
+      })
   }
 
   render() {
@@ -90,6 +110,14 @@ class EditItineraryModal extends React.Component {
           <Button
             label="Save"
             onButtonClick={this.handleSave}
+          />
+        </div>
+
+        <div>
+          <Button 
+            label="Delete Itinerary"
+            colorClassName="btn-red"
+            onButtonClick={this.handleDelete}
           />
         </div>
       </Modal>

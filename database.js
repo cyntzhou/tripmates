@@ -5,6 +5,9 @@ const config = {
   user: 'lnancy',
   password: 'vaf22cop',
   database: 'lnancy+tripmates',
+  // user: 'jellee',
+  // password: 'janrice',
+  // database: 'jellee+tripmates',
 };
 
 class Database {
