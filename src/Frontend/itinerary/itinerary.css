@@ -43,6 +43,7 @@
   position: absolute;
   z-index: 5;
   top: 11vh;
+  right: 1vh;
   text-align: left;
 }
 

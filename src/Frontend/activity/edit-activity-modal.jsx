@@ -74,7 +74,7 @@ class EditActivityModal extends React.Component {
       bodyContext['placeId'] = this.props.activity.placeId;
     }
 
-    axios.put(`/api/activities/${this.props.activity.id}`)
+    axios.put(`/api/activities/${this.props.activity.id}`, bodyContext)
       .then(() => {
         this.props.hideEditModal(null);
       }).catch(err => console.log(err));

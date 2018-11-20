@@ -109,8 +109,9 @@ const router = express.Router();
   */
   router.put('/:id', async (req, res) => {
     if (req.session.name !== undefined) {
-      const activity = await Activities.editActivity(parseInt(req.params.id), req.body.name, req.body.suggestedDuration, req.body.placeId, req.body.category);
-      if (await Trips.checkMembership(req.session.name, activity.tripId)) {
+      const getActivity = await Activities.getActivity(parseInt(req.params.id));
+      if (await Trips.checkMembership(req.session.name, getActivity.tripId)) {
+        const activity = await Activities.editActivity(parseInt(req.params.id), req.body.name, req.body.suggestedDuration, req.body.placeId, req.body.category);
         res.status(200).json(activity).end();
       } else {
         res.status(403).json({
@@ -129,7 +130,7 @@ const router = express.Router();
   * @name DELETE/api/activities/:id
   * @param {int} id - id of activity
   * @throws {401} - if user not logged in
-  * @throws {403} - if user is not a member of trip this activity belongs to
+  * @throws {403} - if user is not a member of trip this activity belongs to TODO idk why it didn't work here
   */
   router.delete('/:id', async (req, res) => {
     if (req.session.name !== undefined) {
@@ -142,92 +143,112 @@ const router = express.Router();
     }
   });
 
- /**
- * Upvote an activity.
- * @name POST/api/activities/upvote
- * @param {string} id - id of the activity
- * @param {string} userId - id of the user
- * @return {Vote} - the vote
- * @throws {401} - if user not logged in
- * @throws {403} - if user is not a member of trip this activity belongs to
- */
- router.post('/upvote', async (req, res) => {
-   if (req.session.name !== undefined) {
-     let id = req.body.id;
-     let userId = req.body.userId;
-     let upvoters = await Activities.getUpvoters(id);
-     let downvoters = await Activities.getDownvoters(id);
-     if (upvoters.includes(id)) {
-       res.status(400).json({
-         error: `Activity already upvoted.`,
-       }).end();
-     }
-     else if (downvoters.includes(id)) {
-       let upvote = await Activities.removeDownvote(id, userId);
-       res.status(200).json(upvote).end();
-     } else {
-       let upvote = await Activities.upvote(id, userId);
-       res.status(200).json(upvote).end();
-     }
-   } else {
-     res.status(401).json({
-       error: `Must be logged in to upvote activity.`,
-     }).end();
-   }
- });
-
-/**
-  * Downvote an activity.
-  * @name POST/api/activities/downvote
+  /**
+  * Upvote an activity.
+  * @name POST/api/activities/:id/upvote
   * @param {string} id - id of the activity
   * @param {string} userId - id of the user
   * @return {Vote} - the vote
   * @throws {401} - if user not logged in
   * @throws {403} - if user is not a member of trip this activity belongs to
   */
-  router.post('/downvote', async (req, res) => {
-   if (req.session.name !== undefined) {
-     let id = req.body.id;
-     let userId = req.body.userId;
-     let upvoters = await Activities.getUpvoters(id);
-     let downvoters = await Activities.getDownvoters(id);
-     if (downvoters.includes(id)) {
-       res.status(400).json({
-         error: `Activity already downvoted.`,
-       }).end();
-     }
-     else if (upvoters.includes(id)) {
-       let downvote = await Activities.removeUpvote(id, userId);
-       res.status(200).json(downvote).end();
-     } else {
-       let downvote = await Activities.downvote(id, userId);
-       res.status(200).json(downvote).end();
-     }
-   } else {
-     res.status(401).json({
-       error: `Must be logged in to downvote activity.`,
-     }).end();
-   }
+  router.post('/:id/upvote', async (req, res) => {
+    if (req.session.name !== undefined) {
+      const getActivity = await Activities.getActivity(parseInt(req.params.id));
+      if (await Trips.checkMembership(req.session.name, getActivity.tripId)) {
+        let id = req.params.id;
+        let userId = req.body.userId;
+        let upvoters = await Activities.getUpvoters(id);
+        let downvoters = await Activities.getDownvoters(id);
+        if (upvoters.includes(id)) {
+          res.status(400).json({
+            error: `Activity already upvoted.`,
+          }).end();
+        }
+        else if (downvoters.includes(id)) {
+          let upvote = await Activities.removeDownvote(id, userId);
+          res.status(200).json(upvote).end();
+        } else {
+          let upvote = await Activities.upvote(id, userId);
+          res.status(200).json(upvote).end();
+        }
+      } else {
+        res.status(403).json({
+          error: `Must be member of activity's trip to upvote activity.`,
+        }).end();
+      }
+    } else {
+      res.status(401).json({
+        error: `Must be logged in to upvote activity.`,
+      }).end();
+    }
   });
 
-/**
- * Get all activities by category of a trip
- * @name GET/api/activities/category/:category
- * @param {string} category - category of activities to filter by
- * @param {int} tripId - id of the activity
- * @return {Activity[]} - all activities with category
- * @throws {401} - if user not logged in
- * @throws {403} - if user is not a member of trip
- */
-router.get('/category/:category', async (req, res) => {
-  if (req.session.name !== undefined) {
-    let activities = await Activities.filterByCategory(req.body.tripId, req.params.category);
-    res.status(200).json(activities).end();
-  } else {
-    res.status(401).json({
-      error: `Must be logged in to get filtered activities.`,
-    }).end();
-  }
-});
+ /**
+   * Downvote an activity.
+   * @name POST/api/activities/:id/downvote
+   * @param {string} id - id of the activity
+   * @param {string} userId - id of the user
+   * @return {Vote} - the vote
+   * @throws {401} - if user not logged in
+   * @throws {403} - if user is not a member of trip this activity belongs to
+   */
+   router.post('/:id/downvote', async (req, res) => {
+    if (req.session.name !== undefined) {
+      const getActivity = await Activities.getActivity(parseInt(req.params.id));
+      if (await Trips.checkMembership(req.session.name, getActivity.tripId)) {
+        let id = req.params.id;
+        let userId = req.body.userId;
+        let upvoters = await Activities.getUpvoters(id);
+        let downvoters = await Activities.getDownvoters(id);
+        if (downvoters.includes(id)) {
+          res.status(400).json({
+            error: `Activity already downvoted.`,
+          }).end();
+        }
+        else if (upvoters.includes(id)) {
+          let downvote = await Activities.removeUpvote(id, userId);
+          res.status(200).json(downvote).end();
+        } else {
+          let downvote = await Activities.downvote(id, userId);
+          res.status(200).json(downvote).end();
+        }
+      } else {
+        res.status(403).json({
+          error: `Must be member of activity's trip to get downvote activity.`,
+        }).end();
+      }
+    } else {
+      res.status(401).json({
+        error: `Must be logged in to downvote activity.`,
+      }).end();
+    }
+   });
 
+ /**
+  * Get all activities by category of a trip
+  * @name GET/api/activities/category/:category
+  * @param {string} category - category of activities to filter by
+  * @param {int} tripId - id of the activity
+  * @return {Activity[]} - all activities with category
+  * @throws {401} - if user not logged in
+  * @throws {403} - if user is not a member of trip
+  */
+ router.get('/category/:category', async (req, res) => {
+   if (await Trips.checkMembership(req.session.name, req.body.tripId)) {
+     if (req.session.name !== undefined) {
+       let activities = await Activities.filterByCategory(req.body.tripId, req.params.category);
+       res.status(200).json(activities).end();
+     } else {
+       res.status(401).json({
+         error: `Must be logged in to get filtered activities.`,
+       }).end();
+     }
+   } else {
+     res.status(403).json({
+       error: `Must be member of this trip.`,
+     }).end();
+   }
+ });
+ 
 module.exports = router;
