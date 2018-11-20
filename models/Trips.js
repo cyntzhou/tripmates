@@ -91,12 +91,17 @@ const Users = require('../models/Users');
 	    const endMonth = parseInt(end.slice(5,7));
 	    const endDay = parseInt(end.slice(8,10));
 
-      if (start.length >= 16 && end.length >= 16) {
-        const startHour = parseInt(start.slice(11,13));
-        const startMinute = parseInt(start.slice(14,16));
+      let startHour = 0;
+      let startMinute = 0;
+      let endHour = 0;
+      let endMinute = 0;
 
-        const endHour = parseInt(end.slice(11,13));
-        const endMinute = parseInt(end.slice(14,16));
+      if (start.length >= 16 && end.length >= 16) {
+        startHour = parseInt(start.slice(11,13));
+        startMinute = parseInt(start.slice(14,16));
+
+        endHour = parseInt(end.slice(11,13));
+        endMinute = parseInt(end.slice(14,16));
       }
 
 	    if (startYear > endYear) {
