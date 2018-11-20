@@ -265,7 +265,7 @@ async function deleteActivity(id) {
  */
 async function getAllActivities(tripId) {
   return requestApp
-    .get(`/api/activities/trip/${tripId}`);
+    .get(`/api/trips/${tripId}/activities`);
 }
 
 /**

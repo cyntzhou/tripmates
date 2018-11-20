@@ -45,30 +45,30 @@ const router = express.Router();
    }
  });
 
- /**
-  * Get all activities of a trip
-  * @name GET/api/activities/trip/:tripId
-  * @param {int} tripId - id of trip
-  * @return {Activity[]} - all activities
-  * @throws {401} - if user not logged in
-  * @throws {403} - if user is not a member of trip
-  */
-  router.get('/trip/:tripId', async (req, res) => {
-    if (await Trips.checkMembership(req.session.name, req.params.tripId)) {
-      if (req.session.name !== undefined) {
-        const all_activities = await Activities.getAllTripActivities(req.params.tripId);
-        res.status(200).json(all_activities).end();
-      } else {
-        res.status(401).json({
-          error: `Must be logged in to get all activities.`,
-        }).end();
-      }
-    } else {
-			res.status(403).json({
-				error: `Must be member of trip to get trip activities.`,
-			}).end();
-		}
-  });
+ // /**
+ //  * Get all activities of a trip
+ //  * @name GET/api/activities/trip/:tripId
+ //  * @param {int} tripId - id of trip
+ //  * @return {Activity[]} - all activities
+ //  * @throws {401} - if user not logged in
+ //  * @throws {403} - if user is not a member of trip
+ //  */
+ //  router.get('/trip/:tripId', async (req, res) => {
+ //    if (await Trips.checkMembership(req.session.name, req.params.tripId)) {
+ //      if (req.session.name !== undefined) {
+ //        const all_activities = await Activities.getAllTripActivities(req.params.tripId);
+ //        res.status(200).json(all_activities).end();
+ //      } else {
+ //        res.status(401).json({
+ //          error: `Must be logged in to get all activities.`,
+ //        }).end();
+ //      }
+ //    } else {
+	// 		res.status(403).json({
+	// 			error: `Must be member of trip to get trip activities.`,
+	// 		}).end();
+	// 	}
+ //  });
 
  /**
   * Get an activity.
