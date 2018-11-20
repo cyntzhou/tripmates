@@ -64,10 +64,16 @@ const address = {
   address: 'toronto'
 };
 
-const hours = {
+const hours1 = {
   day: 2,
   startTime: '09:20:00',
   duration: 30,
+};
+
+const hours2 = {
+  day: 4,
+  startTime: '11:40:00',
+  duration: 120,
 };
 
 describe('Test /api/activities', () => {
@@ -130,15 +136,12 @@ describe('Test /api/activities', () => {
     expect(createdPlace.id).toBe(placeResponse.body.insertId);
     expect(createdPlace.address).toBe(address.address);
 
-    // await expect(database.query(`SELECT * FROM activity WHERE name='hiking'`)).resolves.toBeDefined();
-    // await expect(database.query(`SELECT * FROM activity WHERE name='hiking' AND tripId='2'`)).resolves.toBeDefined();
-    //
-    // let query = await database.query(`SELECT id FROM activity WHERE name='hiking' AND tripId='2'`);
-    // // console.log(query);
-    // let id = query[0].id;
-    //
-    // const deleteResponse = await deleteActivity(id);
-    // expect(deleteResponse.statusCode).toBe(200);
+    // add hours
+    const hoursResponse1 = await addHours(hours1, createdPlace.id);
+    const hoursResponse2 = await addHours(hours2, createdPlace.id);
+
+    const foundHours = await database.query(`SELECT * FROM openHours WHERE placeId='${createdPlace.id}'`);
+    expect(foundHours.length).toBe(2);
   });
 
   // test get all activities within trip
@@ -154,10 +157,9 @@ describe('Test /api/activities', () => {
 
     const allActivities = await getAllActivities(3);
     expect(allActivities.body.length).toBe(3)
-    // console.log(allActivities.body.length);
   });
 
-  // test filtering
+  // test filtering TODO
 
 });
 

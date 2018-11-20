@@ -63,7 +63,7 @@ const router = express.Router();
   * @param {int} duration - duration in minutes
   * @return {Place} - the place created
   */
-  router.post('/hours', async (req, res) => {
+  router.post('/hours/:placeId', async (req, res) => {
     const hours = await OpenHours.addOpenHours(req.params.placeId, req.body.day, req.body.startTime, req.body.duration);
     res.status(200).json(hours).end();
   });
@@ -74,7 +74,7 @@ const router = express.Router();
   * @param {int} id - id of place
   * @return {Place} - the place updated
   */
-  router.delete(':placeId/hours', async (req, res) => {
+  router.delete('/hours/:placeId/', async (req, res) => {
     const hours = await OpenHours.deleteOpenHoursOnDay(req.params.placeId, req.body.day);
     res.status(200).json(hours).end();
   });
