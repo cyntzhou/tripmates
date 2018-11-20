@@ -144,16 +144,16 @@ const router = express.Router();
 
  /**
  * Upvote an activity.
- * @name POST/api/activities/upvote
+ * @name POST/api/activities/:id/upvote
  * @param {string} id - id of the activity
  * @param {string} userId - id of the user
  * @return {Vote} - the vote
  * @throws {401} - if user not logged in
  * @throws {403} - if user is not a member of trip this activity belongs to
  */
- router.post('/upvote', async (req, res) => {
+ router.post('/:id/upvote', async (req, res) => {
    if (req.session.name !== undefined) {
-     let id = req.body.id;
+     let id = req.params.id;
      let userId = req.body.userId;
      let upvoters = await Activities.getUpvoters(id);
      let downvoters = await Activities.getDownvoters(id);
@@ -178,16 +178,16 @@ const router = express.Router();
 
 /**
   * Downvote an activity.
-  * @name POST/api/activities/downvote
+  * @name POST/api/activities/:id/downvote
   * @param {string} id - id of the activity
   * @param {string} userId - id of the user
   * @return {Vote} - the vote
   * @throws {401} - if user not logged in
   * @throws {403} - if user is not a member of trip this activity belongs to
   */
-  router.post('/downvote', async (req, res) => {
+  router.post('/:id/downvote', async (req, res) => {
    if (req.session.name !== undefined) {
-     let id = req.body.id;
+     let id = req.params.id;
      let userId = req.body.userId;
      let upvoters = await Activities.getUpvoters(id);
      let downvoters = await Activities.getDownvoters(id);
