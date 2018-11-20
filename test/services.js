@@ -103,6 +103,14 @@ async function getTripDetails(id) {
     .get(`/api/trips/${id}`);
 }
 
+/**
+ * @param {number} id - id of trip to get itineraries of
+ */
+async function getItinerariesOfTrip(id) {
+  return requestApp
+    .get(`/api/trips/${id}/itineraries`)
+}
+
 // itineraries
 
 /**
@@ -153,6 +161,14 @@ async function renameItinerary(id, newName) {
 async function deleteItinerary(id) {
   return requestApp
     .delete(`/api/itineraries/${id}`);
+}
+
+/**
+ * @param {number} id - id of itinerary to get events of
+ */
+async function getEventsOfItinerary(id) {
+  return requestApp
+    .get(`/api/itineraries/${id}/events`);
 }
 
 // events
@@ -245,6 +261,24 @@ async function deleteActivity(id) {
 }
 
 /**
+ * @param {int} tripId
+ */
+async function getAllActivities(tripId) {
+  return requestApp
+    .get(`/api/activities/trip/${tripId}`);
+}
+
+/**
+ * @param {int} tripId
+ * @param {string} category
+ */
+async function filterActivities(tripId, category) {
+  return requestApp
+    .get(`/api/activities/category/${category}`)
+    .send(tripId);
+}
+
+/**
  * @param {object} voteInfo
  * {
  *    id: int
@@ -280,11 +314,13 @@ module.exports = {
   findMyTrips,
   deleteTrip,
   getTripDetails,
+  getItinerariesOfTrip,
   createItinerary,
   starItinerary,
   unstarItinerary,
   renameItinerary,
   deleteItinerary,
+  getEventsOfItinerary,
   createEvent,
   updateEvent,
   deleteEvent,
@@ -292,6 +328,8 @@ module.exports = {
   addHours,
   createActivity,
   deleteActivity,
+  getAllActivities,
+  filterActivities,
   upvote,
   downvote
 };

@@ -48,6 +48,7 @@ const router = express.Router();
   */
   router.get('/trip/:tripId', async (req, res) => {
     const all_activities = await Activities.getAllTripActivities(req.params.tripId);
+    // console.log(all_activities);
     res.status(200).json(all_activities).end();
   });
 

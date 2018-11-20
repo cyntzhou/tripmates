@@ -7,6 +7,8 @@ const {
   addHours,
   createActivity,
   deleteActivity,
+  getAllActivities,
+  filterActivities,
   upvote,
   downvote
 } = require('./services');
@@ -62,10 +64,16 @@ const address = {
   address: 'toronto'
 };
 
-const hours = {
+const hours1 = {
   day: 2,
   startTime: '09:20:00',
   duration: 30,
+};
+
+const hours2 = {
+  day: 4,
+  startTime: '11:40:00',
+  duration: 120,
 };
 
 describe('Test /api/activities', () => {
@@ -123,26 +131,35 @@ describe('Test /api/activities', () => {
     expect(placeResponse.statusCode).toBe(200);
 
     const foundPlace = await database.query(`SELECT * FROM place WHERE address='toronto'`);
-    console.log(foundPlace);
+    // console.log(foundPlace);
     const createdPlace = foundPlace[0];
     expect(createdPlace.id).toBe(placeResponse.body.insertId);
     expect(createdPlace.address).toBe(address.address);
 
-    // await expect(database.query(`SELECT * FROM activity WHERE name='hiking'`)).resolves.toBeDefined();
-    // await expect(database.query(`SELECT * FROM activity WHERE name='hiking' AND tripId='2'`)).resolves.toBeDefined();
-    //
-    // let query = await database.query(`SELECT id FROM activity WHERE name='hiking' AND tripId='2'`);
-    // // console.log(query);
-    // let id = query[0].id;
-    //
-    // const deleteResponse = await deleteActivity(id);
-    // expect(deleteResponse.statusCode).toBe(200);
+    // add hours
+    const hoursResponse1 = await addHours(hours1, createdPlace.id);
+    const hoursResponse2 = await addHours(hours2, createdPlace.id);
+
+    const foundHours = await database.query(`SELECT * FROM openHours WHERE placeId='${createdPlace.id}'`);
+    expect(foundHours.length).toBe(2);
   });
 
   // test get all activities within trip
+  test('GET/api/activities/trip/:tripId should get all activities within the trip', async () => {
+    const createResponse2 = await createActivity(activity2);
+    expect(createResponse2.statusCode).toBe(200);
 
+    const createResponse3 = await createActivity(activity3);
+    expect(createResponse3.statusCode).toBe(200);
 
-  // test filtering
+    const createResponse4 = await createActivity(activity4);
+    expect(createResponse4.statusCode).toBe(200);
+
+    const allActivities = await getAllActivities(3);
+    expect(allActivities.body.length).toBe(3)
+  });
+
+  // test filtering TODO
 
 });
 
