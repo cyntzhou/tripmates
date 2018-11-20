@@ -74,7 +74,7 @@ const router = express.Router();
   * @return {Activity} - the activity created
   */
   router.put('/:id', async (req, res) => {
-    const activity = Activities.editActivity(parseInt(req.params.id), req.body.name, req.body.suggestedDuration, req.body.placeId, req.body.category);
+    const activity = await Activities.editActivity(parseInt(req.params.id), req.body.name, req.body.suggestedDuration, req.body.placeId, req.body.category);
     res.status(200).json(activity).end();
   });
 
@@ -84,7 +84,7 @@ const router = express.Router();
   * @param {int} id - id of activity
   */
   router.delete('/:id', async (req, res) => {
-    const activity = Activities.deleteActivity(parseInt(req.params.id));
+    const activity = await Activities.deleteActivity(parseInt(req.params.id));
     res.status(200).json(activity).end();
   });
 
@@ -98,18 +98,18 @@ const router = express.Router();
  router.post('/upvote', async (req, res) => {
    let id = req.body.id;
    let userId = req.body.userId;
-   let upvoters = Activities.getUpvoters(id);
-   let downvoters = Activities.getDownvoters(id);
+   let upvoters = await Activities.getUpvoters(id);
+   let downvoters = await Activities.getDownvoters(id);
    if (upvoters.includes(id)) {
      res.status(400).json({
        error: `Activity already upvoted.`,
      }).end();
    }
    else if (downvoters.includes(id)) {
-     let upvote = Activities.removeDownvote(id, userId);
+     let upvote = await Activities.removeDownvote(id, userId);
      res.status(200).json(upvote).end();
    } else {
-     let upvote = Activities.upvote(id, userId);
+     let upvote = await Activities.upvote(id, userId);
      res.status(200).json(upvote).end();
    }
  });
@@ -124,18 +124,18 @@ const router = express.Router();
   router.post('/upvote', async (req, res) => {
    let id = req.body.id;
    let userId = req.body.userId;
-   let upvoters = Activities.getUpvoters(id);
-   let downvoters = Activities.getDownvoters(id);
+   let upvoters = await Activities.getUpvoters(id);
+   let downvoters = await Activities.getDownvoters(id);
    if (downvoters.includes(id)) {
      res.status(400).json({
        error: `Activity already downvoted.`,
      }).end();
    }
    else if (upvoters.includes(id)) {
-     let downvote = Activities.removeUpvote(id, userId);
+     let downvote = await Activities.removeUpvote(id, userId);
      res.status(200).json(downvote).end();
    } else {
-     let downvote = Activities.downvote(id, userId);
+     let downvote = await Activities.downvote(id, userId);
      res.status(200).json(downvote).end();
    }
   });
@@ -144,11 +144,13 @@ const router = express.Router();
  * Get all activities by category of a trip
  * @name GET/api/activities/category/:category
  * @param {string} category - category of activities to filter by
- * @param {string} tripId - id of the activity
+ * @param {int} tripId - id of the activity
  * @return {Activity[]} - all activities with category
  */
 router.get('/category/:category', async (req, res) => {
-  let activities = Activities.filterByCategory(req.body.tripId, req.params.category);
+  console.log("RRRRRRRjnjnjnjnjnjnjnj");
+  let activities = await Activities.filterByCategory(req.body.tripId, req.params.category);
+  console.log(activities);
   res.status(200).json(activities).end();
 });
 

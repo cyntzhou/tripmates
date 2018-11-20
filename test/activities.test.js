@@ -145,7 +145,7 @@ describe('Test /api/activities', () => {
   });
 
   // test get all activities within trip
-  test('GET/api/activities/trip/:tripId should get all activities within the trip', async () => {
+  test('GET /activities/trip/:tripId should get all activities within the trip', async () => {
     const createResponse2 = await createActivity(activity2);
     expect(createResponse2.statusCode).toBe(200);
 
@@ -156,10 +156,19 @@ describe('Test /api/activities', () => {
     expect(createResponse4.statusCode).toBe(200);
 
     const allActivities = await getAllActivities(3);
+    // console.log(allActivities.body);
+
     expect(allActivities.body.length).toBe(3)
   });
 
-  // test filtering TODO
+  // test filtering
+  test('GET /activities/category/:category should get all activities within the trip with the category', async () => {
+    // const allActivities = await getAllActivities(3);
+    // console.log(allActivities.body);
+    // 
+    // const filteredActivities = await filterActivities(3, 'food');
+    // expect(filteredActivities.body.length).toBe(2);
+  });
 
 });
 
