@@ -100,4 +100,44 @@ router.delete('/:id', async (req, res) => {
 	}
 });
 
+/**
+ * Get a trip's details
+ * @name GET/api/trips/:id
+ * :id is the id of the trip to delete
+ * @return {Trip} - an object with the trip's details in the following form:
+ * {
+ *    name: string,
+ *    startDate: string,
+ *    endDate: string,
+ *    members: string[] (array of usernames)
+ * }
+ * @throws {401} - if user not logged in
+ * @throws {404} - if trip with given id not found
+ * @throws {403} - if user is not a member of the trip
+ */
+router.get('/:id', async (req, res) => {
+  if (req.session.name === undefined) {
+    res.status(401).json({
+      error: `Must be logged in to access trip details.`,
+    }).end();
+  } else {
+    const trip = await Trips.findOneById(req.params.id);
+    if (trip === undefined) {
+      res.status(404).json({
+        error: `Trip not found.`,
+      }).end();
+    } else {
+      if (Trips.checkMembership(req.session.name, req.params.id)) {
+        const tripDetails = await Trips.getTripDetails(req.params.id);
+        res.status(200).json(tripDetails).end();
+      } else {
+        res.status(403).json({
+          error: `You cannot access details of a trip you are not in.`,
+        }).end();
+      }
+    }
+  }
+});
+
+
 module.exports = router;

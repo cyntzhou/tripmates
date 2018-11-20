@@ -35,13 +35,13 @@ class EditTripModal extends React.Component {
     const {name, startDate, endDate} = this.state;
     const bodyContext = {name, startDate, endDate};
 
-    axios.put(`api/trips/${this.props.tripId}`, bodyContext).then(res => {
+    axios.put(`/api/trips/${this.props.tripId}`, bodyContext).then(res => {
       this.props.hideModal();
     }).catch(err => console.log(err))
   }
 
   onDelete = () => {
-    axios.delete(`api/trips/${this.props.tripId}`).then(() => {
+    axios.delete(`/api/trips/${this.props.tripId}`).then(() => {
       this.props.history.push('/trips');
     }).catch(err => console.log(err))
   }

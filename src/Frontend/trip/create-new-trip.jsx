@@ -35,8 +35,7 @@ class CreateNewTrip extends React.Component {
     const {name, startDate, endDate} = this.state;
     const bodyContext = {name, startDate, endDate};
 
-    axios.post('api/trips', bodyContext).then(res => {
-      this.props.getTrips();
+    axios.post('api/trips', bodyContext).then(() => {
       this.props.hideModal();
     }).catch(
       err => console.log(err)
