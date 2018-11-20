@@ -163,6 +163,14 @@ async function deleteItinerary(id) {
     .delete(`/api/itineraries/${id}`);
 }
 
+/**
+ * @param {number} id - id of itinerary to get events of
+ */
+async function getEventsOfItinerary(id) {
+  return requestApp
+    .get(`/api/itineraries/${id}/events`);
+}
+
 // events
 
 /**
@@ -312,6 +320,7 @@ module.exports = {
   unstarItinerary,
   renameItinerary,
   deleteItinerary,
+  getEventsOfItinerary,
   createEvent,
   updateEvent,
   deleteEvent,
