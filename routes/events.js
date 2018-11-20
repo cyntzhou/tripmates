@@ -8,7 +8,6 @@ const Events = require('../models/Events');
 const router = express.Router();
 
  // TODO: check that the event time range is within the trip time range,
- // check that event time range is valid,
  // check for conflicts with other events in itinerary (next milestone?)
  // check that activity is in trip activities
 
@@ -23,6 +22,7 @@ const router = express.Router();
  * @throws {401} - if user not logged in
  * @throws {403} - if user is not a member of the trip
  * @throws {400} - if date/time range is invalid
+ * @throws {400} - if activity and itinerary aren't in the same trip
  */
 router.post('/', async (req, res) => {
   if (req.session.name === undefined) {
@@ -57,6 +57,7 @@ router.post('/', async (req, res) => {
  * @return {Event} - the updated event
  * @throws {401} - if user not logged in
  * @throws {403} - if user is not a member of trip
+ * @throws {400} - if date/time range is invalid
  */
 router.put('/:id', async (req, res) => {
   if (req.session.name === undefined) {
@@ -67,8 +68,14 @@ router.put('/:id', async (req, res) => {
     const event = await Events.findOneById(req.params.id);
     const itinerary = await Itineraries.findOneById(event.itineraryId);
     if (Trips.checkMembership(req.session.name, itinerary.tripId)) {
-      const updatedEvent = await Events.updateOne(req.params.id, req.body.newStart, req.body.newEnd);
-      res.status(200).json(updatedEvent).end();
+      if (Trips.validDateTimeRange(req.body.newStart, req.body.newEnd)) {
+        const updatedEvent = await Events.updateOne(req.params.id, req.body.newStart, req.body.newEnd);
+        res.status(200).json(updatedEvent).end();
+      } else {
+        res.status(400).json({
+          error: `Invalid date/time range`,
+        }).end();
+      }
     } else {
       res.status(403).json({
         error: `Must be member of trip to change event details.`,
