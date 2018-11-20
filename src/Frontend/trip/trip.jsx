@@ -3,6 +3,8 @@ import styles from "./trip.css";
 import Activities from "../activity/activities.jsx";
 import Itinerary from "../itinerary/itinerary.jsx";
 import CreateActivityModal from "../activity/create-activity-modal.jsx";
+import CreateItineraryModal from "../itinerary/create-itinerary-modal.jsx";
+import EditItineraryModal from "../itinerary/edit-itinerary-modal.jsx";
 import EditActivityModal from "../activity/edit-activity-modal.jsx";
 import EditTripModal from "./edit-trip-modal.jsx";
 
@@ -13,7 +15,8 @@ class Trip extends React.Component {
       showCreateActivity: false,
       showEditActivity: false,
       showEditTrip: false,
-      showCreateItinerary: false
+      showCreateItinerary: false,
+      showEditItinerary: false
     }
   }
 
@@ -28,6 +31,9 @@ class Trip extends React.Component {
   }
   toggleCreateItineraryModal = () => {
     this.setState({showCreateItinerary: !this.state.showCreateItinerary});
+  }
+  toggleEditItineraryModal = () => {
+    this.setState({showEditItinerary: !this.state.showEditItinerary});
   }
 
   render() {
@@ -60,7 +66,19 @@ class Trip extends React.Component {
             tripId={tripId}
           />
           <Itinerary
+            toggleCreateModal={this.toggleCreateItineraryModal}
+            toggleEditModal={this.toggleEditItineraryModal}
+          />
+
+          <CreateItineraryModal
+            showModal={this.state.showCreateItinerary}
             toggleModal={this.toggleCreateItineraryModal}
+            tripId={tripId}
+          />
+
+          <EditItineraryModal
+            showModal={this.state.showEditItinerary}
+            toggleModal={this.toggleEditItineraryModal}
           />
         </div>
       )
