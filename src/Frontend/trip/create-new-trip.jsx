@@ -17,6 +17,12 @@ class CreateNewTrip extends React.Component {
     }
   }
 
+  setName = (event) => {
+    this.setState({
+      name: event.target.value
+    })
+  }
+
   setStartDate = (day) => {
     const dateString = moment(day).format("YYYY-MM-DD");
     this.setState({
@@ -34,8 +40,7 @@ class CreateNewTrip extends React.Component {
   onSave = () => {
     const {name, startDate, endDate} = this.state;
     const bodyContext = {name, startDate, endDate};
-
-    axios.post('api/trips', bodyContext).then(() => {
+    axios.post('/api/trips', bodyContext).then(() => {
       this.props.hideModal();
     }).catch(
       err => console.log(err)
@@ -48,7 +53,7 @@ class CreateNewTrip extends React.Component {
         <h3>Create New Trip</h3>
         <form>
           <label>Trip Name:
-            <input type="text" name="nameValue" onChange={this.onChange}/>
+            <input type="text" name="name" onChange={this.setName}/>
           </label>
           <label>Start Date:
             <DayPickerInput onDayChange={this.setStartDate}/>

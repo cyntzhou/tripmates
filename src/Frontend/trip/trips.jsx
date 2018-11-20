@@ -22,11 +22,21 @@ class Trips extends React.Component {
 
   getTrips(){
     const userId = this.props.cookies.get("user-id");
+    const tripObjs = [];
+
     axios.get(`/api/users/${userId}/trips`).then(res => {
-      console.log('resdata', res.data);
-      this.setState({
-        tripsList: res.data
-      });
+      const tripIds = res.data;
+      for (var i = 0; i < tripIds.length; i++) {
+        const tripId = tripIds[i].tripId
+        axios.get(`/api/trips/${tripId}`).then(tripData => {
+          tripData.data['tripId'] = tripId;
+          tripObjs.push(tripData.data)
+        }).catch(err => console.log(err));
+      }
+    }).catch(err => console.log(err));
+
+    this.setState({
+      tripsList: tripObjs
     });
   }
 
@@ -36,10 +46,10 @@ class Trips extends React.Component {
 
   hideModal = () => {
     this.setState({show: false});
+    this.getTrips();
   }
 
   render() {
-    console.log('state',this.state.tripsList)
     return (
       <div className="trips">
         {this.state.show ? (
