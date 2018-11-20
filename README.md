@@ -1,7 +1,7 @@
 # Tripmates: JuiCy buNS
-Janice Lee
-Cynthia Zhou
-Nancy Luong
+Janice Lee  
+Cynthia Zhou  
+Nancy Luong  
 Sophia Kwon
 
 ## Description
@@ -13,16 +13,17 @@ A couple additional checks on details to raise errors in the events api (if some
 Writing more tests to test situations in which we should expect errors (not logged in, etc).
 
 ## Deployed app
-TODO: link here
+http://juicy-buns-tripmates.herokuapp.com/
 
 ## Authorship of files:
 Sophia Kwon: All files in models, routes, and test, relating to events, itineraries, and trips
+Cynthia Zhou: All files in `src/Frontend/itinerary`, `src/Frontend/user`, and parts of other frontend files.
 
 ## Installation
 `npm i`
 
 ## Run locally
-`npm run dev` runs both the server and client.
+`npm run dev` runs both the server and client. Head to `localhost:8080/`
 
 `npm run server` runs only the Express server app on your env's PORT, or port 3000.
 

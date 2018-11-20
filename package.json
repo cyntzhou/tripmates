@@ -7,6 +7,8 @@
     "client": "./node_modules/.bin/webpack-dev-server --config ./webpack/webpack.dev.config.js --mode=development",
     "server": "node bin/www",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "npm run dev",
+    "postinstall": "npm run build",
     "test": "jest test --runInBand"
   },
   "author": "",
