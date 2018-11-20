@@ -139,6 +139,14 @@ async function renameItinerary(id, newName) {
     .send(newName);
 }
 
+/**
+ * @param {number} id - id of itinerary to delete
+ */
+async function deleteItinerary(id) {
+  return requestApp
+    .delete(`/api/itineraries/${id}`);
+}
+
 // events
 
 /**
@@ -267,6 +275,7 @@ module.exports = {
   starItinerary,
   unstarItinerary,
   renameItinerary,
+  deleteItinerary,
   createEvent,
   updateEvent,
   deleteEvent,
