@@ -8,7 +8,6 @@
     "server": "node bin/www",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "start": "npm run dev",
-    "postinstall": "npm run build",
     "test": "jest test --runInBand"
   },
   "author": "",
