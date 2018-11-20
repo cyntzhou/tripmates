@@ -1,29 +1,27 @@
 const express = require('express');
 
 const Activities = require('../models/Activities');
+const Trips = require('../models/Trips');
 
 const router = express.Router();
 
-// Janice notes (can delete later)
-// checks: TODO all only possible if logged in
-
+// TODO Janice notes (can delete later)
 // Create an activity
-// Get an activity
-// Get all activities
+// Get an activity TODO only if activity is part of trip user is in
+// Get all activities TODO only if trip is user's
 // Edit an activity TODO only if activity is part of trip user is in
 // Delete an activity TODO only if activity is part of trip user is in
 
 // Upvote an activity TODO only if activity is part of trip user is in
 // Downvote an activity TODO only if activity is part of trip user is in
-// Filter activities by category
 
-// Create hours
-// Delete hours
+// Create hours?
+// Delete hours?
 
-// Create a place
-// Get place
-// Edit a place
-// Delete a place
+// Create a place?
+// Get place?
+// Edit a place?
+// Delete a place?
 
 /**
  * Create an activity.
@@ -53,17 +51,23 @@ const router = express.Router();
   * @param {int} tripId - id of trip
   * @return {Activity[]} - all activities
   * @throws {401} - if user not logged in
+  * @throws {403} - if user is not a member of trip
   */
   router.get('/trip/:tripId', async (req, res) => {
-    if (req.session.name !== undefined) {
-      const all_activities = await Activities.getAllTripActivities(req.params.tripId);
-      // console.log(all_activities);
-      res.status(200).json(all_activities).end();
+    if (await Trips.checkMembership(req.session.name, req.params.tripId)) {
+      if (req.session.name !== undefined) {
+        const all_activities = await Activities.getAllTripActivities(req.params.tripId);
+        res.status(200).json(all_activities).end();
+      } else {
+        res.status(401).json({
+          error: `Must be logged in to get all activities.`,
+        }).end();
+      }
     } else {
-      res.status(401).json({
-        error: `Must be logged in to get all activities.`,
-      }).end();
-    }
+			res.status(403).json({
+				error: `Must be member of trip to get trip activities.`,
+			}).end();
+		}
   });
 
  /**
@@ -72,11 +76,18 @@ const router = express.Router();
   * @param {int} id - id of activity
   * @return {Activity} - activity
   * @throws {401} - if user not logged in
+  * @throws {403} - if user is not a member of trip this activity belongs to
   */
   router.get('/:id', async (req, res) => {
     if (req.session.name !== undefined) {
       const activity = await Activities.getActivity(parseInt(req.params.id));
-      res.status(200).json(activity).end();
+      if (await Trips.checkMembership(req.session.name, activity.tripId)) {
+        res.status(200).json(activity).end();
+      } else {
+        res.status(403).json({
+          error: `Must be member of trip to get trip activities.`,
+        }).end();
+      }
     } else {
       res.status(401).json({
         error: `Must be logged in to get activity.`,
@@ -94,11 +105,18 @@ const router = express.Router();
   * @param {string} category - category of the activity
   * @return {Activity} - the activity created
   * @throws {401} - if user not logged in
+  * @throws {403} - if user is not a member of trip this activity belongs to
   */
   router.put('/:id', async (req, res) => {
     if (req.session.name !== undefined) {
       const activity = await Activities.editActivity(parseInt(req.params.id), req.body.name, req.body.suggestedDuration, req.body.placeId, req.body.category);
-      res.status(200).json(activity).end();
+      if (await Trips.checkMembership(req.session.name, activity.tripId)) {
+        res.status(200).json(activity).end();
+      } else {
+        res.status(403).json({
+          error: `Must be member of trip to get trip activities.`,
+        }).end();
+      }
     } else {
       res.status(401).json({
         error: `Must be logged in to update activity.`,
@@ -111,6 +129,7 @@ const router = express.Router();
   * @name DELETE/api/activities/:id
   * @param {int} id - id of activity
   * @throws {401} - if user not logged in
+  * @throws {403} - if user is not a member of trip this activity belongs to
   */
   router.delete('/:id', async (req, res) => {
     if (req.session.name !== undefined) {
@@ -130,6 +149,7 @@ const router = express.Router();
  * @param {string} userId - id of the user
  * @return {Vote} - the vote
  * @throws {401} - if user not logged in
+ * @throws {403} - if user is not a member of trip this activity belongs to
  */
  router.post('/upvote', async (req, res) => {
    if (req.session.name !== undefined) {
@@ -163,6 +183,7 @@ const router = express.Router();
   * @param {string} userId - id of the user
   * @return {Vote} - the vote
   * @throws {401} - if user not logged in
+  * @throws {403} - if user is not a member of trip this activity belongs to
   */
   router.post('/downvote', async (req, res) => {
    if (req.session.name !== undefined) {
@@ -196,6 +217,7 @@ const router = express.Router();
  * @param {int} tripId - id of the activity
  * @return {Activity[]} - all activities with category
  * @throws {401} - if user not logged in
+ * @throws {403} - if user is not a member of trip
  */
 router.get('/category/:category', async (req, res) => {
   if (req.session.name !== undefined) {

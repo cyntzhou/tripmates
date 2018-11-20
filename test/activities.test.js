@@ -10,7 +10,8 @@ const {
   getAllActivities,
   filterActivities,
   upvote,
-  downvote
+  downvote,
+  createTrip
 } = require('./services');
 
 const database = require('../database.js');
@@ -60,6 +61,12 @@ const activity4 = {
   category: 'food'
 };
 
+const trip = {
+  name: "testtrip",
+  startDate: "2018-12-20",
+  endDate: "2018-12-30"
+}
+
 const address = {
   address: 'toronto'
 };
@@ -84,6 +91,11 @@ describe('Test /api/activities', () => {
   beforeEach(async () => {
     await createUser(user);
     await signin(user);
+    await createTrip(trip);
+    await createTrip(trip);
+    await createTrip(trip);
+    await createTrip(trip);
+    await createTrip(trip);
   });
 
   afterEach(async() => {
@@ -156,7 +168,7 @@ describe('Test /api/activities', () => {
     expect(createResponse4.statusCode).toBe(200);
 
     const allActivities = await getAllActivities(3);
-    console.log(allActivities.body);
+    // console.log(allActivities.body);
 
     expect(allActivities.body.length).toBe(3)
   });
