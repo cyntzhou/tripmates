@@ -61,6 +61,7 @@ class CreateActivityModal extends React.Component{
     
     axios.post('/api/activities', bodyContext).then(() => {
       this.props.hideCreateModal();
+      this.props.editActivitiesDone();
     }).catch(err => console.log(err));
   }
 

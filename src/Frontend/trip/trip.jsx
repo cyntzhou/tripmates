@@ -34,13 +34,18 @@ class Trip extends React.Component {
   }
 
   componentDidMount() {
-    this.getItineraries();
+    // const tripId = this.props.match.params.id;
+    // return axios.get(`/api/trips/${tripId}/activities`).then(res => {
+    //   this.setState({ activities: res.data });
+    //   this.getItineraries();
+    // });
     this.getActivities();
+    this.getItineraries();
   }
 
   getItineraries = (itinerary) => {
     const tripId = this.props.match.params.id;
-    axios.get(`/api/trips/${tripId}/itineraries`).then(res => {
+    return axios.get(`/api/trips/${tripId}/itineraries`).then(res => {
       // console.log('itineraries', res.data);
       const newState = {
         itineraries: res.data
@@ -66,17 +71,12 @@ class Trip extends React.Component {
     return axios.get(`/api/itineraries/${itinerary.id}/events`).then(res => {
       console.log('events', res.data); // TODO not showing new event?
       const existingEvents = res.data.map((event) => {
-        const activities = [ // TODO: for now 
-          {
-            name: "Hiking",
-            id: 1
-          },{
-            name: "Dim sum",
-            id: 2
-          }
-        ];
-        // const activity = this.state.activities.filter(activity => activity.id === event.activityId);
-        const activity = activities.filter(activity => activity.id === event.activityId)[0];
+        console.log(this.state.activities);
+        const matchedActivity = this.state.activities.filter(activity => activity.id === event.activityId);
+        const activity = matchedActivity.length > 0 ? matchedActivity[0] : {
+          id: "",
+          name: ""
+        };
         return {
           start: event.startDateTime.replace(" ", "T"),
           end: event.endDateTime.replace(" ", "T"),
@@ -90,7 +90,7 @@ class Trip extends React.Component {
 
   getActivities = () => {
     const tripId = this.props.match.params.id;
-    axios.get(`/api/activities/trip/${tripId}/activities`).then(res => {
+    return axios.get(`/api/trips/${tripId}/activities`).then(res => {
       this.setState({ activities: res.data });
       console.log('activities', res.data);
     });
@@ -136,9 +136,11 @@ class Trip extends React.Component {
   editItinerariesDone = (itinerary) => {
     this.getItineraries(itinerary);
   }
-
   editEventsDone = () => {
     this.getEvents(this.state.itinerary);
+  }
+  editActivitiesDone = () => {
+    this.getActivities();
   }
 
   handleSelectEvent = (event) => {
@@ -153,7 +155,7 @@ class Trip extends React.Component {
     var tripId = this.props.match.params.id;
 
     const {
-      // activities,
+      activities,
       itineraries,
       itinerary,
       selectedEvent,
@@ -169,22 +171,12 @@ class Trip extends React.Component {
       createEventStart
     } = this.state;
 
-    // for now
-    const activities = [
-      {
-        name: "Hiking",
-        id: 1
-      },{
-        name: "Dim sum",
-        id: 2
-      }
-    ];
-
     if (showCreateActivity) {
       return (
         <CreateActivityModal 
           hideCreateModal={this.toggleCreateActivityModal}
           tripId={trip.tripId}
+          editActivitiesDone={this.editActivitiesDone}
         />
       )
     } else if (showEditActivity) {
