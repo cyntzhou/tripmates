@@ -13,7 +13,7 @@ class TripItem extends React.Component {
       tripId
     } = this.props.trip;
     const formatStart = moment(startDate).format("MMM DD, YYYY");
-    const formatEnd = moment(startDate).format("MMM DD, YYYY");
+    const formatEnd = moment(endDate).format("MMM DD, YYYY");
 
     return (
       <div className="trip-item-container">

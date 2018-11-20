@@ -19,6 +19,7 @@ class Activities extends React.Component {
 
   getActivities = () => {
     axios.get(`/api/activities/trip/${this.props.tripId}`).then(res => {
+      console.log('res',res)
       this.setState({activitiesList: res.data})
     })
   }
