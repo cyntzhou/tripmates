@@ -12,7 +12,8 @@ class CreateActivityModal extends React.Component{
       suggestedHours: null,
       suggestedMins: null,
       address: null,
-      openHours: null
+      openHours: null,
+      placeId: null
     }
   }
 
@@ -29,21 +30,16 @@ class CreateActivityModal extends React.Component{
       suggestedHours,
       suggestedMins,
       address,
-      openHours
-    } = this.state
-
-    let placeId;
-    if (address) {
-      const placeBody = {address}
-      axios.post('api/places', placeBody).then(res => {
-        console.log(res)
-        placeId = res.data.id;
-      }).catch(err => console.log(err));
-    } else {
-      placeId = null;
-    }
+      placeId
+    } = this.state;
 
     let suggestedDuration = null;
+
+    //convert input to minutes
+    if (suggestedHours || suggestedMins) {
+      const hours = (suggestedHours * 60 || 0) ;
+      suggestedDuration = parseInt(hours) + parseInt(suggestedMins || 0);
+    }
 
     const bodyContext = {
       name,
@@ -52,8 +48,20 @@ class CreateActivityModal extends React.Component{
       placeId,
       category
     }
+
+    if (address) {
+      const placeBody = {address}
+      axios.post('/api/places', placeBody).then(res => {
+        this.setState({
+          placeId: res.data.insertId
+        });
+        bodyContext['placeId'] = res.data.insertId
+      }).catch(err => console.log(err));
+    }
+    
     axios.post('/api/activities', bodyContext).then(() => {
       this.props.hideCreateModal();
+      this.props.editActivitiesDone();
     }).catch(err => console.log(err));
   }
 

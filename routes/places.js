@@ -56,25 +56,25 @@ const router = express.Router();
 
  /**
   * Create hours (1 segment) for a day
-  * @name POST/api/places/hours/:placeId
+  * @name POST/api/places/:placeId/hours
   * @param {int} placeId - id of places
   * @param {int} day - day
   * @param {string} startTime - start time
   * @param {int} duration - duration in minutes
   * @return {Place} - the place created
   */
-  router.post('/hours/:placeId', async (req, res) => {
+  router.post('/:placeId/hours', async (req, res) => {
     const hours = await OpenHours.addOpenHours(req.params.placeId, req.body.day, req.body.startTime, req.body.duration);
     res.status(200).json(hours).end();
   });
 
  /**
   * Delete hours for a day
-  * @name DELETE/api/places/hours/:placeId
+  * @name DELETE/api/places/:placeId/hours
   * @param {int} id - id of place
   * @return {Place} - the place updated
   */
-  router.delete('/hours/:placeId/', async (req, res) => {
+  router.delete('/:placeId/hours', async (req, res) => {
     const hours = await OpenHours.deleteOpenHoursOnDay(req.params.placeId, req.body.day);
     res.status(200).json(hours).end();
   });

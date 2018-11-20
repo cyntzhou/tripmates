@@ -232,7 +232,7 @@ async function createPlace(address) {
  */
 async function addHours(hours, placeId) {
   return requestApp
-    .post(`/api/places/hours/${placeId}`)
+    .post(`/api/places/${placeId}/hours`)
     .send(hours);
 }
 
@@ -265,7 +265,7 @@ async function deleteActivity(id) {
  */
 async function getAllActivities(tripId) {
   return requestApp
-    .get(`/api/activities/trip/${tripId}`);
+    .get(`/api/trips/${tripId}/activities`);
 }
 
 /**

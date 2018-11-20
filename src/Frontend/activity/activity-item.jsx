@@ -10,7 +10,6 @@ class ActivityItem extends React.Component {
   }
 
   toggleDetails = () => {
-    console.log('expand')
     this.setState({
       expand: !this.state.expand
     })
@@ -18,18 +17,23 @@ class ActivityItem extends React.Component {
 
   render() {
     const {
-      activityName,
+      showEditModal
+    } = this.props;
+    const {
+      name,
       category,
       suggestedDuration,
-      votes
-    } = this.props;
+      address
+    } = this.props.activity
     return (
       <div className="activity-item-container" onClick={this.toggleDetails}>
-        <h3>{activityName}</h3>
+        <h3>{name}</h3>
         {this.state.expand && 
           <div className="details">
-            <p>Category</p>
-            <i onClick={this.props.showEdit} className="fa fa-edit"/>
+            {(category != "null") && <p>Category: {category}</p>}
+            {suggestedDuration && <p>Suggested Duration: {suggestedDuration} min</p>}
+            {/* {address && <p>Address: {address}</p>} */}
+            <i onClick={() => showEditModal(this.props.activity)} className="fa fa-edit"/>
           </div>
         }
       </div>

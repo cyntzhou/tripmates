@@ -18,27 +18,31 @@ class Activities extends React.Component {
   }
 
   getActivities = () => {
-    axios.get(`/api/activities/trip/${this.props.tripId}`).then(res => {
-      console.log('res',res)
+    axios.get(`/api/trips/${this.props.tripId}/activities`).then(res => {
       this.setState({activitiesList: res.data})
     })
   }
 
   render() {
+    const {
+      showEditModal,
+      showCreateModal
+    } = this.props
     return (
       <div className="activities-container">
         <div className="activity-header">
           <h2>Activities</h2>
           <AddButton 
             className="add-btn" 
-            onButtonClick={this.props.showCreateModal}
+            onButtonClick={showCreateModal}
           />
         </div>
           {this.state.activitiesList.map(function(act, index){
-            return <ActivityItem 
+            return (<ActivityItem 
               key={index}
-              showEditModal={this.props.showEditModal} 
-              activityName={act.name}/>
+              showEditModal={showEditModal} 
+              activity={act}
+            />)
           })}
       </div>
     )

@@ -5,20 +5,20 @@ import Calendar from './calendar.jsx';
 import AddButton from "../components/add-button.jsx";
 import CreateItineraryModal from "./create-itinerary-modal.jsx";
 
-const existingEvents = [
-  {
-    title: "Dim sum",
-    start: new Date(2018, 10, 19, 10, 30),
-    end: new Date(2018, 10, 19, 12, 30),
-    allDay: false
-  }
-]
+// const existingEvents = [
+//   {
+//     title: "Dim sum",
+//     start: new Date(2018, 10, 19, 10, 30),
+//     end: new Date(2018, 10, 19, 12, 30),
+//     allDay: false
+//   }
+// ]
 
 class Itinerary extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      existingEvents: existingEvents,
+      // existingEvents: existingEvents,
       showDropdown: false
     }
   }
@@ -31,20 +31,28 @@ class Itinerary extends React.Component {
 
   render() {
     const {
-      existingEvents,
+      // existingEvents,
       showDropdown
     } = this.state;
 
     const {
-      toggleCreateModal,
-      toggleEditModal,
+      toggleCreateItineraryModal,
+      toggleEditItineraryModal,
+      toggleCreateEventModal,
       itinerary,
-      itineraries
+      itineraries,
+      handleSelectItinerary,
+      existingEvents,
+      handleSelectEvent
     } = this.props;
 
     const itinerariesList = itineraries.map((itinerary, i) => {
       return (
-        <div className="itinerary-item-container" key={i}>
+        <div 
+          className="itinerary-item-container" 
+          key={i}
+          onClick={handleSelectItinerary(itinerary)}
+        >
           <h3>{itinerary.name}</h3>
         </div>
       )
@@ -56,7 +64,7 @@ class Itinerary extends React.Component {
 
           <span className="itinerary-name center-vertically">
             <h2 className="center-vertically">Itineraries</h2>
-            <AddButton onButtonClick={toggleCreateModal}/>
+            <AddButton onButtonClick={toggleCreateItineraryModal}/>
           </span>
 
           {itineraries.length > 0 &&
@@ -66,7 +74,7 @@ class Itinerary extends React.Component {
               <span className="itinerary-name center-vertically">
                 <h2 className="center-vertically">{itinerary.name}</h2>
                 <span className="itinerary-edit center-vertically">
-                  <i onClick={toggleEditModal} className="fa fa-edit fa-lg"/>
+                  <i onClick={toggleEditItineraryModal} className="fa fa-edit fa-lg"/>
                 </span>
               </span>
 
@@ -89,6 +97,8 @@ class Itinerary extends React.Component {
         {itineraries.length > 0 &&
           <Calendar
             existingEvents={existingEvents}
+            toggleCreateEventModal={toggleCreateEventModal}
+            handleSelectEvent={handleSelectEvent}
           />
         }
 
