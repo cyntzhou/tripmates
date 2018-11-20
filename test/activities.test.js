@@ -156,7 +156,7 @@ describe('Test /api/activities', () => {
     expect(createResponse4.statusCode).toBe(200);
 
     const allActivities = await getAllActivities(3);
-    // console.log(allActivities.body);
+    console.log(allActivities.body);
 
     expect(allActivities.body.length).toBe(3)
   });
