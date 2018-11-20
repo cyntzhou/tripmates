@@ -9,7 +9,7 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "jest test --runInBand",
     "start": "node bin/www",
-    "heroku-postbuild": "webpack -p --config ./webpack/webpack.dev.config.js"
+    "heroku-postbuild": "webpack -p --config ./webpack/webpack.prod.config.js"    
   },
   "author": "",
   "license": "ISC",
