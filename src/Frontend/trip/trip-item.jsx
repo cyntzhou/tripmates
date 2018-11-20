@@ -9,14 +9,13 @@ class TripItem extends React.Component {
       tripName, 
       tripUsers,
       tripId,
-      handleClick
-    } = this.props;
+    } = this.props.trip;
     return (
       <div className="trip-item-container">
         <div className="date">{tripDate}</div>
         <div className="trip-details">
           <Link to={`/trips/${tripId}`}>
-            <h3>{tripName}</h3>
+            <h3>{'name'}</h3>
           </Link>
           <div className="trip-users">
             <i className="fa fa-users"/>

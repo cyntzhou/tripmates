@@ -42,7 +42,10 @@ class Trip extends React.Component {
       )
     } else if (this.state.showEditTrip) {
       return (
-        <EditTripModal hideModal={this.toggleEditTripModal}/>
+        <EditTripModal 
+          hideModal={this.toggleEditTripModal}
+          tripId={tripId}
+        />
       )
     } else {
       return (
@@ -54,6 +57,7 @@ class Trip extends React.Component {
           <Activities 
             showCreateModal={this.toggleCreateActivityModal}
             showEditModal={this.toggleEditActivityModal}
+            tripId={tripId}
           />
           <Itinerary
             toggleModal={this.toggleCreateItineraryModal}

@@ -13,14 +13,17 @@ class Trips extends React.Component {
       showModal: false,
       tripsList: []
     }
+    this.getTrips = this.getTrips.bind(this);
   }
 
   componentDidMount() {
     this.getTrips();
   }
 
-  getTrips() {
-    axios.get('/api/trips').then(res => {
+  getTrips(){
+    const userId = this.props.cookies.get("user-id");
+    axios.get(`/api/users/${userId}/trips`).then(res => {
+      console.log('resdata', res.data);
       this.setState({
         tripsList: res.data
       });
@@ -36,10 +39,13 @@ class Trips extends React.Component {
   }
 
   render() {
+    console.log('state',this.state.tripsList)
     return (
       <div className="trips">
         {this.state.show ? (
-          <CreateTripModal hideModal={this.hideModal} getTrips={this.getTrips}/>
+          <CreateTripModal 
+            hideModal={this.hideModal} 
+          />
         ) : (
           <>
             <div className="trip-header">
@@ -47,12 +53,12 @@ class Trips extends React.Component {
               <AddButton onButtonClick={this.showModal}/>
             </div>
             <div className="trip-body">
-              <TripItem 
-                tripName="TripName here" 
-                tripDate="tripdate01 - tripdate02"
-                tripUsers="Janicecream, cyndaquil, sopdrop, nanc"
-                tripId="idNumber"
-              />
+              {this.state.tripsList.map(function(trip, index){
+                return <TripItem 
+                  key={index}
+                  trip={trip}
+                />
+              })}
             </div>
           </>
         )}
