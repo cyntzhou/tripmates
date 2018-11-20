@@ -10,7 +10,7 @@ Tripmates is an online tool to collaboratively plan trips with other people. It 
 ## Notes for Milestone 1: Proof of Concept
 Things that aren't quite done yet:
 A couple additional checks on details to raise errors in the events api (if someone tries to create an event with an activity that's not in the trip, or with a time range that doesn't fall within the trip dates).
-Writing more tests to test situations in which we should expect errors (not logged in, etc).
+Writing more tests (in all test suites) to test situations in which we should expect errors (not logged in, etc).
 
 ## Deployed app
 TODO: link here
