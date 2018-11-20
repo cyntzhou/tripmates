@@ -78,6 +78,21 @@ const database = require('../database');
     }
   }
 
+  /**
+   * Find all Events for a specific itinerary
+   * @param {number} itineraryId - id of Itinerary for which you want to find events
+   * @return {Event[]} - Events for this itinerary
+   */
+  static async findAllForItinerary(itineraryId) {
+    try {
+      const selectSQL = `SELECT * FROM event WHERE itineraryId='${itineraryId}';`;
+      const response = await database.query(selectSQL).then(res => res);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
  }
 
  module.exports = Events;

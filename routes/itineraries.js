@@ -3,6 +3,7 @@ const express = require('express');
 const Users = require('../models/Users');
 const Trips = require('../models/Trips');
 const Itineraries = require('../models/Itineraries');
+const Events = require('../models/Events');
 
 const router = express.Router();
 
@@ -138,6 +139,39 @@ router.delete('/:id', async (req, res) => {
       } else {
         res.status(403).json({
           error: `You cannot delete an itinerary for a trip you are not in.`,
+        }).end();
+      }
+    }
+  }
+});
+
+/**
+ * Get an itinerary's events.
+ * @name GET/api/itineraries/:id/events
+ * :id is the id of the itinerary to get all events of
+ * @return {Event[]} - array of all events of this itinerary
+ * @throws {401} - if user not logged in
+ * @throws {404} - if itinerary with given id not found
+ * @throws {403} - if user is not a member of the trip
+ */
+router.get('/:id/events', async (req, res) => {
+  if (req.session.name === undefined) {
+    res.status(401).json({
+      error: `Must be logged in to access itinerary events.`,
+    }).end();
+  } else {
+  	const itin = await Itineraries.findOneById(req.params.id);
+    if (itin === undefined) {
+      res.status(404).json({
+        error: `Itinerary not found.`,
+      }).end();
+    } else {
+      if (Trips.checkMembership(req.session.name, itin.tripId)) {
+      	const events = await Events.findAllForItinerary(req.params.id);
+      	res.status(200).json(events).end();
+      } else {
+        res.status(403).json({
+          error: `You cannot access itinerary events of a trip you are not in.`,
         }).end();
       }
     }
