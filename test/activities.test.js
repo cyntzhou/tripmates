@@ -7,6 +7,8 @@ const {
   addHours,
   createActivity,
   deleteActivity,
+  getAllActivities,
+  filterActivities,
   upvote,
   downvote
 } = require('./services');
@@ -123,7 +125,7 @@ describe('Test /api/activities', () => {
     expect(placeResponse.statusCode).toBe(200);
 
     const foundPlace = await database.query(`SELECT * FROM place WHERE address='toronto'`);
-    console.log(foundPlace);
+
     const createdPlace = foundPlace[0];
     expect(createdPlace.id).toBe(placeResponse.body.insertId);
     expect(createdPlace.address).toBe(address.address);
@@ -140,7 +142,20 @@ describe('Test /api/activities', () => {
   });
 
   // test get all activities within trip
+  test('GET/api/activities/trip/:tripId should get all activities within the trip', async () => {
+    const createResponse2 = await createActivity(activity2);
+    expect(createResponse2.statusCode).toBe(200);
 
+    const createResponse3 = await createActivity(activity3);
+    expect(createResponse3.statusCode).toBe(200);
+
+    const createResponse4 = await createActivity(activity4);
+    expect(createResponse4.statusCode).toBe(200);
+
+    const allActivities = await getAllActivities(3);
+    expect(allActivities.body.length).toBe(3)
+    // console.log(allActivities.body.length);
+  });
 
   // test filtering
 

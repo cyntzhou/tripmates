@@ -64,9 +64,9 @@ class Activities {
     const openHours = `SELECT * FROM openHours WHERE placeId='${placeId}';`;
 
     // votes
-    let votes = numVotes(id);
-    let upvoters = getUpvoters(id);
-    let downvoters = getDownvoters(id);
+    let votes = await Activities.numVotes(id);
+    let upvoters = await Activities.getUpvoters(id);
+    let downvoters = await Activities.getDownvoters(id);
 
     return { id, name, suggestedDir, category, placeId, address, openHours, votes, upvoters, downvoters };
   }
@@ -104,9 +104,9 @@ class Activities {
       const openHours = `SELECT * FROM openHours WHERE placeId='${placeId}';`;
 
       // votes
-      let votes = numVotes(id);
-      let upvoters = getUpvoters(id);
-      let downvoters = getDownvoters(id);
+      let votes = await Activities.numVotes(id);
+      let upvoters = await Activities.getUpvoters(id);
+      let downvoters = await Activities.getDownvoters(id);
 
       all_activities.push({ id, name, suggestedDir, category, placeId, address, openHours, votes, upvoters, downvoters });
     }
@@ -156,9 +156,9 @@ class Activities {
    */
   static async numVotes(id) {
     try {
-      const sqlUp = `SELECT * FROM activityVotes WHERE id='${id}' AND value='1';`;
+      const sqlUp = `SELECT * FROM activityVotes WHERE activityId='${id}' AND value='1';`;
       const responseUp = await database.query(sqlUp);
-      const sqlDown = `SELECT * FROM activityVotes WHERE id='${id}' AND value='-1';`;
+      const sqlDown = `SELECT * FROM activityVotes WHERE activityId='${id}' AND value='-1';`;
       const responseDown = await database.query(sqlDown);
       return responseUp.length - responseDown.length;
     } catch (error) {
@@ -204,7 +204,7 @@ class Activities {
   static async getUpvoters(id) {
     let upvoters = [];
     try {
-      const sql = `SELECT userId FROM activityVotes WHERE id='${id}' AND value='1';`;
+      const sql = `SELECT userId FROM activityVotes WHERE activityId='${id}' AND value='1';`;
       const response = await database.query(sql);
       for (let i = 0; i < response.length; i++) {
         upvoters.push(parseInt(response[i].userId));
@@ -223,7 +223,7 @@ class Activities {
   static async getDownvoters(id) {
     let downvoters = [];
     try {
-      const sql = `SELECT userId FROM activityVotes WHERE id='${id}' AND value='-1';`;
+      const sql = `SELECT userId FROM activityVotes WHERE activityId='${id}' AND value='-1';`;
       const response = await database.query(sql);
       for (let i = 0; i < response.length; i++) {
         downvoters.push(parseInt(response[i].userId));
@@ -241,7 +241,7 @@ class Activities {
    */
   static async removeUpvote(id, userId) {
     try {
-      const sql = `DELETE FROM activityVotes WHERE id='${id}' AND userId='${userId}' AND value='1';`;
+      const sql = `DELETE FROM activityVotes WHERE activityId='${id}' AND userId='${userId}' AND value='1';`;
       const response = await database.query(sql);
       return response;
     } catch (error) {
@@ -256,7 +256,7 @@ class Activities {
    */
   static async removeUpvote(id, userId) {
     try {
-      const sql = `DELETE FROM activityVotes WHERE id='${id}' AND userId='${userId}' AND value='-1';`;
+      const sql = `DELETE FROM activityVotes WHERE activityId='${id}' AND userId='${userId}' AND value='-1';`;
       const response = await database.query(sql);
       return response;
     } catch (error) {
@@ -296,9 +296,9 @@ class Activities {
         const openHours = `SELECT * FROM openHours WHERE placeId='${placeId}';`;
 
         // votes
-        let votes = numVotes(id);
-        let upvoters = getUpvoters(id);
-        let downvoters = getDownvoters(id);
+        let votes = await Activities.numVotes(id);
+        let upvoters = await Activities.getUpvoters(id);
+        let downvoters = await Activities.getDownvoters(id);
 
         activities.push({ id, name, suggestedDir, category, placeId, address, openHours, votes, upvoters, downvoters });
       }
