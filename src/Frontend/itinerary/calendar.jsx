@@ -78,7 +78,10 @@ class Calendar extends React.Component {
         resizable
         onEventResize={this.resizeEvent}
         onSelectSlot={this.createEvent}
-        onSelectEvent={event => alert(event.title)}
+        onSelectEvent={event => {
+          console.log(event);
+          return this.props.handleSelectEvent(event)
+        }}
         defaultView={BigCalendar.Views.MONTH}
         // defaultDate={new Date(2015, 3, 12)}
         defaultDate={new Date(2018, 10, 20)}

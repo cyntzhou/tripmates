@@ -4,32 +4,30 @@ import Modal from "../components/modal.jsx";
 import Textfield from "../components/textfield.jsx";
 import Button from "../components/button.jsx";
 
-class CreateEventModal extends React.Component {
+class EditEventModal extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       start: "",
       end: "",
-      activityId: 1, // TODO
       errors: []
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      start: nextProps.start,
-      end: nextProps.end
-    });
+    if (this.state.start === "" && this.state.end === "" && nextProps.event) {
+      this.setState({
+        start: nextProps.event.start,
+        end: nextProps.event.end
+      });
+    }
   }
 
-  handleCreate = () => {
-    const { start, end, activityId } = this.state;
-    const { itinerary, toggleModal, editEventsDone } = this.props;
+  handleSave = () => {
+    const { start, end } = this.state;
+    const { event, toggleModal, editEventsDone } = this.props;
     const errors = [];
-    // if (name.length === 0) {
-    //   errors.push("Please enter a name.");
-    // }
     if (errors.length > 0) {
       this.setState({ errors: errors });
       return;
@@ -39,13 +37,28 @@ class CreateEventModal extends React.Component {
     const formattedEnd = end.replace("T", " ") + ":00";
     
     const bodyContent = { 
-      itineraryId: itinerary.id, 
-      activityId: activityId, 
-      start: formattedStart,
-      end: formattedEnd
+      newStart: formattedStart,
+      newEnd: formattedEnd
     };
     axios
-      .post(`/api/events`, bodyContent)
+      .put(`/api/events/${event.id}`, bodyContent)
+      .then(res => {
+        toggleModal();
+        editEventsDone();
+      })
+      .catch(err => {
+        console.log(err);
+        const errors = [err.response.data.error];
+        this.setState({
+          errors: errors
+        })
+      });
+  }
+
+  handleDelete = () => {
+    const { event, toggleModal, editEventsDone } = this.props;
+    axios
+      .delete(`/api/events/${event.id}`)
       .then(res => {
         toggleModal();
         editEventsDone();
@@ -67,10 +80,6 @@ class CreateEventModal extends React.Component {
     this.setState({ end: event.target.value });
   }
 
-  handleSelectActivity = (event) => {
-    this.setState({ activityId: event.target.value });
-  }
-
   render() {
     const {
       start,
@@ -80,23 +89,11 @@ class CreateEventModal extends React.Component {
 
     const {
       showModal,
-      toggleModal,
-      activities
+      toggleModal
     } = this.props;
 
     return (
       <Modal show={showModal} handleClose={toggleModal}>
-        <div>
-          Activity: 
-          <select onChange={this.handleSelectActivity}>
-            {activities.map((activity) => {
-              return (
-                <option value={activity.id} key={activity.id}>{activity.name}</option>
-              )
-            })}
-          </select>
-        </div>
-
         <div>
           Start: 
           <input 
@@ -136,13 +133,19 @@ class CreateEventModal extends React.Component {
             onButtonClick={toggleModal}
           />
           <Button
-            label="Create"
-            onButtonClick={this.handleCreate}
+            label="Save"
+            onButtonClick={this.handleSave}
           />
         </div>
+
+        <Button 
+          label="Delete"
+          onButtonClick={this.handleDelete}
+          colorClassName="btn-red"
+        />
       </Modal>
     )
   }
 }
 
-export default CreateEventModal;
+export default EditEventModal;

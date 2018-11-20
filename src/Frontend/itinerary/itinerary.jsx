@@ -42,7 +42,8 @@ class Itinerary extends React.Component {
       itinerary,
       itineraries,
       handleSelectItinerary,
-      existingEvents
+      existingEvents,
+      handleSelectEvent
     } = this.props;
 
     const itinerariesList = itineraries.map((itinerary, i) => {
@@ -97,6 +98,7 @@ class Itinerary extends React.Component {
           <Calendar
             existingEvents={existingEvents}
             toggleCreateEventModal={toggleCreateEventModal}
+            handleSelectEvent={handleSelectEvent}
           />
         }
 
