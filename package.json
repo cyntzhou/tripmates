@@ -7,9 +7,10 @@
     "client": "./node_modules/.bin/webpack-dev-server --config ./webpack/webpack.dev.config.js --mode=development",
     "server": "node bin/www",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "start": "node bin/www",
-    "heroku-postbuild": "npm install --only=dev && npm install && npm run dev",
-    "test": "jest test --runInBand"
+    "test": "jest test --runInBand",
+    "build": "webpack -p --config ./webpack/webpack.dev.config.js",
+    "start": "npm run server",
+    "heroku-postbuild": "npm install && npm run build"
   },
   "author": "",
   "license": "ISC",
