@@ -7,7 +7,14 @@ const {
 	updateTrip,
 	findMyTrips,
 	deleteTrip,
-	getTripDetails
+	getTripDetails,
+	getItinerariesOfTrip,
+  createItinerary,
+  starItinerary,
+  unstarItinerary,
+  createActivity,
+  renameItinerary,
+  deleteItinerary
 } = require('./services');
 
 const database = require('../database.js');
@@ -130,6 +137,36 @@ describe('Test /api/trips', () => {
 		expect(tripDetails.body.endDate).toBe(trip.endDate);
 		expect(tripDetails.body.members).toEqual(expect.arrayContaining([user.username]));
 		expect(tripDetails.body.members.length).toBe(1);
+	});
+
+	test('Get all itineraries for a trip using GET /api/trips/:id/itineraries', async () => {
+		const userResponse = await signin(user);
+		expect(userResponse.statusCode).toBe(200);
+
+		const tripResponse = await createTrip(trip);
+		expect(tripResponse.statusCode).toBe(200);
+		const tripId = tripResponse.body.id;
+
+		const name0 = "My itinerary";
+		const itin0 = {
+			name: name0,
+			tripId: tripId
+		};
+		const itinResponse0 = await createItinerary(itin0);
+		expect(itinResponse0.statusCode).toBe(200);
+
+		const name1 = "My other itinerary";
+		const itin1 = {
+			name: name1,
+			tripId: tripId
+		};
+		const itinResponse1 = await createItinerary(itin1);
+		expect(itinResponse1.statusCode).toBe(200);
+
+		const getItinsResponse = await getItinerariesOfTrip(tripId);
+		expect(getItinsResponse.statusCode).toBe(200);
+		expect(getItinsResponse.body.length).toBe(2);
+		expect(getItinsResponse.body).toEqual(expect.arrayContaining([itinResponse0.body, itinResponse1.body]));
 	});
 
 });
