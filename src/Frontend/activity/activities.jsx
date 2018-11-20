@@ -1,19 +1,46 @@
 import React from "react";
+import axios from "axios";
 import styles from "./activities.css";
 import ActivityItem from "./activity-item.jsx";
 import AddButton from "../components/add-button.jsx";
 
 
 class Activities extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      activitiesList: []
+    }
+  }
+
+  componentDidMount() {
+    this.getActivities();
+  }
+
+  getActivities = () => {
+    axios.get(`/api/activities/trip/${this.props.tripId}`).then(res => {
+      console.log('activities', res)
+      this.setState({activitiesList: res.data})
+    })
+  }
+
   render() {
     return (
       <div className="activities-container">
         <div className="activity-header">
           <h2>Activities</h2>
-          <AddButton className="add-btn" onButtonClick={this.props.showCreateModal}/>
+          <AddButton 
+            className="add-btn" 
+            onButtonClick={this.props.showCreateModal}
+            refetch={this.getActivities}
+          />
         </div>
-        <ActivityItem showEditModal={this.props.showEditModal} activityName="actName here"/>
-        <ActivityItem showEditModal={this.props.showEditModal} activityName="actName2 here"/>
+          {this.state.activitiesList.map(function(act, index){
+            return <ActivityItem 
+              key={index}
+              showEditModal={this.props.showEditModal} 
+              activityName={act.name}/>
+          })}
       </div>
     )
   }
