@@ -19,7 +19,7 @@ class Activities extends React.Component {
 
   getActivities = () => {
     axios.get(`/api/activities/trip/${this.props.tripId}`).then(res => {
-      console.log('activities', res)
+      console.log('res',res)
       this.setState({activitiesList: res.data})
     })
   }
@@ -32,7 +32,6 @@ class Activities extends React.Component {
           <AddButton 
             className="add-btn" 
             onButtonClick={this.props.showCreateModal}
-            refetch={this.getActivities}
           />
         </div>
           {this.state.activitiesList.map(function(act, index){

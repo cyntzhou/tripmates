@@ -52,7 +52,7 @@ class CreateActivityModal extends React.Component{
       placeId,
       category
     }
-    axios.post('/api/activities', bodyContext).then((res) => {
+    axios.post('/api/activities', bodyContext).then(() => {
       this.props.hideCreateModal();
     }).catch(err => console.log(err));
   }

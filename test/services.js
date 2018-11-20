@@ -103,14 +103,6 @@ async function getTripDetails(id) {
     .get(`/api/trips/${id}`);
 }
 
-/**
- * @param {number} id - id of trip to get itineraries of
- */
-async function getItinerariesOfTrip(id) {
-  return requestApp
-    .get(`/api/trips/${id}/itineraries`)
-}
-
 // itineraries
 
 /**
@@ -269,7 +261,10 @@ async function getAllActivities(tripId) {
 }
 
 /**
- * @param {int} tripId
+ * @param {object} tripId
+ * {
+ *    tripId: int
+ * }
  * @param {string} category
  */
 async function filterActivities(tripId, category) {
@@ -314,7 +309,6 @@ module.exports = {
   findMyTrips,
   deleteTrip,
   getTripDetails,
-  getItinerariesOfTrip,
   createItinerary,
   starItinerary,
   unstarItinerary,

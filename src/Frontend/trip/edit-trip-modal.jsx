@@ -9,14 +9,22 @@ import Button from "../components/button.jsx";
 var moment = require('moment');
 
 class EditTripModal extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      name: '',
-      startDate: '',
-      endDate: ''
+      name: this.props.trip.name,
+      startDate: this.props.trip.startDate,
+      endDate: this.props.trip.endDate,
+      tripId: this.props.trip.tripId
     }
   }
+
+  setName = (event) => {
+    this.setState({
+      name: event.target.value
+    })
+  }
+
   setStartDate = (day) => {
     const dateString = moment(day).format("YYYY-MM-DD");
     this.setState({
@@ -32,33 +40,31 @@ class EditTripModal extends React.Component {
   }
 
   onSave = () => {
-    const {name, startDate, endDate} = this.state;
-    const bodyContext = {name, startDate, endDate};
-
-    axios.put(`/api/trips/${this.props.tripId}`, bodyContext).then(res => {
+    const {name, startDate, endDate, tripId} = this.state;
+    const bodyContext = {newName: name, newStart: startDate, newEnd: endDate};
+    axios.put(`/api/trips/${tripId}`, bodyContext).then(res => {
       this.props.hideModal();
     }).catch(err => console.log(err))
   }
 
   onDelete = () => {
-    axios.delete(`/api/trips/${this.props.tripId}`).then(() => {
+    const {tripId} = this.state
+    axios.delete(`/api/trips/${tripId}`).then(() => {
       this.props.history.push('/trips');
     }).catch(err => console.log(err))
   }
 
   render() {
+
     const {
-      tripDate, 
-      tripName, 
-      tripUsers,
-      hideModal
-    } = this.props;
+      members,
+    } = this.props.trip;
     return (
       <div>
         <h3>Edit Trip Details</h3>
         <form>
           <label>Trip Name:
-            <input type="text" name="nameValue" onChange={this.onChange}/>
+            <input type="text" name="name" onChange={this.setName}/>
           </label>
           <label>Start Date:
             <DayPickerInput onDayChange={this.setStartDate}/>
@@ -69,9 +75,9 @@ class EditTripModal extends React.Component {
         </form>
         <div className="trip-users">
           <i className="fa fa-users"/>
-          {tripUsers}
+          {members}
         </div>
-        <Button label="Cancel" onButtonClick={hideModal}/>
+        <Button label="Cancel" onButtonClick={this.props.hideModal}/>
         <Button label="Save" onButtonClick={this.onSave}/>
         <Button label="Delete" onButtonClick={this.onDelete}/>
       </div>
