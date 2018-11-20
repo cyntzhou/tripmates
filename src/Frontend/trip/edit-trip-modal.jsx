@@ -9,14 +9,21 @@ import Button from "../components/button.jsx";
 var moment = require('moment');
 
 class EditTripModal extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      name: '',
-      startDate: '',
-      endDate: ''
+      name: this.props.trip.name,
+      startDate: this.props.trip.startDate,
+      endDate: this.props.trip.endDate
     }
   }
+
+  setName = (event) => {
+    this.setState({
+      name: event.target.value
+    })
+  }
+
   setStartDate = (day) => {
     const dateString = moment(day).format("YYYY-MM-DD");
     this.setState({
@@ -47,18 +54,19 @@ class EditTripModal extends React.Component {
   }
 
   render() {
+
     const {
-      tripDate, 
-      tripName, 
-      tripUsers,
-      hideModal
-    } = this.props;
+      startDate, 
+      endDate, 
+      members,
+      name
+    } = this.props.trip;
     return (
       <div>
         <h3>Edit Trip Details</h3>
         <form>
           <label>Trip Name:
-            <input type="text" name="nameValue" onChange={this.onChange}/>
+            <input type="text" name="name" onChange={this.setName}/>
           </label>
           <label>Start Date:
             <DayPickerInput onDayChange={this.setStartDate}/>
@@ -69,9 +77,9 @@ class EditTripModal extends React.Component {
         </form>
         <div className="trip-users">
           <i className="fa fa-users"/>
-          {tripUsers}
+          {members}
         </div>
-        <Button label="Cancel" onButtonClick={hideModal}/>
+        <Button label="Cancel" onButtonClick={this.props.hideModal}/>
         <Button label="Save" onButtonClick={this.onSave}/>
         <Button label="Delete" onButtonClick={this.onDelete}/>
       </div>

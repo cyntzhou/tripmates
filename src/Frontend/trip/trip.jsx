@@ -31,6 +31,7 @@ class Trip extends React.Component {
   }
 
   render() {
+    var trip = this.props.location.state.trip
     var tripId = this.props.match.params.id;
     if (this.state.showCreateActivity) {
       return (
@@ -44,7 +45,7 @@ class Trip extends React.Component {
       return (
         <EditTripModal 
           hideModal={this.toggleEditTripModal}
-          tripId={tripId}
+          trip={trip}
         />
       )
     } else {
