@@ -38,14 +38,16 @@ class Trip extends React.Component {
 
   render() {
     var trip = this.props.location.state.trip
-    var tripId = this.props.match.params.id;
     if (this.state.showCreateActivity) {
       return (
-        <CreateActivityModal hideCreateModal={this.toggleCreateActivityModal}/>
+        <CreateActivityModal 
+          hideCreateModal={this.toggleCreateActivityModal}
+          tripId={trip.tripId}
+        />
       )
     } else if (this.state.showEditActivity) {
       return (
-        <EditActivityModal hideEditModal={this.toggleEditActivityModal} tripId={tripId}/>
+        <EditActivityModal hideEditModal={this.toggleEditActivityModal} tripId={trip.tripId}/>
       )
     } else if (this.state.showEditTrip) {
       return (
@@ -64,7 +66,7 @@ class Trip extends React.Component {
           <Activities 
             showCreateModal={this.toggleCreateActivityModal}
             showEditModal={this.toggleEditActivityModal}
-            tripId={tripId}
+            tripId={trip.tripId}
           />
           <Itinerary
             toggleCreateModal={this.toggleCreateItineraryModal}
@@ -74,7 +76,7 @@ class Trip extends React.Component {
           <CreateItineraryModal
             showModal={this.state.showCreateItinerary}
             toggleModal={this.toggleCreateItineraryModal}
-            tripId={tripId}
+            tripId={trip.tripId}
           />
 
           <EditItineraryModal

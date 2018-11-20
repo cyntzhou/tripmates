@@ -36,7 +36,6 @@ class CreateActivityModal extends React.Component{
     if (address) {
       const placeBody = {address}
       axios.post('api/places', placeBody).then(res => {
-        console.log(res)
         placeId = res.data.id;
       }).catch(err => console.log(err));
     } else {
@@ -47,7 +46,7 @@ class CreateActivityModal extends React.Component{
 
     const bodyContext = {
       name,
-      tripId: this.props.tripId,
+      tripId: 4,
       suggestedDuration,
       placeId,
       category

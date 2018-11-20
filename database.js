@@ -2,9 +2,9 @@ const mysql = require('mysql');
 
 const config = {
   host: 'sql.mit.edu',
-  user: 'jellee',
-  password: 'janrice',
-  database: 'jellee+tripmates',
+  user: 'lnancy',
+  password: 'vaf22cop',
+  database: 'lnancy+tripmates',
 };
 
 class Database {
