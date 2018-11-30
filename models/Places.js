@@ -3,6 +3,7 @@ const database = require('../database');
 /**
  * @typedef Places
  * @prop {int} id - id of place
+ * @prop {string} name - name of place
  * @prop {string} address - address of place
  */
 
@@ -13,11 +14,12 @@ const database = require('../database');
 class Places {
   /**
    * Add a place.
+   * @param {string} name - name of place
    * @param {string} address - address of place
    */
-  static async addPlace(address) {
+  static async addPlace(name, address) {
     try {
-      const sql = `INSERT INTO place (address) VALUES ('${address}');`;
+      const sql = `INSERT INTO place (name, address) VALUES ('${name}', '${address}');`;
       const response = await database.query(sql);
       return response;
     } catch (error) {
@@ -42,11 +44,12 @@ class Places {
   /**
    * Edit a place by id.
    * @param {int} id - id of place
+   * @param {string} name - name of place
    * @param {string} address - address of place
    */
-  static async editPlace(id, address) {
+  static async editPlace(id, name, address) {
     try {
-      const sql = `UPDATE place SET address='${address}' WHERE id='${id}';`;
+      const sql = `UPDATE place SET name='${name}', address='${address}' WHERE id='${id}';`;
       const response = await database.query(sql);
       return response;
     } catch (error) {

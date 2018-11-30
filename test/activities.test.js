@@ -67,7 +67,8 @@ const trip = {
   endDate: "2018-12-30"
 }
 
-const address = {
+const place = {
+  name: 'canada yay',
   address: 'toronto'
 };
 
@@ -139,14 +140,14 @@ describe('Test /api/activities', () => {
     const createResponse = await createActivity(activity1);
     expect(createResponse.statusCode).toBe(200);
 
-    const placeResponse = await createPlace(address);
+    const placeResponse = await createPlace(place);
     expect(placeResponse.statusCode).toBe(200);
 
     const foundPlace = await database.query(`SELECT * FROM place WHERE address='toronto'`);
-    // console.log(foundPlace);
     const createdPlace = foundPlace[0];
     expect(createdPlace.id).toBe(placeResponse.body.insertId);
-    expect(createdPlace.address).toBe(address.address);
+    expect(createdPlace.name).toBe(place.name);
+    expect(createdPlace.address).toBe(place.address);
 
     // add hours
     const hoursResponse1 = await addHours(hours1, createdPlace.id);

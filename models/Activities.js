@@ -53,15 +53,20 @@ class Activities {
     // activity
     let name = a.name;
     let suggestedDuration = a.suggestedDuration;
-    let category = a.category;
+    let category = null;
+    if (a.category) {
+      category = a.category;
+    }
     let placeId = a.placeId;
 
     // place
-    const address_query = `SELECT address FROM place WHERE id='${placeId}';`;
-    const address_response = await database.query(address_query);
+    const place_query = `SELECT * FROM place WHERE id='${placeId}';`;
+    const place_response = await database.query(place_query);
     let address = null;
-    if (address_response.length != 0) {
-      address = address_response[0].address;
+    let placeName = null;
+    if (place_response.length != 0) {
+      address = place_response[0].address;
+      placeName = place_response[0].name;
     }
 
     // openHours
@@ -74,7 +79,7 @@ class Activities {
     let upvoters = await Activities.getUpvoters(id);
     let downvoters = await Activities.getDownvoters(id);
 
-    return { id, name, suggestedDuration, category, placeId, address, openHours, votes, upvoters, downvoters };
+    return { id, name, suggestedDuration, category, placeId, placeName, address, openHours, votes, upvoters, downvoters };
   }
 
   /**
@@ -99,15 +104,20 @@ class Activities {
       let id = a.id;
       let name = a.name;
       let suggestedDuration = a.suggestedDuration;
-      let category = a.category;
+      let category = null;
+      if (a.category) {
+        category = a.category;
+      }
       let placeId = a.placeId;
 
       // place
-      const address_query = `SELECT address FROM place WHERE id='${placeId}';`;
-      const address_response = await database.query(address_query);
+      const place_query = `SELECT * FROM place WHERE id='${placeId}';`;
+      const place_response = await database.query(place_query);
       let address = null;
-      if (address_response.length != 0) {
-        // address = address_response[0].address;
+      let placeName = null;
+      if (place_response.length != 0) {
+        address = place_response[0].address;
+        placeName = place_response[0].name;
       }
 
       // openHours
@@ -120,7 +130,7 @@ class Activities {
       let upvoters = await Activities.getUpvoters(id);
       let downvoters = await Activities.getDownvoters(id);
 
-      all_activities.push({ id, name, suggestedDuration, category, placeId, address, openHours, votes, upvoters, downvoters });
+      all_activities.push({ id, name, suggestedDuration, category, placeId, placeName, address, openHours, votes, upvoters, downvoters });
     }
     return all_activities;
   }
@@ -297,15 +307,20 @@ class Activities {
         let id = a.id;
         let name = a.name;
         let suggestedDuration = a.suggestedDuration;
-        let category = a.category;
+        let category = null;
+        if (a.category) {
+          category = a.category;
+        }
         let placeId = a.placeId;
 
         // place
-        const address_query = `SELECT address FROM place WHERE id='${placeId}';`;
-        const address_response = await database.query(address_query);
+        const place_query = `SELECT * FROM place WHERE id='${placeId}';`;
+        const place_response = await database.query(place_query);
         let address = null;
-        if (address_response.length != 0) {
-          address = address_response[0].address;
+        let placeName = null;
+        if (place_response.length != 0) {
+          address = place_response[0].address;
+          placeName = place_response[0].name;
         }
 
         // openHours
@@ -318,7 +333,7 @@ class Activities {
         let upvoters = await Activities.getUpvoters(id);
         let downvoters = await Activities.getDownvoters(id);
 
-        activities.push({ id, name, suggestedDuration, category, placeId, address, openHours, votes, upvoters, downvoters });
+        activities.push({ id, name, suggestedDuration, category, placeId, placeName, address, openHours, votes, upvoters, downvoters });
       }
       // console.log("filtered activities:");
       // console.log(activities);

@@ -5,24 +5,6 @@ const Trips = require('../models/Trips');
 
 const router = express.Router();
 
-// TODO Janice notes (can delete later)
-// Create an activity
-// Get an activity TODO only if activity is part of trip user is in
-// Get all activities TODO only if trip is user's
-// Edit an activity TODO only if activity is part of trip user is in
-// Delete an activity TODO only if activity is part of trip user is in
-
-// Upvote an activity TODO only if activity is part of trip user is in
-// Downvote an activity TODO only if activity is part of trip user is in
-
-// Create hours?
-// Delete hours?
-
-// Create a place?
-// Get place?
-// Edit a place?
-// Delete a place?
-
 /**
  * Create an activity.
  * @name POST/api/activities
@@ -44,31 +26,6 @@ const router = express.Router();
      }).end();
    }
  });
-
- // /**
- //  * Get all activities of a trip
- //  * @name GET/api/activities/trip/:tripId
- //  * @param {int} tripId - id of trip
- //  * @return {Activity[]} - all activities
- //  * @throws {401} - if user not logged in
- //  * @throws {403} - if user is not a member of trip
- //  */
- //  router.get('/trip/:tripId', async (req, res) => {
- //    if (await Trips.checkMembership(req.session.name, req.params.tripId)) {
- //      if (req.session.name !== undefined) {
- //        const all_activities = await Activities.getAllTripActivities(req.params.tripId);
- //        res.status(200).json(all_activities).end();
- //      } else {
- //        res.status(401).json({
- //          error: `Must be logged in to get all activities.`,
- //        }).end();
- //      }
- //    } else {
-	// 		res.status(403).json({
-	// 			error: `Must be member of trip to get trip activities.`,
-	// 		}).end();
-	// 	}
- //  });
 
  /**
   * Get an activity.
@@ -250,5 +207,5 @@ const router = express.Router();
      }).end();
    }
  });
- 
+
 module.exports = router;

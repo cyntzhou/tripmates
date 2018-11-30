@@ -78,7 +78,7 @@ class Database {
     ).catch(err => console.log(err));
 
     await this.query(`CREATE TABLE IF NOT EXISTS openHours (
-      id INT PRIMARY KEY AUTOINCREMENT,
+      id INT PRIMARY KEY AUTO_INCREMENT,
     	placeId INT REFERENCES place(id),
     	day INT NOT NULL,
     	startTime VARCHAR(5) NOT NULL,
