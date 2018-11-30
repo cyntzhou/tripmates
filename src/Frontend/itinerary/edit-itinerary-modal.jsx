@@ -90,6 +90,7 @@ class EditItineraryModal extends React.Component {
           placeholder="name"
           onChange={this.handleChangeName}
           value={name}
+          maxLength={40}
         />
 
         {errors.length > 0 &&
