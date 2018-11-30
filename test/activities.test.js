@@ -6,6 +6,7 @@ const {
   createPlace,
   addHours,
   createActivity,
+  getActivity,
   deleteActivity,
   getAllActivities,
   filterActivities,
@@ -61,6 +62,15 @@ const activity4 = {
   category: 'food'
 };
 
+const activity5 = {
+  name: 'sleeping',
+  tripId: 4,
+  suggestedDuration: 30,
+  placeId: 4,
+  category: 'rest'
+};
+
+
 const trip = {
   name: "testtrip",
   startDate: "2018-12-20",
@@ -108,7 +118,7 @@ describe('Test /api/activities', () => {
   });
 
   // tests create activity with null place, delete activity
-  test('POST /activities/places should allow creating activity', async () => {
+  test('POST /activities should allow creating activity', async () => {
     const createResponse = await createActivity(activity);
     expect(createResponse.statusCode).toBe(200);
 
@@ -158,7 +168,7 @@ describe('Test /api/activities', () => {
   });
 
   // test get all activities within trip
-  test('GET /activities/trip/:tripId should get all activities within the trip', async () => {
+  test('GET /trips/:tripId/activities should get all activities within the trip', async () => {
     const createResponse2 = await createActivity(activity2);
     expect(createResponse2.statusCode).toBe(200);
 
@@ -178,6 +188,21 @@ describe('Test /api/activities', () => {
   test('GET /activities/category/:category should get all activities within the trip with the category', async () => {
     const filteredActivities = await filterActivities({ tripId: 3 }, 'food');
     expect(filteredActivities.body.length).toBe(2);
+  });
+
+  // test get and edit activity
+  test('GET /api/activities/:id and PUT /api/activities/:id to edit activity duration and category, etc', async () => {
+    const createResponse = await createActivity(activity5);
+    let aId = createResponse.body.insertId;
+
+    let activityRes = await getActivity(aId);
+    // console.log(activityRes.body);
+    expect(activityRes.body.name).toBe(activity5.name);
+    expect(activityRes.body.category).toBe(activity5.category);
+    expect(activityRes.body.suggestedDuration).toBe(activity5.suggestedDuration);
+
+    // const editResponse = await editActivity();
+    // TODO
   });
 
 });
