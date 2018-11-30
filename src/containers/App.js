@@ -28,7 +28,7 @@ class App extends Component {
 
   logout = () => {
     const { cookies } = this.props;
-    axios.post('api/users/signout')
+    axios.post('/api/users/signout')
       .then(() => {
         cookies.remove("username");
         cookies.remove('user-id');

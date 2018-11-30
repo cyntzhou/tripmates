@@ -110,6 +110,7 @@ class ChangePasswordForm extends React.Component {
             placeholder="current password"
             value={currentPassword}
             onChange={this.handleChangeCurrentPassword}
+            type={"password"}
           />
         </div>
 
@@ -119,6 +120,7 @@ class ChangePasswordForm extends React.Component {
             placeholder="new password"
             value={newPassword}
             onChange={this.handleChangeNewPassword}
+            type={"password"}
           />
         </div>
 
@@ -128,6 +130,7 @@ class ChangePasswordForm extends React.Component {
             placeholder="new password"
             value={confirmNewPassword}
             onChange={this.handleChangeConfirmNewPassword}
+            type={"password"}
           />
         </div>
 
