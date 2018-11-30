@@ -9,6 +9,8 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import { withCookies } from 'react-cookie';
 
+const COOKIE_AGE = 6*60*60; // 6 hours (in seconds)
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -20,8 +22,8 @@ class App extends Component {
 
   userHasAuthenticated = (user) => {
     const { cookies } = this.props;
-    cookies.set('username', user.username, { path: '/' });
-    cookies.set('user-id', user.id, { path: "/" });
+    cookies.set('username', user.username, { path: '/', maxAge: COOKIE_AGE });
+    cookies.set('user-id', user.id, { path: '/', maxAge: COOKIE_AGE });
     console.log("User logged in");
     console.log(user);
   }
@@ -32,7 +34,6 @@ class App extends Component {
       .then(() => {
         cookies.remove("username");
         cookies.remove('user-id');
-        // eventBus.$emit('signout-success', true);
       })
   }
 
