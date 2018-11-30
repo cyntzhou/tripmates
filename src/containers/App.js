@@ -20,6 +20,22 @@ class App extends Component {
     // };
   }
 
+  // Check if user is logged into session on server side. 
+  // If not, delete cookie in browser
+  componentDidMount() {
+    const { cookies } = this.props;
+    const userId = cookies.get("user-id");
+    if (userId) {
+      axios.get(`/api/users/${userId}/trips`).then(res => {
+        // user is logged into session
+      }).catch(err => {
+        // 401 error because user is logged out of session
+        cookies.remove("username");
+        cookies.remove('user-id');
+      });
+    }
+  }
+
   userHasAuthenticated = (user) => {
     const { cookies } = this.props;
     cookies.set('username', user.username, { path: '/', maxAge: COOKIE_AGE });
