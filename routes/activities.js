@@ -67,8 +67,11 @@ const router = express.Router();
   router.put('/:id', async (req, res) => {
     if (req.session.name !== undefined) {
       const getActivity = await Activities.getActivity(parseInt(req.params.id));
+      console.log(getActivity);
       if (await Trips.checkMembership(req.session.name, getActivity.tripId)) {
+        console.log("YASSS");
         const activity = await Activities.editActivity(parseInt(req.params.id), req.body.name, req.body.suggestedDuration, req.body.placeId, req.body.category);
+        console.log(activity);
         res.status(200).json(activity).end();
       } else {
         res.status(403).json({

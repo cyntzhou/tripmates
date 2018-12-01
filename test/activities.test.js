@@ -7,6 +7,7 @@ const {
   addHours,
   createActivity,
   getActivity,
+  editActivity,
   deleteActivity,
   getAllActivities,
   filterActivities,
@@ -200,9 +201,18 @@ describe('Test /api/activities', () => {
     expect(activityRes.body.name).toBe(activity5.name);
     expect(activityRes.body.category).toBe(activity5.category);
     expect(activityRes.body.suggestedDuration).toBe(activity5.suggestedDuration);
-
-    // const editResponse = await editActivity();
-    // TODO
+    const editted = {
+      id: aId,
+      name: 'waking',
+      suggestedDuration: 20,
+      placeId: 4,
+      category: 'unrest'
+    }
+    const editResponse = await editActivity(aId, editted);
+    let editActivityRes = await getActivity(aId);
+    expect(editActivityRes.body.name).toBe(editted.name);
+    expect(editActivityRes.body.category).toBe(editted.category);
+    expect(editActivityRes.body.suggestedDuration).toBe(editted.suggestedDuration);
   });
 
 });
