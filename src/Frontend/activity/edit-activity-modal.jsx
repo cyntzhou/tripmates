@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
+import moment from 'moment';
 import Button from "../components/button.jsx";
+import OpenHoursCalendar from './hours-calender.jsx';
 
 class EditActivityModal extends React.Component {
   constructor(props) {
@@ -12,10 +14,16 @@ class EditActivityModal extends React.Component {
       suggestedMins: null,
       newPlaceName: null,
       newAddress: null,
-      newOpenHours: [],
+      openHours: [],
       currHours: Math.floor(this.props.activity.suggestedDuration/60),
       currMins: this.props.activity.suggestedDuration%60
     }
+  }
+
+  updateOpenHours = (newHours) => {
+    this.setState({
+      openHours: newHours
+    })
   }
 
   onChange = (event) => {
@@ -105,6 +113,22 @@ class EditActivityModal extends React.Component {
   }
   
   render() {
+    const {
+      openHours
+    } = this.state
+    this.props.activity.openHours.forEach((timeSeg) => {
+      const formatStart = moment([
+        2018, 10, 20, 
+        parseInt(timeSeg.startTime.substring(0,2)), 
+        parseInt(timeSeg.startTime.substring(3))
+      ]);
+      openHours.push({
+        resourceId: timeSeg.day,
+        start: formatStart._d,
+        end: moment(formatStart).add(timeSeg.duration, 'm')._d
+      })
+    })
+
     return (
       <div className="modal-container">
         <h3>Edit Activity</h3>
@@ -156,7 +180,9 @@ class EditActivityModal extends React.Component {
               onChange={this.onChange}/>
           </label>
           <p>Open Hours:</p>
-          <div>Put in calendar here</div>
+          <div>
+            <OpenHoursCalendar openHours={openHours} updateHours={this.updateOpenHours} />
+          </div>
         </form>
         <div className="btns-container">
           <Button label="Cancel" onButtonClick={this.props.hideEditModal}/>

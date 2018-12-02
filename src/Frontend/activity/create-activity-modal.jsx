@@ -20,12 +20,42 @@ class CreateActivityModal extends React.Component{
     }
   }
 
+  updateOpenHours = (newHours) => {
+    // const newHours = this.state.openHours
+    // newHours.push(hourSeg)
+    // this.setState({
+    //   openHours: newHours
+    // })
+
+    this.setState({
+      openHours: newHours
+    })
+  }
+
+  createHours = () => {
+    console.log(this.state.openHours)
+    this.state.openHours.forEach((timeSeg) => {
+      var a = moment(timeSeg.start)
+      var b = moment(timeSeg.end)
+      const dur = b.diff(a, 'minutes')
+      const hoursBody = {
+        placeId: this.state.placeId,
+        day: timeSeg.resourceId,
+        startTime: moment(timeSeg.start).format('HH:mm'),
+        duration: dur
+      }
+      axios.post(`/api/places/${this.state.placeId}/hours`, hoursBody)
+        .then()
+        .catch(err => console.log(err))
+    })
+  }
+
   onChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value
     });
   }
-
+  
   onSave = () => {
     const {
       name,
@@ -68,6 +98,7 @@ class CreateActivityModal extends React.Component{
         });
         bodyContext['placeId'] = res.data.insertId
         axios.post('/api/activities', bodyContext).then(() => {
+          this.createHours();
           this.props.hideCreateModal();
           this.props.editActivitiesDone();
         }).catch(err => console.log(err));
@@ -103,7 +134,7 @@ class CreateActivityModal extends React.Component{
           </label>
           <p>Open Hours:</p>
           <div>
-            <OpenHoursCalendar openHours={openHours} />
+            <OpenHoursCalendar openHours={openHours} updateHours={this.updateOpenHours} />
           </div>
         </form>
         <div className="btns-container">
