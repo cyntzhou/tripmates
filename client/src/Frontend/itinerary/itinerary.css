@@ -1,0 +1,75 @@
+.itinerary-container {
+  width: 77%;
+  height: 82vh;
+  margin: 1%;
+}
+
+.itinerary-header {
+  display: flex;
+  justify-content: center;
+  height: 7vh;
+}
+
+.itinerary-edit {
+  margin-left: .5em;
+  margin-right: 1em;
+}
+
+.center-vertically {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.rbc-calendar {
+  background-color: var(--white);
+}
+
+.itinerary-dropdown-button {
+  width: 2em;
+  border-radius: 5%;
+  font-size: 1em;
+  color: var(--white);
+  background-color: var(--dark-green);
+  border: 0;
+  text-align: center;
+}
+
+.itinerary-dropdown-button:hover {
+  cursor: pointer;
+}
+
+.itinerary-dropdown {
+  position: absolute;
+  z-index: 5;
+  top: 11vh;
+  right: 1vh;
+  text-align: left;
+}
+
+.itinerary-name {
+  display: flex;
+  flex-direction: row;
+}
+
+.itinerary-item-container {
+  text-align: center;
+  background-color: var(--mid-green);
+  border-top: 0.5px solid var(--dark-green);
+  border-bottom: 0.5px solid var(--dark-green);
+}
+
+.itinerary-item-container h3 {
+  font-size: 1em;
+  margin: 0.5em;
+}
+
+.itinerary-item-container:hover {
+  background-color: var(--dark-green);
+  color: var(--white);
+  cursor: pointer;
+}
+
+.itinerary-container i {
+  cursor: pointer;
+}

@@ -1,0 +1,12 @@
+.tripname-bar {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--light-green);
+    color: var(--black);
+    display: flex;
+    justify-content: center;
+    height: 5vh;
+    border-bottom: 0.3em solid var(--dark-brown);
+    font-size: 1.7em;
+}

@@ -1,0 +1,15 @@
+.trips {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+}
+
+.trip-header {
+  display: flex;
+  justify-content: center;
+}
+
+.trip-body {
+  margin: 1.0em;
+}

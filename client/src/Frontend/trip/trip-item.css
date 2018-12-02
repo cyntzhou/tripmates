@@ -1,0 +1,33 @@
+.trip-item-container {
+  display: flex;
+  background-color: var(--mid-green);
+  color: var(--dark-brown);
+  width: 50%;
+  margin: auto;
+  padding: 0.5em;
+  text-align: center;
+}
+
+.trip-details {
+  margin: auto;
+}
+
+.date {
+  background-color: var(--white);
+  width: 20%;
+  padding: 0.5em;
+  margin: 0.5em;
+  border-radius: 5px;
+}
+
+.fa-users {
+  padding: 0.5em;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* a:visited {
+  text-decoration: none;
+} */
