@@ -14,6 +14,12 @@ class EditItineraryModal extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.state.name === "" && nextProps.itinerary) {
+      this.setState({ name: nextProps.itinerary.name });
+    }
+  }
+
   resetForm = () => {
     this.setState({ errors: [] });
   }

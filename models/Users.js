@@ -123,6 +123,10 @@ class Users {
     try {
       const sql = `DELETE FROM user WHERE id='${id}';`;
       const response = await database.query(sql);
+
+      const membershipSql = `DELETE FROM tripMembership WHERE userId='${id}';`;
+      const membershipResponse = await database.query(membershipSql);
+
       return response;
     } catch (err) { throw err; }
   }

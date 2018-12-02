@@ -1,4 +1,5 @@
 const database = require('../database');
+const sanitizer = require('sanitizer');
 
 /**
  * @typedef Places
@@ -19,7 +20,9 @@ class Places {
    */
   static async addPlace(name, address) {
     try {
-      const sql = `INSERT INTO place (name, address) VALUES ('${name}', '${address}');`;
+      const sanitizedName = sanitizer.sanitize(name);
+      const sanitizedAddress = sanitizer.sanitize(address);
+      const sql = `INSERT INTO place (name, address) VALUES ('${sanitizedName}', '${sanitizedAddress}');`;
       const response = await database.query(sql);
       return response;
     } catch (error) {
@@ -49,7 +52,9 @@ class Places {
    */
   static async editPlace(id, name, address) {
     try {
-      const sql = `UPDATE place SET name='${name}', address='${address}' WHERE id='${id}';`;
+      const sanitizedName = sanitizer.sanitize(name);
+      const sanitizedAddress = sanitizer.sanitize(address);
+      const sql = `UPDATE place SET name='${sanitizedName}', address='${sanitizedAddress}' WHERE id='${id}';`;
       const response = await database.query(sql);
       return response;
     } catch (error) {
@@ -66,6 +71,10 @@ class Places {
     try {
       const sql = `DELETE * FROM place WHERE id='${id}';`;
       const response = await database.query(sql);
+
+      const membershipSql = `DELETE FROM openHours WHERE placeId='${id}';`;
+      const membershipResponse = await database.query(membershipSql);
+
       return response;
     } catch (error) {
       throw error;

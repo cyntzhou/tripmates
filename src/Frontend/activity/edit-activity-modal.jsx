@@ -1,18 +1,29 @@
 import React from "react";
 import axios from "axios";
+import moment from 'moment';
 import Button from "../components/button.jsx";
+import OpenHoursCalendar from './hours-calender.jsx';
 
 class EditActivityModal extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       newName: null,
       newCategory: null,
       suggestedHours: null,
       suggestedMins: null,
+      newPlaceName: null,
       newAddress: null,
-      newOpenHours: [],
+      openHours: [],
+      currHours: Math.floor(this.props.activity.suggestedDuration/60),
+      currMins: this.props.activity.suggestedDuration%60
     }
+  }
+
+  updateOpenHours = (newHours) => {
+    this.setState({
+      openHours: newHours
+    })
   }
 
   onChange = (event) => {
@@ -28,6 +39,7 @@ class EditActivityModal extends React.Component {
       suggestedHours,
       suggestedMins,
       newAddress,
+      newPlaceName
     } = this.state
     let name, category, suggestedDuration, address
 
@@ -58,26 +70,40 @@ class EditActivityModal extends React.Component {
       category
     }
 
-    if(newAddress) {
-      const placeBody = {address: newAddress}
+    if(newAddress || newPlaceName) {
+      let placeBody = {}
+
+      if (newAddress) {
+        placeBody['address'] = newAddress;
+      } else if (newPlaceName) {
+        placeBody['name'] = newPlaceName;
+      }
+
       if (this.props.activity.placeId) {
         axios.put(`/api/places/${this.props.activity.placeId}`, placeBody)
           .then(res => {
             bodyContext['placeId'] = res.data.insertId;
+            axios.put(`/api/activities/${this.props.activity.id}`, bodyContext)
+            .then(() => {
+              this.props.hideEditModal(null);
+            }).catch(err => console.log(err));
           })
       } else {
         axios.post('/api/places', placeBody).then(res => {
           bodyContext['placeId'] = res.data.insertId;
+          axios.put(`/api/activities/${this.props.activity.id}`, bodyContext)
+          .then(() => {
+            this.props.hideEditModal(null);
+          }).catch(err => console.log(err));
         }).catch(err => console.log(err));
       }
     } else {
       bodyContext['placeId'] = this.props.activity.placeId;
-    }
-
-    axios.put(`/api/activities/${this.props.activity.id}`, bodyContext)
+      axios.put(`/api/activities/${this.props.activity.id}`, bodyContext)
       .then(() => {
         this.props.hideEditModal(null);
       }).catch(err => console.log(err));
+    }
   }
 
   onDelete = () => {
@@ -87,27 +113,76 @@ class EditActivityModal extends React.Component {
   }
   
   render() {
+    const {
+      openHours
+    } = this.state
+    this.props.activity.openHours.forEach((timeSeg) => {
+      const formatStart = moment([
+        2018, 10, 20, 
+        parseInt(timeSeg.startTime.substring(0,2)), 
+        parseInt(timeSeg.startTime.substring(3))
+      ]);
+      openHours.push({
+        resourceId: timeSeg.day,
+        start: formatStart._d,
+        end: moment(formatStart).add(timeSeg.duration, 'm')._d
+      })
+    })
+
     return (
       <div className="modal-container">
         <h3>Edit Activity</h3>
         <form>
           <label>Activity Name:
-            <input type="text" name="newName" onChange={this.onChange}/>
+            <input 
+              type="text" name="newName" 
+              onChange={this.onChange} 
+              placeholder={this.props.activity.name}
+            />
           </label>
           <h4>Optional Details</h4>
           <label>Category:
-            <input type="text" name="newCategory" onChange={this.onChange}/>
+            <input 
+              type="text" 
+              name="newCategory" 
+              onChange={this.onChange}
+              placeholder={this.props.activity.category? 
+                this.props.activity.category : 'category'}
+            />
           </label>
           <label>Suggested Duration:
-            <input type="number" min="0" name="suggestedHours" placeholder="hours" onChange={this.onChange}/>
-            <input type="number" min="0" name="suggestedMins" placeholder="mins" onChange={this.onChange}/>
+            <input 
+              type="number" min="0" 
+              name="suggestedHours" 
+              placeholder={`${this.state.currHours? this.state.currHours : ''} hours`}
+              onChange={this.onChange}
+            />
+            <input 
+              type="number" min="0" 
+              name="suggestedMins" 
+              placeholder={`${this.state.currMins? this.state.currMins : ''} mins`}
+              onChange={this.onChange}
+            />
           </label>
           <p>Place:</p>
+          <label>Name:
+            <input 
+              type="text" 
+              name="newPlaceName" 
+              placeholder={this.props.address? this.props.address : 'address'}
+              onChange={this.onChange}/>
+          </label>
           <label>Address:
-            <input type="text" name="newAddress" onChange={this.onChange}/>
+            <input 
+              type="text" 
+              name="newAddress" 
+              placeholder={this.props.address? this.props.address : 'address'}
+              onChange={this.onChange}/>
           </label>
           <p>Open Hours:</p>
-          <div>Put in calendar here</div>
+          <div>
+            <OpenHoursCalendar openHours={openHours} updateHours={this.updateOpenHours} />
+          </div>
         </form>
         <div className="btns-container">
           <Button label="Cancel" onButtonClick={this.props.hideEditModal}/>
