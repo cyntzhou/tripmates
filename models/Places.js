@@ -71,6 +71,10 @@ class Places {
     try {
       const sql = `DELETE * FROM place WHERE id='${id}';`;
       const response = await database.query(sql);
+
+      const membershipSql = `DELETE FROM openHours WHERE placeId='${id}';`;
+      const membershipResponse = await database.query(membershipSql);
+
       return response;
     } catch (error) {
       throw error;

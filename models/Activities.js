@@ -148,7 +148,13 @@ class Activities {
     try {
       const sql = `DELETE FROM activity WHERE id='${id}';`;
       const response = await database.query(sql);
-      // TODO delete respective votes in table
+
+      const voteSql = `DELETE FROM activityVotes WHERE activityId='${id}';`;
+      const voteResponse = await database.query(voteSql);
+
+      const eventSql = `DELETE FROM event WHERE activityId='${id}';`;
+      const eventResponse = await database.query(eventSql);
+
       return response;
     } catch (error) {
       throw error;

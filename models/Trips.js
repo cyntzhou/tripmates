@@ -193,6 +193,12 @@ const Users = require('../models/Users');
       const membershipSql = `DELETE FROM tripMembership WHERE tripId='${id}';`;
       const membershipResponse = await database.query(membershipSql);
 
+      const activitySql = `DELETE FROM activity WHERE tripId='${id}';`;
+      const activityResponse = await database.query(activitySql);
+
+      const itinerarySql = `DELETE FROM itinerary WHERE tripId='${id}';`;
+      const itineraryResponse = await database.query(itinerarySql);
+
       return tripResponse[0];
     } catch (err) {
     	throw err;
