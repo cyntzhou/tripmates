@@ -106,7 +106,7 @@ class Activities {
       let name = a.name;
       let suggestedDuration = a.suggestedDuration;
       let category = null;
-      if (a.category) {
+      if (a.category !== 'null') {
         category = a.category;
       }
       let placeId = a.placeId;

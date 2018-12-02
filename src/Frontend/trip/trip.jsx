@@ -41,8 +41,7 @@ class Trip extends React.Component {
     //   this.setState({ activities: res.data });
     //   this.getItineraries();
     // });
-    this.getActivities();
-    this.getItineraries();
+    this.getActivities(this.getItineraries);
     this.getTrip();
   }
 
@@ -72,9 +71,9 @@ class Trip extends React.Component {
 
   getEvents = (itinerary) => {
     return axios.get(`/api/itineraries/${itinerary.id}/events`).then(res => {
-      console.log('events', res.data); // TODO not showing new event?
+      // console.log('events', res.data); // TODO not showing new event?
       const existingEvents = res.data.map((event) => {
-        console.log(this.state.activities);
+        // console.log(this.state.activities);
         const matchedActivity = this.state.activities.filter(activity => activity.id === event.activityId);
         const activity = matchedActivity.length > 0 ? matchedActivity[0] : {
           id: "",
@@ -91,11 +90,12 @@ class Trip extends React.Component {
     });
   }
 
-  getActivities = () => {
+  getActivities = (callBack) => {
     const tripId = this.props.match.params.id;
     return axios.get(`/api/trips/${tripId}/activities`).then(res => {
       this.setState({ activities: res.data });
-      console.log('activities', res.data);
+      // console.log('activities', res.data);
+      callBack();
     });
   }
 

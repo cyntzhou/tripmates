@@ -16,18 +16,18 @@ class TripItem extends React.Component {
     const formatEnd = moment(endDate).format("MMM DD, YYYY");
 
     return (
-      <div className="trip-item-container">
-        <div className="date">{formatStart + ' - ' + formatEnd}</div>
-        <div className="trip-details">
-          <Link to={{pathname: `/trips/${tripId}`, state: { trip: this.props.trip} }}>
-            <h3>{name}</h3>
-          </Link>
-          <div className="trip-users">
-            <i className="fa fa-users"/>
-            {members.join(',')}
+      <Link to={{pathname: `/trips/${tripId}`, state: { trip: this.props.trip} }}>
+        <div className="trip-item-container">
+          <div className="date">{formatStart + ' - ' + formatEnd}</div>
+          <div className="trip-details">
+              <h3>{name}</h3>
+            <div className="trip-users">
+              <i className="fa fa-users"/>
+              {members.join(',')}
+            </div>
           </div>
         </div>
-      </div>
+      </Link>
     )
   }
 }
