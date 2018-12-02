@@ -111,7 +111,7 @@ class SignupForm extends React.Component {
         maxLength={60}
         type={"password"}
       />
-      <div className="login-button">
+      <div className="signup-button">
         <Button
           label="Sign Up"
           onButtonClick={this.handleSignup}
@@ -119,7 +119,7 @@ class SignupForm extends React.Component {
       </div>
 
       {errors.length > 0 &&
-        <div className="login-error-message">
+        <div className="signup-error-message">
           <ul>
             {errors.map((error, i) => {
                 return <li key={i}>{error}</li>;
@@ -129,7 +129,7 @@ class SignupForm extends React.Component {
       }
 
       {showSuccessMessage &&
-        <div className="login-success-message">
+        <div className="signup-success-message">
           <b>Successfully created new account. Now log in!</b>
         </div>
       }

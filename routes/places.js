@@ -27,7 +27,7 @@ const router = express.Router();
   */
   router.get('/:id', async (req, res) => {
     const place = await Places.getPlace(parseInt(req.params.id));
-    res.status(200).json(place).end();
+    res.status(200).json(place[0]).end();
   });
 
  /**
@@ -40,6 +40,7 @@ const router = express.Router();
   */
   router.put('/:id', async (req, res) => {
     const place = await Places.editPlace(parseInt(req.params.id), req.body.name, req.body.address);
+    console.log(place);
     res.status(200).json(place).end();
   });
 

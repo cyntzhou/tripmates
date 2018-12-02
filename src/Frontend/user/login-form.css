@@ -9,9 +9,5 @@
 }
 
 .login-error-message {
-  color: red;
-}
-
-.login-success-message {
-  color: var(--dark-green);
+  color: white;
 }
