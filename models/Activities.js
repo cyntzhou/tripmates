@@ -44,7 +44,9 @@ class Activities {
       if (response.length === 0) {
         return undefined;
       }
+      console.log("Didn't throw error");
     } catch (error) {
+      console.log("In get activity, throwing error");
       throw error;
     }
 

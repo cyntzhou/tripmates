@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/dist'))); // Note
 
-app.use(session({ secret: 'super-secret-password', saveUninitialized: false, resave: true }));
+app.use(session({ secret: 'super-secret-password', saveUninitialized: false, resave: true })); // TODO expire session here?
 
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);

@@ -48,7 +48,7 @@ describe('Test /api/events', () => {
 
   // TODO: test the situations in which you should get errors (not logged in, not member of trip, all the different cases for dates, etc.)
 
-  test('Create an event using POST /api/events', async () => {
+  test.only('Create an event using POST /api/events', async () => {
     const userResponse = await signin(user);
     expect(userResponse.statusCode).toBe(200);
 
@@ -64,9 +64,20 @@ describe('Test /api/events', () => {
     const itinResponse = await createItinerary(itin);
     expect(itinResponse.statusCode).toBe(200);
 
+    const activity = {
+      name: 'hiking',
+      tripId: tripId,
+      suggestedDuration: 30,
+      placeId: null,
+      category: 'nature'
+    };
+    const activityResponse = await createActivity(activity);
+    expect(activityResponse.statusCode).toBe(200);
+    const activityId = activityResponse.body.insertId;
+
     const event = {
       itineraryId: itinResponse.body.id,
-      activityId: 1,
+      activityId: activityId,
       start: "2018-12-20 17:30",
       end: "2018-12-20 18:30"
     };
