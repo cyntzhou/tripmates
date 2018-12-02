@@ -102,14 +102,14 @@ const router = express.Router();
 
   /**
   * Upvote an activity.
-  * @name POST/api/activities/:id/upvote
+  * @name PUT/api/activities/:id/upvote
   * @param {string} id - id of the activity
   * @param {string} userId - id of the user
   * @return {Vote} - the vote
   * @throws {401} - if user not logged in
   * @throws {403} - if user is not a member of trip this activity belongs to
   */
-  router.post('/:id/upvote', async (req, res) => {
+  router.put('/:id/upvote', async (req, res) => {
     if (req.session.name !== undefined) {
       const getActivity = await Activities.getActivity(parseInt(req.params.id));
       if (await Trips.checkMembership(req.session.name, getActivity.tripId)) {
@@ -143,14 +143,14 @@ const router = express.Router();
 
  /**
    * Downvote an activity.
-   * @name POST/api/activities/:id/downvote
+   * @name PUT/api/activities/:id/downvote
    * @param {string} id - id of the activity
    * @param {string} userId - id of the user
    * @return {Vote} - the vote
    * @throws {401} - if user not logged in
    * @throws {403} - if user is not a member of trip this activity belongs to
    */
-   router.post('/:id/downvote', async (req, res) => {
+   router.put('/:id/downvote', async (req, res) => {
     if (req.session.name !== undefined) {
       const getActivity = await Activities.getActivity(parseInt(req.params.id));
       if (await Trips.checkMembership(req.session.name, getActivity.tripId)) {
@@ -184,17 +184,17 @@ const router = express.Router();
 
  /**
   * Get all activities by category of a trip
-  * @name GET/api/activities/category/:category
-  * @param {string} category - category of activities to filter by
+  * @name GET/api/activities?category=:categoryType
+  * @param {string} categoryType - category of activities to filter by
   * @param {int} tripId - id of the activity
   * @return {Activity[]} - all activities with category
   * @throws {401} - if user not logged in
   * @throws {403} - if user is not a member of trip
   */
- router.get('/category/:category', async (req, res) => {
+ router.get('/', async (req, res) => {
    if (await Trips.checkMembership(req.session.name, req.body.tripId)) {
      if (req.session.name !== undefined) {
-       let activities = await Activities.filterByCategory(req.body.tripId, req.params.category);
+       let activities = await Activities.filterByCategory(req.body.tripId, req.query.category);
        res.status(200).json(activities).end();
      } else {
        res.status(401).json({
