@@ -1,4 +1,5 @@
 const database = require('../database');
+const sanitizer = require('sanitizer');
 
 /**
  * @typedef Activity
@@ -24,7 +25,9 @@ class Activities {
    */
   static async addActivity(name, tripId, suggestedDuration=null, placeId=null, category=null) {
     try {
-      const sql = `INSERT INTO activity (name, suggestedDuration, placeId, tripId, category) VALUES ('${name}', '${suggestedDuration}', '${placeId}', '${tripId}', '${category}');`;
+      const sanitizedName = sanitizer.sanitize(name);
+      const sanitizedCategory = sanitizer.sanitize(category);
+      const sql = `INSERT INTO activity (name, suggestedDuration, placeId, tripId, category) VALUES ('${sanitizedName}', '${suggestedDuration}', '${placeId}', '${tripId}', '${sanitizedCategory}');`;
       const response = await database.query(sql);
       return response;
     } catch (error) {
@@ -106,7 +109,7 @@ class Activities {
       let name = a.name;
       let suggestedDuration = a.suggestedDuration;
       let category = null;
-      if (a.category) {
+      if (a.category !== 'null') {
         category = a.category;
       }
       let placeId = a.placeId;
@@ -145,7 +148,13 @@ class Activities {
     try {
       const sql = `DELETE FROM activity WHERE id='${id}';`;
       const response = await database.query(sql);
-      // TODO delete respective votes in table
+
+      const voteSql = `DELETE FROM activityVotes WHERE activityId='${id}';`;
+      const voteResponse = await database.query(voteSql);
+
+      const eventSql = `DELETE FROM event WHERE activityId='${id}';`;
+      const eventResponse = await database.query(eventSql);
+
       return response;
     } catch (error) {
       throw error;
@@ -162,7 +171,9 @@ class Activities {
    */
   static async editActivity(id, name=null, suggestedDuration=null, placeId=null, category=null) {
     try {
-      const sql = `UPDATE activity SET name='${name}', suggestedDuration='${suggestedDuration}', placeId='${placeId}', category='${category}' WHERE id='${id}';`;
+      const sanitizedName = sanitizer.sanitize(name);
+      const sanitizedCategory = sanitizer.sanitize(category);
+      const sql = `UPDATE activity SET name='${sanitizedName}', suggestedDuration='${suggestedDuration}', placeId='${placeId}', category='${sanitizedCategory}' WHERE id='${id}';`;
       const response = await database.query(sql);
       return response;
     } catch (error) {
@@ -300,7 +311,8 @@ class Activities {
   static async filterByCategory(tripId, category) {
     let activities = [];
     try {
-      const sql = `SELECT * FROM activity WHERE tripId='${tripId}' AND category='${category}';`;
+      const sanitizedCategory = sanitizer.sanitize(category);
+      const sql = `SELECT * FROM activity WHERE tripId='${tripId}' AND category='${sanitizedCategory}';`;
       const response = await database.query(sql);
       for (let i = 0; i < response.length; i++) {
         let a = response[i];
@@ -338,8 +350,6 @@ class Activities {
 
         activities.push({ id, tripId, name, suggestedDuration, category, placeId, placeName, address, openHours, votes, upvoters, downvoters });
       }
-      // console.log("filtered activities:");
-      // console.log(activities);
       return activities;
     } catch (error) {
       throw error;
