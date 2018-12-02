@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
         error: `Trip with given tripId not found.`,
       }).end();
     } else {
-      if (Trips.checkMembership(req.session.name, req.body.tripId)) {
+      if (await Trips.checkMembership(req.session.name, req.body.tripId)) {
         const itin = await Itineraries.addOne(req.body.name, req.body.tripId);
         res.status(200).json(itin).end();
       } else {
@@ -62,7 +62,7 @@ router.put('/:id/star', async (req, res) => {
         error: `Itinerary not found.`,
       }).end();
     } else {
-      if (Trips.checkMembership(req.session.name, itinerary.tripId)) {
+      if (await Trips.checkMembership(req.session.name, itinerary.tripId)) {
         const itin = await Itineraries.starOne(req.params.id);
         res.status(200).json(itin).end();
       } else {
@@ -95,7 +95,7 @@ router.put('/:id/unstar', async (req, res) => {
         error: `Itinerary not found.`,
       }).end();
     } else {
-      if (Trips.checkMembership(req.session.name, itinerary.tripId)) {
+      if (await Trips.checkMembership(req.session.name, itinerary.tripId)) {
         const itin = await Itineraries.unstarOne(req.params.id);
         res.status(200).json(itin).end();
       } else {
@@ -129,7 +129,7 @@ router.put('/:id/name', async (req, res) => {
         error: `Itinerary not found.`,
       }).end();
     } else {
-      if (Trips.checkMembership(req.session.name, itinerary.tripId)) {
+      if (await Trips.checkMembership(req.session.name, itinerary.tripId)) {
         const itin = await Itineraries.updateNameOne(req.params.id, req.body.newName);
         res.status(200).json(itin).end();
       } else {
@@ -162,7 +162,7 @@ router.delete('/:id', async (req, res) => {
         error: `Itinerary not found.`,
       }).end();
     } else {
-      if (Trips.checkMembership(req.session.name, itin.tripId)) {
+      if (await Trips.checkMembership(req.session.name, itin.tripId)) {
         const deleted = await Itineraries.deleteOne(req.params.id);
         res.status(200).json(deleted).end();
       } else {
@@ -195,7 +195,7 @@ router.get('/:id/events', async (req, res) => {
         error: `Itinerary not found.`,
       }).end();
     } else {
-      if (Trips.checkMembership(req.session.name, itin.tripId)) {
+      if (await Trips.checkMembership(req.session.name, itin.tripId)) {
       	const events = await Events.findAllForItinerary(req.params.id);
       	res.status(200).json(events).end();
       } else {
