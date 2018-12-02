@@ -34,11 +34,16 @@ const router = express.Router();
   * @return {Activity} - activity
   * @throws {401} - if user not logged in
   * @throws {403} - if user is not a member of trip this activity belongs to
+  * @throws {404} - if activity doesn't exist (invalid ID)
   */
   router.get('/:id', async (req, res) => {
     if (req.session.name !== undefined) {
       const activity = await Activities.getActivity(parseInt(req.params.id));
-      if (await Trips.checkMembership(req.session.name, activity.tripId)) {
+      if (activity === undefined) {
+        res.status(404).json({
+          error: `Activity not found.`,
+        }).end();
+      } else if (await Trips.checkMembership(req.session.name, activity.tripId)) {
         res.status(200).json(activity).end();
       } else {
         res.status(403).json({
@@ -63,11 +68,16 @@ const router = express.Router();
   * @return {Activity} - the activity created
   * @throws {401} - if user not logged in
   * @throws {403} - if user is not a member of trip this activity belongs to
-  */
+  * @throws {404} - if activity doesn't exist (invalid ID)
+*/
   router.put('/:id', async (req, res) => {
     if (req.session.name !== undefined) {
-      const getActivity = await Activities.getActivity(parseInt(req.params.id));
-      if (await Trips.checkMembership(req.session.name, getActivity.tripId)) {
+      const activity = await Activities.getActivity(parseInt(req.params.id));
+      if (activity === undefined) {
+        res.status(404).json({
+          error: `Activity not found.`,
+        }).end();
+      } else if (await Trips.checkMembership(req.session.name, activity.tripId)) {
         const activity = await Activities.editActivity(parseInt(req.params.id), req.body.name, req.body.suggestedDuration, req.body.placeId, req.body.category);
         res.status(200).json(activity).end();
       } else {
@@ -88,11 +98,19 @@ const router = express.Router();
   * @param {int} id - id of activity
   * @throws {401} - if user not logged in
   * @throws {403} - if user is not a member of trip this activity belongs to TODO idk why it didn't work here
+  * @throws {404} - if activity doesn't exist (invalid ID)
   */
   router.delete('/:id', async (req, res) => {
     if (req.session.name !== undefined) {
-      const activity = await Activities.deleteActivity(parseInt(req.params.id));
-      res.status(200).json(activity).end();
+      const activity = await Activities.getActivity(parseInt(req.params.id));
+      if (activity === undefined) {
+        res.status(404).json({
+          error: `Activity not found.`,
+        }).end();
+      } else {
+        const activity = await Activities.deleteActivity(parseInt(req.params.id));
+        res.status(200).json(activity).end();
+      }
     } else {
       res.status(401).json({
         error: `Must be logged in to delete activity.`,
@@ -108,11 +126,16 @@ const router = express.Router();
   * @return {Vote} - the vote
   * @throws {401} - if user not logged in
   * @throws {403} - if user is not a member of trip this activity belongs to
+  * @throws {404} - if activity doesn't exist (invalid ID)
   */
   router.put('/:id/upvote', async (req, res) => {
     if (req.session.name !== undefined) {
-      const getActivity = await Activities.getActivity(parseInt(req.params.id));
-      if (await Trips.checkMembership(req.session.name, getActivity.tripId)) {
+      const activity = await Activities.getActivity(parseInt(req.params.id));
+      if (activity === undefined) {
+        res.status(404).json({
+          error: `Activity not found.`,
+        }).end();
+      } else if (await Trips.checkMembership(req.session.name, activity.tripId)) {
         let id = req.params.id;
         let userId = req.body.userId;
         let upvoters = await Activities.getUpvoters(id);
@@ -149,11 +172,16 @@ const router = express.Router();
    * @return {Vote} - the vote
    * @throws {401} - if user not logged in
    * @throws {403} - if user is not a member of trip this activity belongs to
-   */
+   * @throws {404} - if activity doesn't exist (invalid ID)
+ */
    router.put('/:id/downvote', async (req, res) => {
     if (req.session.name !== undefined) {
-      const getActivity = await Activities.getActivity(parseInt(req.params.id));
-      if (await Trips.checkMembership(req.session.name, getActivity.tripId)) {
+      const activity = await Activities.getActivity(parseInt(req.params.id));
+      if (activity === undefined) {
+        res.status(404).json({
+          error: `Activity not found.`,
+        }).end();
+      } else if (await Trips.checkMembership(req.session.name, activity.tripId)) {
         let id = req.params.id;
         let userId = req.body.userId;
         let upvoters = await Activities.getUpvoters(id);
