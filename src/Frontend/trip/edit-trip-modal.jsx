@@ -42,7 +42,7 @@ class EditTripModal extends React.Component {
   onSave = () => {
     const {name, startDate, endDate, tripId} = this.state;
     const bodyContext = {newName: name, newStart: startDate, newEnd: endDate};
-    axios.put(`/api/trips/${tripId}`, bodyContext).then(res => {
+    axios.put(`/api/trips/${tripId}`, bodyContext).then(() => {
       this.props.hideModal();
     }).catch(err => console.log(err))
   }
@@ -58,19 +58,22 @@ class EditTripModal extends React.Component {
 
     const {
       members,
+      name,
+      startDate,
+      endDate
     } = this.props.trip;
     return (
       <div>
         <h3>Edit Trip Details</h3>
         <form>
           <label>Trip Name:
-            <input type="text" name="name" onChange={this.setName}/>
+            <input type="text" name="name" onChange={this.setName} placeholder={name}/>
           </label>
           <label>Start Date:
-            <DayPickerInput onDayChange={this.setStartDate}/>
+            <DayPickerInput onDayChange={this.setStartDate} value={startDate}/>
           </label>
           <label>End Date:
-            <DayPickerInput onDayChange={this.setEndDate}/>
+            <DayPickerInput onDayChange={this.setEndDate} value={endDate}/>
           </label>
         </form>
         <div className="trip-users">

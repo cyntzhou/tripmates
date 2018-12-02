@@ -23,16 +23,22 @@ class ActivityItem extends React.Component {
       name,
       category,
       suggestedDuration,
-      address
+      address,
+      placeName
     } = this.props.activity
+
+    const suggestedHours = Math.floor(suggestedDuration/60) || 0;
+    const suggestedMin = suggestedDuration%60;
+
     return (
       <div className="activity-item-container" onClick={this.toggleDetails}>
         <h3>{name}</h3>
         {this.state.expand && 
           <div className="details">
-            {(category != "null") && <p>Category: {category}</p>}
-            {suggestedDuration && <p>Suggested Duration: {suggestedDuration} min</p>}
-            {/* {address && <p>Address: {address}</p>} */}
+            {category && <p>Category: {category}</p>}
+            {suggestedDuration !== 0 && <p>Suggested Duration: {suggestedHours} Hrs {suggestedMin} Min</p>}
+            {placeName && <p>Place: {placeName}</p>}
+            {address && <p>Address: {address}</p>}
             <i onClick={() => showEditModal(this.props.activity)} className="fa fa-edit"/>
           </div>
         }
