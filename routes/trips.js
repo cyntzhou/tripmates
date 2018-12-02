@@ -43,6 +43,7 @@ router.post('/', async (req, res) => {
  * @param {string} newEnd - the new end date to change to
  * @return {Trip} - the updated trip
  * @throws {401} - if user not logged in
+ * @throws {404} - if trip with given id not found
  * @throws {403} - if user is not a member of trip
  * @throws {400} - if date range is invalid
  */
@@ -52,20 +53,27 @@ router.put('/:id', async (req, res) => {
 	      error: `Must be logged in to change trip details.`,
 	    }).end();
 	} else {
-		if (Trips.checkMembership(req.session.name, req.params.id)) {
-			if (Trips.validDateTimeRange(req.body.newStart, req.body.newEnd)) {
-				const trip = await Trips.updateOne(req.params.id, req.body.newName, req.body.newStart, req.body.newEnd);
-				res.status(200).json(trip).end();
-			} else {
-				res.status(400).json({
-					error: `Not a valid date range. Start date cannot be after end date.`,
-				}).end();
-			}
-		} else {
-			res.status(403).json({
-				error: `Must be member of trip to change trip details.`,
-			}).end();
-		}
+    const trip = await Trips.findOneById(req.params.id);
+    if (trip === undefined) {
+      res.status(404).json({
+        error: `Trip not found.`,
+      }).end();
+    } else {
+      if (Trips.checkMembership(req.session.name, req.params.id)) {
+        if (Trips.validDateTimeRange(req.body.newStart, req.body.newEnd)) {
+          const trip = await Trips.updateOne(req.params.id, req.body.newName, req.body.newStart, req.body.newEnd);
+          res.status(200).json(trip).end();
+        } else {
+          res.status(400).json({
+            error: `Not a valid date range. Start date cannot be after end date.`,
+          }).end();
+        }
+      } else {
+        res.status(403).json({
+          error: `Must be member of trip to change trip details.`,
+        }).end();
+      }
+    }
 	}
 });
 
@@ -181,22 +189,30 @@ router.get('/:id/itineraries', async (req, res) => {
  * @return {Activity[]} - all activities
  * @throws {401} - if user not logged in
  * @throws {403} - if user is not a member of trip
+ * @throws {404} - if trip with given tripId not found
  */
- router.get('/:tripId/activities', async (req, res) => {
-	 if (await Trips.checkMembership(req.session.name, req.params.tripId)) {
-		 if (req.session.name !== undefined) {
-			 const all_activities = await Activities.getAllTripActivities(req.params.tripId);
-			 res.status(200).json(all_activities).end();
-		 } else {
-			 res.status(401).json({
-				 error: `Must be logged in to get all activities.`,
-			 }).end();
-		 }
-	 } else {
-		 res.status(403).json({
-			 error: `Must be member of trip to get trip activities.`,
-		 }).end();
-	 }
- });
+router.get('/:tripId/activities', async (req, res) => {
+  if (await Trips.checkMembership(req.session.name, req.params.tripId)) {
+    if (req.session.name !== undefined) {
+      const trip = await Trips.findOneById(req.params.tripId);
+      if (trip === undefined) {
+        res.status(404).json({
+          error: `Trip not found.`,
+        }).end();
+      } else {
+        const all_activities = await Activities.getAllTripActivities(req.params.tripId);
+        res.status(200).json(all_activities).end();
+      }
+    } else {
+      res.status(401).json({
+        error: `Must be logged in to get all activities.`,
+      }).end();
+    }
+  } else {
+    res.status(403).json({
+      error: `Must be member of trip to get trip activities.`,
+    }).end();
+  }
+});
 
 module.exports = router;

@@ -213,7 +213,7 @@ describe('Test /api/itineraries', () => {
 
     const event0 = {
       itineraryId: itinResponse.body.id,
-      activityId: activityResponse0.body.id,
+      activityId: activityResponse0.body.insertId,
       start: "2018-12-20 17:30",
       end: "2018-12-20 18:30"
     };
@@ -222,7 +222,7 @@ describe('Test /api/itineraries', () => {
 
     const event1 = {
       itineraryId: itinResponse.body.id,
-      activityId: activityResponse1.body.id,
+      activityId: activityResponse1.body.insertId,
       start: "2018-12-21 23:30",
       end: "2018-12-22 01:00"
     };

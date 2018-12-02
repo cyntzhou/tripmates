@@ -10,6 +10,7 @@ import CreateEventModal from "../itinerary/create-event-modal.jsx";
 import EditEventModal from "../itinerary/edit-event-modal.jsx";
 import EditActivityModal from "../activity/edit-activity-modal.jsx";
 import EditTripModal from "./edit-trip-modal.jsx";
+import TripnameBar from "./tripname-bar.jsx";
 
 class Trip extends React.Component {
   constructor() {
@@ -29,7 +30,8 @@ class Trip extends React.Component {
       createEventStart: "",
       createEventEnd: "",
       existingEvents: [],
-      selectedEvent: null
+      selectedEvent: null,
+      tripName: ""
     }
   }
 
@@ -39,8 +41,8 @@ class Trip extends React.Component {
     //   this.setState({ activities: res.data });
     //   this.getItineraries();
     // });
-    this.getActivities();
-    this.getItineraries();
+    this.getActivities(this.getItineraries);
+    this.getTrip();
   }
 
   getItineraries = (itinerary) => {
@@ -69,9 +71,9 @@ class Trip extends React.Component {
 
   getEvents = (itinerary) => {
     return axios.get(`/api/itineraries/${itinerary.id}/events`).then(res => {
-      console.log('events', res.data); // TODO not showing new event?
+      // console.log('events', res.data); // TODO not showing new event?
       const existingEvents = res.data.map((event) => {
-        console.log(this.state.activities);
+        // console.log(this.state.activities);
         const matchedActivity = this.state.activities.filter(activity => activity.id === event.activityId);
         const activity = matchedActivity.length > 0 ? matchedActivity[0] : {
           id: "",
@@ -88,11 +90,19 @@ class Trip extends React.Component {
     });
   }
 
-  getActivities = () => {
+  getActivities = (callBack) => {
     const tripId = this.props.match.params.id;
     return axios.get(`/api/trips/${tripId}/activities`).then(res => {
       this.setState({ activities: res.data });
-      console.log('activities', res.data);
+      // console.log('activities', res.data);
+      callBack();
+    });
+  }
+
+  getTrip = () => {
+    const tripId = this.props.match.params.id;
+    return axios.get(`/api/trips/${tripId}`).then(res => {
+      this.setState({ tripName: res.data.name });
     });
   }
 
@@ -168,7 +178,8 @@ class Trip extends React.Component {
       showCreateEvent,
       showEditEvent,
       createEventEnd,
-      createEventStart
+      createEventStart,
+      tripName
     } = this.state;
 
     if (showCreateActivity) {
@@ -197,57 +208,59 @@ class Trip extends React.Component {
     } else {
       return (
         <div className="trip-container">
-          <div className="edit-trip">
-            <p>Click to edit trip: </p>
-            <i onClick={this.toggleEditTripModal} className="fa fa-edit"/>
+          <TripnameBar
+            toggleEditTripModal={this.toggleEditTripModal}
+            tripName={tripName}
+          />
+          <div className="trip-details">
+            <Activities 
+              showCreateModal={this.toggleCreateActivityModal}
+              showEditModal={this.toggleEditActivityModal}
+              tripId={tripId}
+            />
+            <Itinerary
+              toggleCreateItineraryModal={this.toggleCreateItineraryModal}
+              toggleEditItineraryModal={this.toggleEditItineraryModal}
+              toggleCreateEventModal={this.toggleCreateEventModal}
+              itinerary={itinerary}
+              itineraries={itineraries}
+              existingEvents={existingEvents}
+              handleSelectItinerary={this.handleSelectItinerary}
+              handleSelectEvent={this.handleSelectEvent}
+            />
+
+            <CreateItineraryModal
+              showModal={showCreateItinerary}
+              toggleModal={this.toggleCreateItineraryModal}
+              tripId={tripId}
+              editItinerariesDone={this.editItinerariesDone}
+            />
+
+            <EditItineraryModal
+              showModal={showEditItinerary}
+              toggleModal={this.toggleEditItineraryModal}
+              itinerary={itinerary}
+              editItinerariesDone={this.editItinerariesDone}
+            />
+
+            <CreateEventModal
+              showModal={showCreateEvent}
+              toggleModal={this.toggleCreateEventModal}
+              itinerary={itinerary}
+              start={createEventStart}
+              end={createEventEnd}
+              editEventsDone={this.editEventsDone}
+              activities={activities}
+            />
+
+            <EditEventModal
+              showModal={showEditEvent}
+              toggleModal={this.toggleEditEventModal}
+              itinerary={itinerary}
+              event={selectedEvent}
+              editEventsDone={this.editEventsDone}
+            />
           </div>
-          <Activities 
-            showCreateModal={this.toggleCreateActivityModal}
-            showEditModal={this.toggleEditActivityModal}
-            tripId={tripId}
-          />
-          <Itinerary
-            toggleCreateItineraryModal={this.toggleCreateItineraryModal}
-            toggleEditItineraryModal={this.toggleEditItineraryModal}
-            toggleCreateEventModal={this.toggleCreateEventModal}
-            itinerary={itinerary}
-            itineraries={itineraries}
-            existingEvents={existingEvents}
-            handleSelectItinerary={this.handleSelectItinerary}
-            handleSelectEvent={this.handleSelectEvent}
-          />
-
-          <CreateItineraryModal
-            showModal={showCreateItinerary}
-            toggleModal={this.toggleCreateItineraryModal}
-            tripId={tripId}
-            editItinerariesDone={this.editItinerariesDone}
-          />
-
-          <EditItineraryModal
-            showModal={showEditItinerary}
-            toggleModal={this.toggleEditItineraryModal}
-            itinerary={itinerary}
-            editItinerariesDone={this.editItinerariesDone}
-          />
-
-          <CreateEventModal
-            showModal={showCreateEvent}
-            toggleModal={this.toggleCreateEventModal}
-            itinerary={itinerary}
-            start={createEventStart}
-            end={createEventEnd}
-            editEventsDone={this.editEventsDone}
-            activities={activities}
-          />
-
-          <EditEventModal
-            showModal={showEditEvent}
-            toggleModal={this.toggleEditEventModal}
-            itinerary={itinerary}
-            event={selectedEvent}
-            editEventsDone={this.editEventsDone}
-          />
         </div>
       )
     }

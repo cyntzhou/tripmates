@@ -9,7 +9,7 @@ class Button extends React.Component {
       onButtonClick
     } = this.props;
 
-    const classNames = "btn " + colorClassName;
+    const classNames = colorClassName ? "btn " + colorClassName : "btn btn-regular";
 
     return (
       <div className="btn-container">
