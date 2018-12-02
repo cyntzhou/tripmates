@@ -80,8 +80,8 @@ class Trip extends React.Component {
           name: ""
         };
         return {
-          start: event.startDateTime.replace(" ", "T"),
-          end: event.endDateTime.replace(" ", "T"),
+          start: new Date(event.startDateTime.replace(" ", "T")),
+          end: new Date(event.endDateTime.replace(" ", "T")),
           title: activity.name,
           id: event.id
         }
