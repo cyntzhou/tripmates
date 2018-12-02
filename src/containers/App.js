@@ -9,6 +9,8 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import { withCookies } from 'react-cookie';
 
+const COOKIE_AGE = 6*60*60; // 6 hours (in seconds)
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -18,21 +20,36 @@ class App extends Component {
     // };
   }
 
+  // Check if user is logged into session on server side. 
+  // If not, delete cookie in browser
+  componentDidMount() {
+    const { cookies } = this.props;
+    const userId = cookies.get("user-id");
+    if (userId) {
+      axios.get(`/api/users/${userId}/trips`).then(res => {
+        // user is logged into session
+      }).catch(err => {
+        // 401 error because user is logged out of session
+        cookies.remove("username");
+        cookies.remove('user-id');
+      });
+    }
+  }
+
   userHasAuthenticated = (user) => {
     const { cookies } = this.props;
-    cookies.set('username', user.username, { path: '/' });
-    cookies.set('user-id', user.id, { path: "/" });
+    cookies.set('username', user.username, { path: '/', maxAge: COOKIE_AGE });
+    cookies.set('user-id', user.id, { path: '/', maxAge: COOKIE_AGE });
     console.log("User logged in");
     console.log(user);
   }
 
   logout = () => {
     const { cookies } = this.props;
-    axios.post('api/users/signout')
+    axios.post('/api/users/signout')
       .then(() => {
         cookies.remove("username");
         cookies.remove('user-id');
-        // eventBus.$emit('signout-success', true);
       })
   }
 

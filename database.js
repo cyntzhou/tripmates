@@ -1,10 +1,12 @@
+require('dotenv').config();
+
 const mysql = require('mysql');
 
 const config = {
-  host: 'sql.mit.edu',
-  user: 'jellee',
-  password: 'janrice',
-  database: 'jellee+tripmates'
+  host: process.env.DB_HOST,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 };
 
 class Database {
@@ -44,7 +46,7 @@ class Database {
 
     await this.query(`CREATE TABLE IF NOT EXISTS trip (
 	    id INT PRIMARY KEY AUTO_INCREMENT,
-	    name VARCHAR(20) NOT NULL,
+	    name VARCHAR(40) NOT NULL,
       creatorId INT REFERENCES user(id),
       startDate VARCHAR(10) NOT NULL,
       endDate VARCHAR(10) NOT NULL
@@ -60,7 +62,7 @@ class Database {
 
     await this.query(`CREATE TABLE IF NOT EXISTS activity (
     	id INT PRIMARY KEY AUTO_INCREMENT,
-    	name VARCHAR(20) NOT NULL,
+    	name VARCHAR(40) NOT NULL,
     	suggestedDuration INT,
     	placeId INT REFERENCES place(id),
     	tripId INT REFERENCES trip(id),
@@ -70,21 +72,23 @@ class Database {
 
     await this.query(`CREATE TABLE IF NOT EXISTS place (
 	    id INT PRIMARY KEY AUTO_INCREMENT,
+      name VARCHAR(40) NOT NULL,
 	    address VARCHAR(100)
     );`
     ).catch(err => console.log(err));
 
     await this.query(`CREATE TABLE IF NOT EXISTS openHours (
+      id INT PRIMARY KEY AUTO_INCREMENT,
     	placeId INT REFERENCES place(id),
     	day INT NOT NULL,
-    	startTime TIME NOT NULL,
+    	startTime VARCHAR(5) NOT NULL,
     	duration INT NOT NULL
     );`
     ).catch(err => console.log(err));
 
     await this.query(`CREATE TABLE IF NOT EXISTS itinerary (
     	id INT PRIMARY KEY AUTO_INCREMENT,
-    	name VARCHAR(20) NOT NULL,
+    	name VARCHAR(40) NOT NULL,
     	tripId INT REFERENCES trip(id),
     	starred BOOLEAN NOT NULL
     );`

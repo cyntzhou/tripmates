@@ -20,7 +20,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/dist'))); // Note
 
-app.use(session({ secret: 'super-secret-password', saveUninitialized: false, resave: true })); // TODO expire session here?
+app.use(session({ 
+  secret: 'super-secret-password', 
+  saveUninitialized: false, 
+  resave: true,
+  cookie: {
+    maxAge: 6*60*60*1000 // 6 hours (in milliseconds)
+  }
+}));
 
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);

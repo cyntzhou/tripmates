@@ -48,7 +48,7 @@ describe('Test /api/events', () => {
 
   // TODO: test the situations in which you should get errors (not logged in, not member of trip, all the different cases for dates, etc.)
 
-  test.only('Create an event using POST /api/events', async () => {
+  test('Create an event using POST /api/events', async () => {
     const userResponse = await signin(user);
     expect(userResponse.statusCode).toBe(200);
 

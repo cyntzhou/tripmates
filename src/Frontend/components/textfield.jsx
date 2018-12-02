@@ -10,15 +10,19 @@ class TextField extends React.Component {
     const {
       placeholder,
       onChange,
-      value
+      value,
+      maxLength,
+      type
     } = this.props;
+    const inputType = type ? type : "text";
     return (
       <input 
-        className="textfield" 
-        type="text" 
+        className="textfield"
+        type={inputType} 
         placeholder={placeholder}
         onChange={onChange}
         value={value}
+        maxLength={maxLength}
       />
     )
   }

@@ -34,6 +34,8 @@ Janice Lee: All files in models, routes, and test, relating to users, activities
 `npm i`
 
 ## Run locally
+Copy `.env_template` to a file named `.env` in the base repo. Fill in database configurations.
+
 `npm run dev` runs both the server and client. Head to `localhost:8080`
 
 `npm run server` runs only the Express server app on your env's PORT, or port 3000.

@@ -102,11 +102,14 @@ class SignupForm extends React.Component {
         placeholder="username" 
         onChange={this.handleChangeUsername}
         value={username}
+        maxLength={20}
       />
       <TextField 
         placeholder="password"
         onChange={this.handleChangePassword}
         value={password}
+        maxLength={60}
+        type={"password"}
       />
       <div className="login-button">
         <Button

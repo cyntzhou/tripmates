@@ -253,6 +253,30 @@ async function createActivity(activity) {
 }
 
 /**
+ * @param {int} id
+ */
+async function getActivity(id) {
+  return requestApp
+    .get(`/api/activities/${id}`);
+}
+
+/**
+ * @param {object} activity
+ * {
+ *    id: int
+ *    name: int
+ *    suggestedDuration: int
+ *    placeId: int
+ *    category: string
+ * }
+ */
+async function editActivity(id, activity) {
+  return requestApp
+    .put(`/api/activities/${id}`)
+    .send(activity);
+}
+
+/**
  * @param {string} id
  */
 async function deleteActivity(id) {
@@ -329,7 +353,9 @@ module.exports = {
   deleteEvent,
   createPlace,
   addHours,
+  getActivity,
   createActivity,
+  editActivity,
   deleteActivity,
   getAllActivities,
   filterActivities,

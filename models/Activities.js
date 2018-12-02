@@ -40,43 +40,47 @@ class Activities {
   static async getActivity(id) {
     try {
       const sql = `SELECT * FROM activity WHERE id='${id}';`;
-      const response = await database.query(sql);
+      let response = await database.query(sql);
       if (response.length === 0) {
         return undefined;
+      } else {
+        let a = response[0];
+
+        // activity
+        let name = a.name;
+        let suggestedDuration = a.suggestedDuration;
+        let category = null;
+        if (a.category) {
+          category = a.category;
+        }
+        let placeId = a.placeId;
+        let tripId = a.tripId;
+
+        // place
+        const place_query = `SELECT * FROM place WHERE id='${placeId}';`;
+        const place_response = await database.query(place_query);
+        let address = null;
+        let placeName = null;
+        if (place_response.length != 0) {
+          address = place_response[0].address;
+          placeName = place_response[0].name;
+        }
+
+        // openHours
+        const openhours_query = `SELECT * FROM openHours WHERE placeId='${placeId}'`;
+        const openhours_response = await database.query(openhours_query);
+        let openHours = openhours_response;
+
+        // votes
+        let votes = await Activities.numVotes(id);
+        let upvoters = await Activities.getUpvoters(id);
+        let downvoters = await Activities.getDownvoters(id);
+
+        return { id, tripId, name, suggestedDuration, category, placeId, placeName, address, openHours, votes, upvoters, downvoters };
       }
-      console.log("Didn't throw error");
     } catch (error) {
-      console.log("In get activity, throwing error");
       throw error;
     }
-
-    let a = response[0];
-
-    // activity
-    let name = a.name;
-    let suggestedDuration = a.suggestedDuration;
-    let category = a.category;
-    let placeId = a.placeId;
-
-    // place
-    const address_query = `SELECT address FROM place WHERE id='${placeId}';`;
-    const address_response = await database.query(address_query);
-    let address = null;
-    if (address_response.length != 0) {
-      address = address_response[0].address;
-    }
-
-    // openHours
-    const openhours_query = `SELECT * FROM openHours WHERE placeId='${placeId}'`;
-    const openhours_response = await database.query(openhours_query);
-    let openHours = openhours_response;
-
-    // votes
-    let votes = await Activities.numVotes(id);
-    let upvoters = await Activities.getUpvoters(id);
-    let downvoters = await Activities.getDownvoters(id);
-
-    return { id, name, suggestedDuration, category, placeId, address, openHours, votes, upvoters, downvoters };
   }
 
   /**
@@ -101,15 +105,21 @@ class Activities {
       let id = a.id;
       let name = a.name;
       let suggestedDuration = a.suggestedDuration;
-      let category = a.category;
+      let category = null;
+      if (a.category) {
+        category = a.category;
+      }
       let placeId = a.placeId;
+      let tripId = a.tripId;
 
       // place
-      const address_query = `SELECT address FROM place WHERE id='${placeId}';`;
-      const address_response = await database.query(address_query);
+      const place_query = `SELECT * FROM place WHERE id='${placeId}';`;
+      const place_response = await database.query(place_query);
       let address = null;
-      if (address_response.length != 0) {
-        // address = address_response[0].address;
+      let placeName = null;
+      if (place_response.length != 0) {
+        address = place_response[0].address;
+        placeName = place_response[0].name;
       }
 
       // openHours
@@ -122,7 +132,7 @@ class Activities {
       let upvoters = await Activities.getUpvoters(id);
       let downvoters = await Activities.getDownvoters(id);
 
-      all_activities.push({ id, name, suggestedDuration, category, placeId, address, openHours, votes, upvoters, downvoters });
+      all_activities.push({ id, tripId, name, suggestedDuration, category, placeId, placeName, address, openHours, votes, upvoters, downvoters });
     }
     return all_activities;
   }
@@ -299,15 +309,21 @@ class Activities {
         let id = a.id;
         let name = a.name;
         let suggestedDuration = a.suggestedDuration;
-        let category = a.category;
+        let category = null;
+        if (a.category) {
+          category = a.category;
+        }
         let placeId = a.placeId;
+        let tripId = a.tripId;
 
         // place
-        const address_query = `SELECT address FROM place WHERE id='${placeId}';`;
-        const address_response = await database.query(address_query);
+        const place_query = `SELECT * FROM place WHERE id='${placeId}';`;
+        const place_response = await database.query(place_query);
         let address = null;
-        if (address_response.length != 0) {
-          address = address_response[0].address;
+        let placeName = null;
+        if (place_response.length != 0) {
+          address = place_response[0].address;
+          placeName = place_response[0].name;
         }
 
         // openHours
@@ -320,7 +336,7 @@ class Activities {
         let upvoters = await Activities.getUpvoters(id);
         let downvoters = await Activities.getDownvoters(id);
 
-        activities.push({ id, name, suggestedDuration, category, placeId, address, openHours, votes, upvoters, downvoters });
+        activities.push({ id, tripId, name, suggestedDuration, category, placeId, placeName, address, openHours, votes, upvoters, downvoters });
       }
       // console.log("filtered activities:");
       // console.log(activities);

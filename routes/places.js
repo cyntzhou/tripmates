@@ -10,11 +10,12 @@ const router = express.Router();
 /**
  * Create a place.
  * @name POST/api/places
+ * @param {string} name - name
  * @param {string} address - address
  * @return {Place} - the place created
  */
  router.post('/', async (req, res) => {
-   const place = await Places.addPlace(req.body.address);
+   const place = await Places.addPlace(req.body.name, req.body.address);
    res.status(200).json(place).end();
  });
 
@@ -33,11 +34,12 @@ const router = express.Router();
   * Update a place
   * @name PUT/api/places/:id
   * @param {int} id - id of place
+  * @param {string} name - name
   * @param {string} address - address
   * @return {Place} - the place updated
   */
   router.put('/:id', async (req, res) => {
-    const place = await Places.editPlace(parseInt(req.params.id), req.body.address);
+    const place = await Places.editPlace(parseInt(req.params.id), req.body.name, req.body.address);
     res.status(200).json(place).end();
   });
 
