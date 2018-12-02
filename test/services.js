@@ -322,7 +322,7 @@ async function getAllActivities(tripId) {
  */
 async function filterActivities(tripId, category) {
   return requestApp
-    .get(`/api/activities/category/${category}`)
+    .get(`/api/activities?category=${category}`)
     .send(tripId);
 }
 
@@ -335,7 +335,7 @@ async function filterActivities(tripId, category) {
  */
 async function upvote(voteInfo) {
   return requestApp
-    .post('/api/activities/upvote')
+    .put('/api/activities/upvote')
     .send(voteInfo);
 }
 
@@ -348,7 +348,7 @@ async function upvote(voteInfo) {
  */
 async function downvote(voteInfo) {
   return requestApp
-    .post('/api/activities/downvote')
+    .put('/api/activities/downvote')
     .send(voteInfo);
 }
 
