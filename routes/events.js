@@ -47,11 +47,18 @@ router.post('/', async (req, res) => {
             }).end();
           } else {
             if (Trips.validDateTimeRange(req.body.start, req.body.end)) {
-              const event = await Events.addOne(req.body.itineraryId, req.body.activityId, req.body.start, req.body.end);
-              res.status(200).json(event).end();
+              const trip = await Trips.findOneById(itinerary.tripId);
+              if (Trips.validDateTimeRange(trip.startDate, req.body.start.substring(0, 10)) && Trips.validDateTimeRange(req.body.end.substring(0,10), trip.endDate)) {
+                const event = await Events.addOne(req.body.itineraryId, req.body.activityId, req.body.start, req.body.end);
+                res.status(200).json(event).end();
+              } else {
+                res.status(400).json({
+                  error: `Event must happen during trip.`
+                }).end();
+              }
             } else {
               res.status(400).json({
-                error: `Invalid date/time range`,
+                error: `Event's start must be before its end.'`,
               }).end();
             }
           }
@@ -92,11 +99,18 @@ router.put('/:id', async (req, res) => {
       const itinerary = await Itineraries.findOneById(event.itineraryId);
       if (Trips.checkMembership(req.session.name, itinerary.tripId)) {
         if (Trips.validDateTimeRange(req.body.newStart, req.body.newEnd)) {
-          const updatedEvent = await Events.updateOne(req.params.id, req.body.newStart, req.body.newEnd);
+          const trip = await Trips.findOneById(itinerary.tripId);
+          if (Trips.validDateTimeRange(trip.startDate, req.body.newStart.substring(0, 10)) && Trips.validDateTimeRange(req.body.newEnd.substring(0,10), trip.endDate)) {
+            const updatedEvent = await Events.updateOne(req.params.id, req.body.newStart, req.body.newEnd);
           res.status(200).json(updatedEvent).end();
+          } else {
+            res.status(400).json({
+              error: `Event must happen during trip.`
+            }).end();
+          }
         } else {
           res.status(400).json({
-            error: `Invalid date/time range`,
+            error: `Event's start must be before its end.`,
           }).end();
         }
       } else {
