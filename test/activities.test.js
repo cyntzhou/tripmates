@@ -4,6 +4,8 @@ const {
   createUser,
   deleteUser,
   createPlace,
+  editPlace,
+  getPlace,
   addHours,
   createActivity,
   getActivity,
@@ -71,7 +73,6 @@ const activity5 = {
   category: 'rest'
 };
 
-
 const trip = {
   name: "testtrip",
   startDate: "2018-12-20",
@@ -81,6 +82,11 @@ const trip = {
 const place = {
   name: 'canada yay',
   address: 'toronto'
+};
+
+const place2 = {
+  name: 'simmons',
+  address: '222 vassar st'
 };
 
 const hours1 = {
@@ -213,6 +219,31 @@ describe('Test /api/activities', () => {
     expect(editActivityRes.body.name).toBe(editted.name);
     expect(editActivityRes.body.category).toBe(editted.category);
     expect(editActivityRes.body.suggestedDuration).toBe(editted.suggestedDuration);
+  });
+
+  // test edit place, get place
+  test('GET /api/activities/:id and PUT /api/activities/:id to edit activity duration and category, etc', async () => {
+    const createResponse = await createPlace(place2);
+    let pId = createResponse.body.insertId;
+
+    const newActivity = {
+      name: '6.170',
+      tripId: 4,
+      suggestedDuration: 30,
+      placeId: pId,
+      category: 'work'
+    };
+
+    let activityRes = await createActivity(newActivity);
+
+    const newPlace = {
+      name: 'simmons',
+      address: '229 vassar st'
+    }
+    let editPlaceRes = await editPlace(pId, newPlace);
+    let getPlaceRes = await getPlace(pId);
+    expect(getPlaceRes.body.name).toBe(newPlace.name);
+    expect(getPlaceRes.body.address).toBe(newPlace.address);
   });
 
 });

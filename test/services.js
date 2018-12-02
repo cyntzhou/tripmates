@@ -222,6 +222,27 @@ async function createPlace(address) {
 }
 
 /**
+ * @param {int} id - id of place
+ */
+async function getPlace(id) {
+  return requestApp
+    .get(`/api/places/${id}`);
+}
+
+/**
+ * @param {object} place
+ * {
+ *    name: string
+ *    address: string
+ * }
+ */
+async function editPlace(id, place) {
+  return requestApp
+    .put(`/api/places/${id}`)
+    .send(place);
+}
+
+/**
  * @param {int} placeId
  * @param {object} hours
  * {
@@ -352,6 +373,8 @@ module.exports = {
   updateEvent,
   deleteEvent,
   createPlace,
+  getPlace,
+  editPlace,
   addHours,
   getActivity,
   createActivity,
