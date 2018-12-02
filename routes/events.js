@@ -8,10 +8,6 @@ const Activities = require('../models/Activities');
 
 const router = express.Router();
 
- // TODO: check that the event time range is within the trip time range,
- // check for conflicts with other events in itinerary (next milestone?)
- // check that activity is in trip activities
-
 /**
  * Create an event.
  * @name POST/api/events
@@ -45,13 +41,19 @@ router.post('/', async (req, res) => {
             error: `Activity not found.`,
           }).end();
         } else {
-          if (Trips.validDateTimeRange(req.body.start, req.body.end)) {
-            const event = await Events.addOne(req.body.itineraryId, req.body.activityId, req.body.start, req.body.end);
-            res.status(200).json(event).end();
-          } else {
+          if (itinerary.tripId !== activity.tripId) {
             res.status(400).json({
-              error: `Invalid date/time range`,
+              error: `Activity not in this trip.`,
             }).end();
+          } else {
+            if (Trips.validDateTimeRange(req.body.start, req.body.end)) {
+              const event = await Events.addOne(req.body.itineraryId, req.body.activityId, req.body.start, req.body.end);
+              res.status(200).json(event).end();
+            } else {
+              res.status(400).json({
+                error: `Invalid date/time range`,
+              }).end();
+            }
           }
         }
       } else {
