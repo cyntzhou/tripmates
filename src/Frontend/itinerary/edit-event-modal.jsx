@@ -16,8 +16,8 @@ class EditEventModal extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.state.start === "" && this.state.end === "" && nextProps.event) {
-      this.setState({
+    if (nextProps.event) {
+        this.setState({
         start: nextProps.event.start,
         end: nextProps.event.end
       });

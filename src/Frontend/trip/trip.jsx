@@ -11,6 +11,7 @@ import EditEventModal from "../itinerary/edit-event-modal.jsx";
 import EditActivityModal from "../activity/edit-activity-modal.jsx";
 import EditTripModal from "./edit-trip-modal.jsx";
 import TripnameBar from "./tripname-bar.jsx";
+import { formatDate } from "../utils.js";
 
 class Trip extends React.Component {
   constructor() {
@@ -154,9 +155,13 @@ class Trip extends React.Component {
   }
 
   handleSelectEvent = (event) => {
+    const selectedEvent = { ...event };
+    selectedEvent.start = formatDate(event.start);
+    selectedEvent.end = formatDate(event.end);
+    console.log(selectedEvent);
     this.setState({
       showEditEvent: true,
-      selectedEvent: event
+      selectedEvent: selectedEvent
     });
   }
 

@@ -1,10 +1,12 @@
 import React from "react";
+import axios from "axios";
 import moment from 'moment';
 import styles from "./calendar.css";
 import BigCalendar from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
+import { formatDate } from "../utils.js";
 
 const DragAndDropCalendar = withDragAndDrop(BigCalendar)
 const localizer = BigCalendar.momentLocalizer(moment) // or globalizeLocalizer
@@ -21,16 +23,34 @@ class Calendar extends React.Component {
     this.setState({ events: nextProps.existingEvents });
   }
 
+  saveEvent = (event, start, end) => {
+    const formattedStart = formatDate(start);
+    const formattedEnd = formatDate(end);
+    
+    const bodyContent = { 
+      newStart: formattedStart,
+      newEnd: formattedEnd
+    };
+    axios
+      .put(`/api/events/${event.id}`, bodyContent)
+      .then(res => {
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
   moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
     const { events } = this.state
 
     const idx = events.indexOf(event)
     let allDay = event.allDay
 
+    // TODO: all day
     if (!event.allDay && droppedOnAllDaySlot) {
-      allDay = true
+      allDay = true;
     } else if (event.allDay && !droppedOnAllDaySlot) {
-      allDay = false
+      allDay = false;
     }
 
     const updatedEvent = { ...event, start, end, allDay }
@@ -40,25 +60,24 @@ class Calendar extends React.Component {
 
     this.setState({
       events: nextEvents,
-    })
-
-    // alert(`${event.title} was dropped onto ${updatedEvent.start}`)
+    });
+    this.saveEvent(event, start, end);
   }
 
   resizeEvent = ({ event, start, end }) => {
-    const { events } = this.state
+    const { events } = this.state;
 
     const nextEvents = events.map(existingEvent => {
       return existingEvent.id == event.id
         ? { ...existingEvent, start, end }
         : existingEvent
-    })
+    });
 
     this.setState({
       events: nextEvents,
-    })
+    });
 
-    //alert(`${event.title} was resized to ${start}-${end}`)
+    this.saveEvent(event, start, end);
   }
 
   createEvent = ({ start, end }) => {
