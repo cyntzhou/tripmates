@@ -29,14 +29,14 @@ class CreateActivityModal extends React.Component{
   createHours = () => {
     console.log(this.state.openHours)
     this.state.openHours.forEach((timeSeg) => {
-      var a = moment(timeSeg.start)
-      var b = moment(timeSeg.end)
-      const dur = b.diff(a, 'minutes')
+      // var a = moment(timeSeg.start)
+      // var b = moment(timeSeg.end)
+      // const dur = b.diff(a, 'minutes')
       const hoursBody = {
         placeId: this.state.placeId,
         day: timeSeg.resourceId,
         startTime: moment(timeSeg.start).format('HH:mm'),
-        duration: dur
+        endTime: moment(timeSeg.end).format('HH:mm')
       }
       axios.post(`/api/places/${this.state.placeId}/hours`, hoursBody)
         .then()
