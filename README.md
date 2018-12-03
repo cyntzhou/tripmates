@@ -23,7 +23,7 @@ The app supports joining a trip through sharing a code with another user. Users 
 
 Things that aren't quite done yet:
 
-TODO
+Edit activity open hours isn't properly storing the hours on save.
 
 ## Deployed app
 http://juicy-buns-tripmates.herokuapp.com/
