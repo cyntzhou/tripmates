@@ -111,6 +111,18 @@ async function getItinerariesOfTrip(id) {
     .get(`/api/trips/${id}/itineraries`)
 }
 
+/**
+ * @param {object} code
+ * {
+ *    joinCode: string
+ * }
+ */
+async function joinTrip(code) {
+  return requestApp
+    .post(`/api/trips/join`)
+    .send(code)
+}
+
 // itineraries
 
 /**
@@ -208,6 +220,20 @@ async function updateEvent(id, newTimes) {
 async function deleteEvent(id) {
   return requestApp
     .delete(`/api/events/${id}`);
+}
+
+/**
+ * @param {object} event
+ * {
+ *    activityId: number
+ *    start: string
+ *    end: string
+ * }
+ */
+async function eventDuringOpenHours(event) { // TODO delete this
+  return requestApp
+    .get(`/api/events/test`)
+    .send(event);
 }
 
 // activities
@@ -363,6 +389,7 @@ module.exports = {
   deleteTrip,
   getTripDetails,
   getItinerariesOfTrip,
+  joinTrip,
   createItinerary,
   starItinerary,
   unstarItinerary,
@@ -383,5 +410,6 @@ module.exports = {
   getAllActivities,
   filterActivities,
   upvote,
-  downvote
+  downvote,
+  eventDuringOpenHours // TODO delete
 };

@@ -1,0 +1,16 @@
+.calendar {
+  height: 100%;
+}
+
+/* .calendar-drag {
+  background-color: 'yellow';
+  position: 'relative';
+  top: 0;
+  left: 0;
+  height: '100%';
+  width: '100%';
+  opacity: 0.5;
+  z-index: 1;
+  font-size: 1.3em;
+  text-align: center;
+} */

@@ -6,6 +6,7 @@
   margin: auto;
   padding: 0.5em;
   text-align: center;
+  justify-content: space-between;
 }
 
 .trip-details {
@@ -31,3 +32,14 @@ a {
 /* a:visited {
   text-decoration: none;
 } */
+
+.trip-item-container a {
+  display: flex;
+}
+
+.trip-item-container .share {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  cursor: pointer;
+}

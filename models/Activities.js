@@ -27,8 +27,10 @@ class Activities {
     try {
       const sanitizedName = sanitizer.sanitize(name);
       const sanitizedCategory = sanitizer.sanitize(category);
-      const sql = `INSERT INTO activity (name, suggestedDuration, placeId, tripId, category) VALUES ('${sanitizedName}', '${suggestedDuration}', '${placeId}', '${tripId}', '${sanitizedCategory}');`;
-      const response = await database.query(sql);
+      // const sql = `INSERT INTO activity (name, suggestedDuration, placeId, tripId, category) VALUES ('${sanitizedName}', '${suggestedDuration}', '${placeId}', '${tripId}', '${sanitizedCategory}');`;
+      // const response = await database.query(sql);
+      const sql = `INSERT INTO activity (name, suggestedDuration, placeId, tripId, category) VALUES (?, ?, ?, ?, ?);`;
+      const response = await database.query(sql, [sanitizedName, suggestedDuration, placeId, tripId, sanitizedCategory]);
       return response;
     } catch (error) {
       throw error;
@@ -42,8 +44,8 @@ class Activities {
    */
   static async getActivity(id) {
     try {
-      const sql = `SELECT * FROM activity WHERE id='${id}';`;
-      let response = await database.query(sql);
+      const sql = `SELECT * FROM activity WHERE id=?;`;
+      let response = await database.query(sql, [id]);
       if (response.length === 0) {
         return undefined;
       } else {
@@ -60,8 +62,8 @@ class Activities {
         let tripId = a.tripId;
 
         // place
-        const place_query = `SELECT * FROM place WHERE id='${placeId}';`;
-        const place_response = await database.query(place_query);
+        const place_query = `SELECT * FROM place WHERE id=?;`;
+        const place_response = await database.query(place_query, [placeId]);
         let address = null;
         let placeName = null;
         if (place_response.length != 0) {
@@ -70,8 +72,8 @@ class Activities {
         }
 
         // openHours
-        const openhours_query = `SELECT * FROM openHours WHERE placeId='${placeId}'`;
-        const openhours_response = await database.query(openhours_query);
+        const openhours_query = `SELECT * FROM openHours WHERE placeId=?`;
+        const openhours_response = await database.query(openhours_query, [placeId]);
         let openHours = openhours_response;
 
         // votes
@@ -95,8 +97,8 @@ class Activities {
     let activity_responses = [];
 
     try {
-      const sql = `SELECT * FROM activity WHERE tripId='${tripId}';`;
-      const response = await database.query(sql);
+      const sql = `SELECT * FROM activity WHERE tripId=?;`;
+      const response = await database.query(sql, [tripId]);
       activity_responses = response;
     } catch (error) {
       throw error;
@@ -116,8 +118,8 @@ class Activities {
       let tripId = a.tripId;
 
       // place
-      const place_query = `SELECT * FROM place WHERE id='${placeId}';`;
-      const place_response = await database.query(place_query);
+      const place_query = `SELECT * FROM place WHERE id=?;`;
+      const place_response = await database.query(place_query, [placeId]);
       let address = null;
       let placeName = null;
       if (place_response.length != 0) {
@@ -126,8 +128,8 @@ class Activities {
       }
 
       // openHours
-      const openhours_query = `SELECT * FROM openHours WHERE placeId='${placeId}'`;
-      const openhours_response = await database.query(openhours_query);
+      const openhours_query = `SELECT * FROM openHours WHERE placeId=?`;
+      const openhours_response = await database.query(openhours_query, [placeId]);
       let openHours = openhours_response;
 
       // votes
@@ -146,14 +148,14 @@ class Activities {
    */
   static async deleteActivity(id) {
     try {
-      const sql = `DELETE FROM activity WHERE id='${id}';`;
-      const response = await database.query(sql);
+      const sql = `DELETE FROM activity WHERE id=?;`;
+      const response = await database.query(sql, [id]);
 
-      const voteSql = `DELETE FROM activityVotes WHERE activityId='${id}';`;
-      const voteResponse = await database.query(voteSql);
+      const voteSql = `DELETE FROM activityVotes WHERE activityId=?;`;
+      const voteResponse = await database.query(voteSql, [id]);
 
-      const eventSql = `DELETE FROM event WHERE activityId='${id}';`;
-      const eventResponse = await database.query(eventSql);
+      const eventSql = `DELETE FROM event WHERE activityId=?;`;
+      const eventResponse = await database.query(eventSql, [id]);
 
       return response;
     } catch (error) {
@@ -173,8 +175,8 @@ class Activities {
     try {
       const sanitizedName = sanitizer.sanitize(name);
       const sanitizedCategory = sanitizer.sanitize(category);
-      const sql = `UPDATE activity SET name='${sanitizedName}', suggestedDuration='${suggestedDuration}', placeId='${placeId}', category='${sanitizedCategory}' WHERE id='${id}';`;
-      const response = await database.query(sql);
+      const sql = `UPDATE activity SET name=?, suggestedDuration=?, placeId=?, category=? WHERE id=?;`;
+      const response = await database.query(sql, [sanitizedName, suggestedDuration, placeId, sanitizedCategory, id]);
       return response;
     } catch (error) {
       throw error;
@@ -191,10 +193,10 @@ class Activities {
    */
   static async numVotes(id) {
     try {
-      const sqlUp = `SELECT * FROM activityVotes WHERE activityId='${id}' AND value='1';`;
-      const responseUp = await database.query(sqlUp);
-      const sqlDown = `SELECT * FROM activityVotes WHERE activityId='${id}' AND value='-1';`;
-      const responseDown = await database.query(sqlDown);
+      const sqlUp = `SELECT * FROM activityVotes WHERE activityId=? AND value='1';`;
+      const responseUp = await database.query(sqlUp, [id]);
+      const sqlDown = `SELECT * FROM activityVotes WHERE activityId=? AND value='-1';`;
+      const responseDown = await database.query(sqlDown, [id]);
       return responseUp.length - responseDown.length;
     } catch (error) {
       throw error;
@@ -208,8 +210,8 @@ class Activities {
    */
   static async upvote(activityId, userId) {
     try {
-      const sql = `INSERT INTO activityVotes (activityId, userId, value) VALUES ('${activityId}', '${userId}', '-1');`;
-      const response = await database.query(sql);
+      const sql = `INSERT INTO activityVotes (activityId, userId, value) VALUES (?, ?, '-1');`;
+      const response = await database.query(sql, [activityId, userId]);
       return response;
     } catch (error) {
       throw error;
@@ -223,8 +225,8 @@ class Activities {
    */
   static async upvote(activityId, userId) {
     try {
-      const sql = `INSERT INTO activityVotes (activityId, userId, value) VALUES ('${activityId}', '${userId}', '1');`;
-      const response = await database.query(sql);
+      const sql = `INSERT INTO activityVotes (activityId, userId, value) VALUES (?, ?, '1');`;
+      const response = await database.query(sql, [activityId, userId]);
       return response;
     } catch (error) {
       throw error;
@@ -239,8 +241,8 @@ class Activities {
   static async getUpvoters(id) {
     let upvoters = [];
     try {
-      const sql = `SELECT userId FROM activityVotes WHERE activityId='${id}' AND value='1';`;
-      const response = await database.query(sql);
+      const sql = `SELECT userId FROM activityVotes WHERE activityId=? AND value='1';`;
+      const response = await database.query(sql, [id]);
       for (let i = 0; i < response.length; i++) {
         upvoters.push(parseInt(response[i].userId));
       }
@@ -258,8 +260,8 @@ class Activities {
   static async getDownvoters(id) {
     let downvoters = [];
     try {
-      const sql = `SELECT userId FROM activityVotes WHERE activityId='${id}' AND value='-1';`;
-      const response = await database.query(sql);
+      const sql = `SELECT userId FROM activityVotes WHERE activityId=? AND value='-1';`;
+      const response = await database.query(sql, [id]);
       for (let i = 0; i < response.length; i++) {
         downvoters.push(parseInt(response[i].userId));
       }
@@ -276,8 +278,8 @@ class Activities {
    */
   static async removeUpvote(id, userId) {
     try {
-      const sql = `DELETE FROM activityVotes WHERE activityId='${id}' AND userId='${userId}' AND value='1';`;
-      const response = await database.query(sql);
+      const sql = `DELETE FROM activityVotes WHERE activityId=? AND userId=? AND value='1';`;
+      const response = await database.query(sql, [id, userId]);
       return response;
     } catch (error) {
       throw error;
@@ -291,8 +293,8 @@ class Activities {
    */
   static async removeUpvote(id, userId) {
     try {
-      const sql = `DELETE FROM activityVotes WHERE activityId='${id}' AND userId='${userId}' AND value='-1';`;
-      const response = await database.query(sql);
+      const sql = `DELETE FROM activityVotes WHERE activityId=? AND userId=? AND value='-1';`;
+      const response = await database.query(sql, [id, userId]);
       return response;
     } catch (error) {
       throw error;
@@ -312,8 +314,8 @@ class Activities {
     let activities = [];
     try {
       const sanitizedCategory = sanitizer.sanitize(category);
-      const sql = `SELECT * FROM activity WHERE tripId='${tripId}' AND category='${sanitizedCategory}';`;
-      const response = await database.query(sql);
+      const sql = `SELECT * FROM activity WHERE tripId=? AND category=?;`;
+      const response = await database.query(sql, [tripId, sanitizedCategory]);
       for (let i = 0; i < response.length; i++) {
         let a = response[i];
 
@@ -329,8 +331,8 @@ class Activities {
         let tripId = a.tripId;
 
         // place
-        const place_query = `SELECT * FROM place WHERE id='${placeId}';`;
-        const place_response = await database.query(place_query);
+        const place_query = `SELECT * FROM place WHERE id=?;`;
+        const place_response = await database.query(place_query, [placeId]);
         let address = null;
         let placeName = null;
         if (place_response.length != 0) {
@@ -339,8 +341,8 @@ class Activities {
         }
 
         // openHours
-        const openhours_query = `SELECT * FROM openHours WHERE placeId='${placeId}'`;
-        const openhours_response = await database.query(openhours_query);
+        const openhours_query = `SELECT * FROM openHours WHERE placeId=?`;
+        const openhours_response = await database.query(openhours_query, [placeId]);
         let openHours = openhours_response;
 
         // votes

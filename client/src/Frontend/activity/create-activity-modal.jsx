@@ -9,7 +9,7 @@ class CreateActivityModal extends React.Component{
   constructor() {
     super()
     this.state = {
-      name: '',
+      name: null,
       category: null,
       suggestedHours: null,
       suggestedMins: null,
@@ -17,7 +17,34 @@ class CreateActivityModal extends React.Component{
       placeName: null,
       openHours: [],
       placeId: null,
+      errors: []
     }
+  }
+
+  updateOpenHours = (newHours) => {
+    this.setState({
+      openHours: newHours
+    })
+  }
+
+  createHours = () => {
+    console.log(this.state.openHours)
+    this.state.openHours.forEach((timeSeg) => {
+      // var a = moment(timeSeg.start)
+      // var b = moment(timeSeg.end)
+      // const dur = b.diff(a, 'minutes')
+      const hoursBody = {
+        placeId: this.state.placeId,
+        day: timeSeg.resourceId,
+        startTime: moment(timeSeg.start).format('HH:mm'),
+        endTime: moment(timeSeg.end).format('HH:mm')
+      }
+      axios.post(`/api/places/${this.state.placeId}/hours`, hoursBody)
+        .then()
+        .catch(err => {
+          console.log(err);
+        })
+    })
   }
 
   onChange = (event) => {
@@ -34,11 +61,17 @@ class CreateActivityModal extends React.Component{
       suggestedMins,
       address,
       placeName,
-      placeId
+      placeId,
+      openHours
     } = this.state;
 
-    let suggestedDuration = null;
+    if (name == null || name == '') {
+      alert("An activity name is required!")
+      return;
+    } 
 
+    let suggestedDuration = null;
+    
     //convert input to minutes
     if (suggestedHours || suggestedMins) {
       const hours = (suggestedHours * 60 || 0) ;
@@ -52,12 +85,13 @@ class CreateActivityModal extends React.Component{
       placeId,
       category
     }
+    const errors = [];
 
-    if (address || placeName) {
-      let placeBody = {name: 'defaul', address: 'default'};
+    if ((address || openHours) && placeName) {
+      let placeBody = {name: null, address: null};
       if (placeName) {
         placeBody['name'] = placeName
-      } 
+      }
       if (address) {
         placeBody['address'] = address;
       }
@@ -68,27 +102,43 @@ class CreateActivityModal extends React.Component{
         });
         bodyContext['placeId'] = res.data.insertId
         axios.post('/api/activities', bodyContext).then(() => {
+          this.createHours();
           this.props.hideCreateModal();
           this.props.editActivitiesDone();
-        }).catch(err => console.log(err));
+        }).catch(err => {
+          console.log(err);
+          if (err.response.status === 403) {
+            this.props.hideCreateModal(null);
+            alert("You cannot create an activity since another user has deleted this trip.");
+            // TODO lead back to trips page
+          }
+        });
       }).catch(err => console.log(err));
+    } else if ((address || openHours) && !placeName) {
+      errors.push("To add a place, you must add a place name.");
+      if (errors.length > 0) {
+        this.setState({
+          errors: errors
+        });
+      }
     }
   }
 
   render() {
     const {
-      openHours
+      openHours,
+      errors
     } = this.state
     return (
       <div className="modal-container">
         <h3>Create Activity</h3>
         <form>
           <label>Activity Name:
-            <input type="text" name="name" onChange={this.onChange}/>
+            <input type="text" name="name" onChange={this.onChange} maxLength="40"/>
           </label>
           <h4>Optional Details</h4>
           <label>Category:
-            <input type="text" name="category" onChange={this.onChange}/>
+            <input type="text" name="category" onChange={this.onChange} maxLength="20"/>
           </label>
           <label>Suggested Duration:
             <input type="number" min="0" name="suggestedHours" placeholder="hours" onChange={this.onChange}/>
@@ -96,20 +146,30 @@ class CreateActivityModal extends React.Component{
           </label>
           <p>Place:</p>
           <label>Name:
-            <input type="text" name="placeName" onChange={this.onChange}/>
+            <input type="text" name="placeName" onChange={this.onChange} maxLength="40"/>
           </label>
           <label>Address:
-            <input type="text" name="address" onChange={this.onChange}/>
+            <input type="text" name="address" onChange={this.onChange} maxLength="100"/>
           </label>
           <p>Open Hours:</p>
           <div>
-            <OpenHoursCalendar openHours={openHours} />
+            <OpenHoursCalendar openHours={openHours} updateHours={this.updateOpenHours} />
           </div>
         </form>
         <div className="btns-container">
           <Button label="Cancel" onButtonClick={this.props.hideCreateModal}/>
           <Button label="Create" onButtonClick={this.onSave}/>
         </div>
+
+        {errors.length > 0 &&
+          <div className="error-message">
+            <ul>
+              {errors.map((error, i) => {
+                  return <li key={i}>{error}</li>;
+              })}
+            </ul>
+          </div>
+        }
       </div>
     )
   }

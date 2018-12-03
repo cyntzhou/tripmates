@@ -12,7 +12,7 @@ class OpenHoursCalendar extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      openHours: props.openHours,
+      openHours: this.props.openHours
     }
   }
 
@@ -20,58 +20,67 @@ class OpenHoursCalendar extends React.Component {
     this.setState({ openHours: nextProps.openHours });
   }
 
-  moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
-    const { events } = this.state
+  moveEvent = (slotInfo) => {
+    const { openHours } = this.state
+    const { event, start, end, resourceId } = slotInfo
 
-    const idx = events.indexOf(event)
-    let allDay = event.allDay
+    const idx = openHours.indexOf(event)
 
-    if (!event.allDay && droppedOnAllDaySlot) {
-      allDay = true
-    } else if (event.allDay && !droppedOnAllDaySlot) {
-      allDay = false
-    }
+    event.resourceId = resourceId
+    const updatedEvent = { ...event, start, end }
 
-    const updatedEvent = { ...event, start, end, allDay }
+    const nextOpenHours = [...openHours]
+    nextOpenHours.splice(idx, 1, updatedEvent)
 
-    const nextEvents = [...events]
-    nextEvents.splice(idx, 1, updatedEvent)
-
-    this.setState({
-      events: nextEvents,
-    })
+    this.props.updateHours(nextOpenHours)
   }
 
   resizeEvent = ({ event, start, end }) => {
-    const { events } = this.state
+    const { openHours } = this.state
 
-    const nextEvents = events.map(existingEvent => {
+    const nextEvents = openHours.map(existingEvent => {
       return existingEvent.id == event.id
         ? { ...existingEvent, start, end }
         : existingEvent
     })
 
     this.setState({
-      events: nextEvents,
+      openHours: nextEvents,
     })
   }
 
-  createEvent = ({ start, end }) => {
-    const startDateTime = new Date(start).toISOString().slice(0,16);
-    const endDateTime = new Date(start).toISOString().slice(0,16);
-    // this.props.toggleCreateEventModal(startDateTime, endDateTime);
+  createEvent = (slotInfo) => {
+    const { openHours } = this.state
+    const nextOpenHours = [...openHours]
+    nextOpenHours.push({
+      resourceId: slotInfo.resourceId, 
+      start: slotInfo.start, 
+      end: slotInfo.end
+    })
+    this.props.updateHours(nextOpenHours)
+  }
+
+  // removes event
+  selectEvent = (event) => {
+    const { openHours } = this.state
+    const idx = openHours.indexOf(event)
+
+    const nextOpenHours = [...openHours]
+    nextOpenHours.splice(idx, 1)
+
+    this.props.updateHours(nextOpenHours)
   }
 
   render() {
-
+    
     const dayMap = [
-      { resourceId: 1, resourceTitle: 'Sunday' },
-      { resourceId: 2, resourceTitle: 'Monday' },
-      { resourceId: 3, resourceTitle: 'Tuesday' },
-      { resourceId: 4, resourceTitle: 'Wednesday' },
-      { resourceId: 5, resourceTitle: 'Thursday' },
-      { resourceId: 6, resourceTitle: 'Friday' },
-      { resourceId: 7, resourceTitle: 'Saturday' },
+      { resourceId: 0, resourceTitle: 'Sunday' },
+      { resourceId: 1, resourceTitle: 'Monday' },
+      { resourceId: 2, resourceTitle: 'Tuesday' },
+      { resourceId: 3, resourceTitle: 'Wednesday' },
+      { resourceId: 4, resourceTitle: 'Thursday' },
+      { resourceId: 5, resourceTitle: 'Friday' },
+      { resourceId: 6, resourceTitle: 'Saturday' },
     ]
 
     return (
@@ -83,7 +92,9 @@ class OpenHoursCalendar extends React.Component {
         resizable
         onEventResize={this.resizeEvent}
         onSelectSlot={this.createEvent}
+        onSelectEvent={this.selectEvent}
         defaultView={BigCalendar.Views.DAY}
+        views={['day']}
         defaultDate={new Date(2018, 10, 20)}
         resources={dayMap}
         resourceIdAccessor="resourceId"

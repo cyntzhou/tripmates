@@ -15,11 +15,18 @@ const router = express.Router();
  * @param {string} category - category of the activity
  * @return {Activity} - the activity created
  * @throws {401} - if user not logged in
+ * @throws {403} - if user is not a member of trip this activity belongs to
  */
  router.post('/', async (req, res) => {
    if (req.session.name !== undefined) {
-     const activity = await Activities.addActivity(req.body.name, req.body.tripId, req.body.suggestedDuration, req.body.placeId, req.body.category);
-     res.status(200).json(activity).end();
+     if (await Trips.checkMembership(req.session.name, req.body.tripId)) {
+       const activity = await Activities.addActivity(req.body.name, req.body.tripId, req.body.suggestedDuration, req.body.placeId, req.body.category);
+       res.status(200).json(activity).end();
+     } else {
+       res.status(403).json({
+         error: `Must be member of trip to post activity to trip.`,
+       }).end();
+     }
    } else {
      res.status(401).json({
        error: `Must be logged in to create activity.`,

@@ -14,7 +14,8 @@ const {
   unstarItinerary,
   createActivity,
   renameItinerary,
-  deleteItinerary
+  deleteItinerary,
+  joinTrip
 } = require('./services');
 
 const database = require('../database.js');
@@ -168,6 +169,34 @@ describe('Test /api/trips', () => {
 		expect(getItinsResponse.body.length).toBe(2);
 		expect(getItinsResponse.body).toEqual(expect.arrayContaining([itinResponse0.body, itinResponse1.body]));
 	});
+
+  test('Join a trip with POST /api/trips/join', async () => {
+    const signin1Response = await signin(user);
+    expect(signin1Response.statusCode).toBe(200);
+
+    const createResponse = await createTrip(trip);
+    expect(createResponse.statusCode).toBe(200);
+    const tripJoinCode = createResponse.body.joinCode;
+
+    const signoutResponse = await signout();
+    expect(signoutResponse.statusCode).toBe(200);
+
+    const user2 = {
+      username: "joininguser",
+      password: "password2"
+    };    
+    const user2Response = await createUser(user2);
+    expect(user2Response.statusCode).toBe(200);
+
+    const signin2Response = await signin(user2);
+    expect(signin2Response.statusCode).toBe(200);
+
+    const joinResponse = await joinTrip({joinCode: tripJoinCode});
+    expect(joinResponse.statusCode).toBe(200);
+
+    const foundMembership = await database.query(`SELECT * FROM tripMembership WHERE userId='${user2Response.body.insertId}' and tripId='${createResponse.body.id}';`);
+    expect(foundMembership.length).toBe(1);
+  });
 
 });
 
