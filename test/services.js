@@ -111,6 +111,18 @@ async function getItinerariesOfTrip(id) {
     .get(`/api/trips/${id}/itineraries`)
 }
 
+/**
+ * @param {object} code
+ * {
+ *    joinCode: string
+ * }
+ */
+async function joinTrip(code) {
+  return requestApp
+    .post(`/api/trips/join`)
+    .send(code)
+}
+
 // itineraries
 
 /**
@@ -377,6 +389,7 @@ module.exports = {
   deleteTrip,
   getTripDetails,
   getItinerariesOfTrip,
+  joinTrip,
   createItinerary,
   starItinerary,
   unstarItinerary,

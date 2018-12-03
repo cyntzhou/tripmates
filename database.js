@@ -49,7 +49,8 @@ class Database {
 	    name VARCHAR(40) NOT NULL,
       creatorId INT REFERENCES user(id),
       startDate VARCHAR(10) NOT NULL,
-      endDate VARCHAR(10) NOT NULL
+      endDate VARCHAR(10) NOT NULL,
+      joinCode VARCHAR(60) NOT NULL
       );`
     ).catch(err => console.log(err));
 

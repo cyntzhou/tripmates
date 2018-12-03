@@ -23,11 +23,24 @@ const Activities = require('../models/Activities');
    */
   static async addOne(name, creatorId, startDate, endDate) {
     try {
+      // Generate join code for trip
+      const codeLength = 40;
+      let tempCode = '';
+      while (true) {
+        tempCode = await Trips.generateRandomCode(codeLength);
+        const codeSql = `SELECT * FROM trip WHERE joinCode='${tempCode}'`;
+        const codeResponse = await database.query(codeSql).then(res => res);
+        if (codeResponse.length === 0) { // there isn't already a trip with this joinCode
+          break;
+        }
+      }
+      const joinCode = tempCode;
+
       const sanitizedName = sanitizer.sanitize(name);
-      const sql = `INSERT INTO trip (name, creatorId, startDate, endDate) VALUES ('${sanitizedName}', '${creatorId}', '${startDate}', '${endDate}');`;
+      const sql = `INSERT INTO trip (name, creatorId, startDate, endDate, joinCode) VALUES ('${sanitizedName}', '${creatorId}', '${startDate}', '${endDate}', '${joinCode}');`;
       const insertId = await database.query(sql).then(res => res.insertId);
 
-      // make creator a member of trip
+      // Make creator a member of trip
       const sqlMembership = `INSERT INTO tripMembership (userId, tripId) VALUES ('${creatorId}', '${insertId}');`;
       const membershipResponse = await database.query(sqlMembership).then(res => res);
 
@@ -244,6 +257,55 @@ const Activities = require('../models/Activities');
       return tripDetails;
     } catch (err) {
       throw err;
+    }
+  }
+
+  /**
+   * Generate a random n-digit code
+   * @param {number} n - length of code to generate
+   * @return {string} - generated code
+   */
+  static async generateRandomCode(n) {
+    try {
+      const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnop";
+      let result = '';
+      for (let i=0; i < n; i++) {
+        result += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Find the trip with the given join code, if there is one
+   * @param {string} joinCode - join code to match to trip
+   * @return {Trip | undefined} - found Trip
+   */
+  static async findOneByJoinCode(joinCode) {
+    try {
+      const sql = `SELECT * FROM trip WHERE joinCode='${joinCode}';`;
+      const response = await database.query(sql);
+      return response[0];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Add a member to a trip
+   * @param {number} userId - id of user to add to trip
+   * @param {number} tripId - id of trip to add member to
+   * @return {Membership} - created membership
+   */
+  static async addMember(userId, tripId) {
+    try {
+      const sqlMembership = `INSERT INTO tripMembership (userId, tripId) VALUES ('${userId}', '${tripId}');`;
+      const membershipResponse = await database.query(sqlMembership).then(res => res);
+      return membershipResponse;
+    } catch (error) {
+      throw error;
     }
   }
 

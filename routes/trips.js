@@ -20,8 +20,8 @@ const router = express.Router();
 router.post('/', async (req, res) => {
 	if (req.session.name === undefined) {
 		res.status(401).json({
-	      error: `Must be logged in to create trip.`,
-	    }).end();
+      error: `Must be logged in to create trip.`,
+    }).end();
 	} else {
 	  	if (await Trips.validDateTimeRange(req.body.startDate, req.body.endDate)) {
 	  		const trip = await Trips.addOne(req.body.name, req.session.name, req.body.startDate, req.body.endDate);
@@ -212,6 +212,39 @@ router.get('/:tripId/activities', async (req, res) => {
     res.status(403).json({
       error: `Must be member of trip to get trip activities.`,
     }).end();
+  }
+});
+
+/**
+ * Join a trip.
+ * @name POST/api/trips/join
+ * @param {string} joinCode - join code for trip
+ * @return {Membership} - the newly created trip
+ * @throws {401} - if user not logged in
+ * @throws {404} - if no trip with that join code found
+ * @throws {400} - if user is already a member of that trip
+ */
+router.post('/join', async (req, res) => {
+  if (req.session.name === undefined) {
+    res.status(401).json({
+      error: `Must be logged in to join trip.`,
+    }).end();
+  } else {
+    const trip = await Trips.findOneByJoinCode(req.body.joinCode);
+    if (trip === undefined) {
+      res.status(404).json({
+        error: `No trip found for this join code.`,
+      }).end();
+    } else {
+      if (await Trips.checkMembership(req.session.name, trip.id)) {
+        res.status(400).json({
+          error: `You are already a member of this trip.`,
+        }).end();
+      } else {
+        const new_membership = await Trips.addMember(req.session.name, trip.id);
+        res.status(200).json(new_membership).end();
+      }
+    }
   }
 });
 

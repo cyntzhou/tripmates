@@ -1,5 +1,25 @@
 import React from "react";
+import { DragSource } from 'react-dnd';
+import { ITEM } from '../itemTypes';
 import styles from "./activity-item.css";
+
+const source = {
+	beginDrag(props) {
+    return {};
+	},
+  endDrag(props, monitor) {
+    if (!monitor.didDrop()) {
+      return;
+    }
+    const { toggleCreateEventModal, activity } = props;
+    toggleCreateEventModal("","", activity.id);
+  }
+};
+
+const collect = (connect, monitor) => ({
+  connectDragSource: connect.dragSource(),
+  isDragging: monitor.isDragging(),
+});
 
 class ActivityItem extends React.Component {
   constructor() {
@@ -17,7 +37,10 @@ class ActivityItem extends React.Component {
 
   render() {
     const {
-      showEditModal
+      activity,
+      showEditModal,
+      connectDragSource, 
+      isDragging
     } = this.props;
     const {
       name,
@@ -25,13 +48,19 @@ class ActivityItem extends React.Component {
       suggestedDuration,
       address,
       placeName
-    } = this.props.activity
+    } = activity;
 
     const suggestedHours = Math.floor(suggestedDuration/60) || 0;
     const suggestedMin = suggestedDuration%60;
 
-    return (
-      <div className="activity-item-container" onClick={this.toggleDetails}>
+    return connectDragSource(
+      <div 
+        className="activity-item-container" 
+        onClick={this.toggleDetails}
+        style={{ 
+          opacity: isDragging ? 0.25 : 1,
+        }}
+      >
         <h3>{name}</h3>
         {this.state.expand && 
           <div className="details">
@@ -47,4 +76,4 @@ class ActivityItem extends React.Component {
   }
 }
 
-export default ActivityItem;
+export default DragSource(ITEM, source, collect)(ActivityItem);

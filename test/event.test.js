@@ -14,7 +14,8 @@ const {
   createEvent,
   updateEvent,
   deleteEvent,
-  eventDuringOpenHours // TODO delete this
+  eventDuringOpenHours, // TODO delete this
+  createPlace
 } = require('./services');
 
 const database = require('../database.js');
@@ -196,26 +197,72 @@ describe('Test /api/events', () => {
     const itinResponse = await createItinerary(itin);
     expect(itinResponse.statusCode).toBe(200);
 
-    const activity = {
+    const activity0 = {
       name: 'hiking',
       tripId: tripId,
       suggestedDuration: 30,
       placeId: null,
       category: 'nature'
     };
-    const activityResponse = await createActivity(activity);
-    expect(activityResponse.statusCode).toBe(200);
-    const activityId = activityResponse.body.insertId;
+    const activityResponse0 = await createActivity(activity0);
+    expect(activityResponse0.statusCode).toBe(200);
+    const activityId0 = activityResponse0.body.insertId;
 
-    const event = {
-      activityId: activityId,
+    const event0 = {
+      activityId: activityId0,
       start: "2018-12-20 17:30",
       end: "2018-12-20 18:30"
     };
     
-    const duringOpenHoursResponse = await eventDuringOpenHours(event);
-    expect(duringOpenHoursResponse.statusCode).toBe(200);
-    console.log("duringOpenHoursResponse: " + duringOpenHoursResponse);
+    console.log("EVENT WITH NO PLACE");
+    const duringOpenHoursResponse0 = await eventDuringOpenHours(event0);
+    expect(duringOpenHoursResponse0.statusCode).toBe(200);
+
+    const place1 = {
+      name: 'MIT',
+      address: '77 Mass Ave'
+    };
+
+    const placeResponse1 = await createPlace(place1);
+    expect(placeResponse1.statusCode).toBe(200);
+    const placeId1 = placeResponse1.body.insertId;
+    console.log("placeId1: " + placeId1);
+
+    // const hoursA = {
+    //   day: 2,
+    //   startTime: '09:20',
+    //   duration: 1440,
+    // };
+
+    // const hoursB = {
+    //   day: 4,
+    //   startTime: '11:40',
+    //   duration: 120,
+    // };
+
+    // const hoursResponseA = await addHours(hoursA, placeId1);
+    // const hoursResponseB = await addHours(hoursB, placeId1);
+
+    const activity1 = {
+      name: 'hacking',
+      tripId: tripId,
+      suggestedDuration: 30,
+      placeId: placeId1,
+      category: 'MIT'
+    };
+    const activityResponse1 = await createActivity(activity1);
+    expect(activityResponse1.statusCode).toBe(200);
+    const activityId1 = activityResponse1.body.insertId;
+
+    const event1 = {
+      activityId: activityId1,
+      start: "2018-12-20 17:30",
+      end: "2018-12-20 18:30"
+    };
+    
+    console.log("EVENT WITH PLACE WITH NO HOURS");
+    const duringOpenHoursResponse1 = await eventDuringOpenHours(event1);
+    expect(duringOpenHoursResponse1.statusCode).toBe(200);
   });
 
 });
