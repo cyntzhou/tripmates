@@ -46,7 +46,7 @@ class EditTripModal extends React.Component {
       this.props.hideModal();
     }).catch(err => {
       console.log(err);
-      if (err.response.status === 403 || rr.response.status === 404) {
+      if (err.response.status === 403 || err.response.status === 404) {
         alert("You cannot update this trip since another user has deleted it.");
         this.props.hideModal();
         // TODO lead back to trips page? if doesn't already...
