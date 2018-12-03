@@ -32,7 +32,7 @@ class Navbar extends React.Component {
           </li>
           <li className="navbar-li">
             <a href="#" className="user-dropdown"
-              onMouseEnter={this.toggleUserDropdown} 
+              onMouseEnter={this.toggleUserDropdown}
               onMouseLeave={this.toggleUserDropdown}
             >
               <i className="fa fa-user-circle fa-2x"/>
@@ -42,7 +42,7 @@ class Navbar extends React.Component {
 
         {showUserDropdown &&
           <div className="user-dropdown-content"
-            onMouseEnter={this.toggleUserDropdown} 
+            onMouseEnter={this.toggleUserDropdown}
             onMouseLeave={this.toggleUserDropdown}
           >
             <Link to="/trips">

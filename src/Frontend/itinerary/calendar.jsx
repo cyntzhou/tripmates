@@ -4,12 +4,27 @@ import moment from 'moment';
 import styles from "./calendar.css";
 import BigCalendar from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
+import { DropTarget } from 'react-dnd';
+import { ITEM } from '../itemTypes';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import { formatDate } from "../utils.js";
 
 const DragAndDropCalendar = withDragAndDrop(BigCalendar)
 const localizer = BigCalendar.momentLocalizer(moment) // or globalizeLocalizer
+
+const target = {
+  drop(props) {
+    // const {} = props;
+    return ({
+    });
+  }
+}
+
+const collect = (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOver: monitor.isOver()
+});
 
 class Calendar extends React.Component {
   constructor(props) {
@@ -87,26 +102,50 @@ class Calendar extends React.Component {
   }
 
   render() {
-    return (
-      <DragAndDropCalendar
-        selectable
-        localizer={localizer}
-        events={this.state.events}
-        // events={this.events}
-        onEventDrop={this.moveEvent}
-        resizable
-        onEventResize={this.resizeEvent}
-        onSelectSlot={this.createEvent}
-        onSelectEvent={event => {
-          console.log(event);
-          return this.props.handleSelectEvent(event)
-        }}
-        defaultView={BigCalendar.Views.MONTH}
-        // defaultDate={new Date(2015, 3, 12)}
-        defaultDate={new Date(2018, 10, 20)}
-      />
+    const {
+      connectDropTarget, 
+      isOver,
+      defaultDate
+    } = this.props;
+    
+    return connectDropTarget(
+      <div className='calendar'>
+        {isOver &&
+          <div style={{
+            position: 'relative',
+            top: 0,
+            left: 0,
+            height: '100%',
+            width: '100%',
+            zIndex: 1,
+            opacity: 0.5,
+            backgroundColor: 'white',
+            textAlign: 'center',
+            fontSize: '1.3em'
+          }}>
+            <br/>
+            Drop activity here to create an event
+          </div>
+        }
+        {!isOver &&
+          <DragAndDropCalendar
+            selectable
+            localizer={localizer}
+            events={this.state.events}
+            onEventDrop={this.moveEvent}
+            resizable
+            onEventResize={this.resizeEvent}
+            onSelectSlot={this.createEvent}
+            onSelectEvent={event => {
+              return this.props.handleSelectEvent(event)
+            }}
+            defaultView={BigCalendar.Views.MONTH}
+            defaultDate={new Date(defaultDate)}
+          />
+        }
+      </div>
     )
   }
 }
 
-export default Calendar
+export default DropTarget(ITEM, target, collect)(Calendar)
