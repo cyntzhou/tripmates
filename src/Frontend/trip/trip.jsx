@@ -107,6 +107,12 @@ class Trip extends React.Component {
     const tripId = this.props.match.params.id;
     return axios.get(`/api/trips/${tripId}`).then(res => {
       this.setState({ tripName: res.data.name });
+    }).catch(err => {
+      console.log(err);
+      if (err.response.status === 403 || rr.response.status === 404) {
+        alert("Another user has deleted this trip.");
+        // TODO lead back to trips page? if doesn't already...
+      }
     });
   }
 
@@ -197,7 +203,7 @@ class Trip extends React.Component {
 
     if (showCreateActivity) {
       return (
-        <CreateActivityModal 
+        <CreateActivityModal
           hideCreateModal={this.toggleCreateActivityModal}
           tripId={trip.tripId}
           editActivitiesDone={this.editActivitiesDone}
@@ -205,15 +211,15 @@ class Trip extends React.Component {
       )
     } else if (showEditActivity) {
       return (
-        <EditActivityModal 
-          hideEditModal={this.toggleEditActivityModal} 
+        <EditActivityModal
+          hideEditModal={this.toggleEditActivityModal}
           tripId={trip.tripId}
           activity={this.state.activityToEdit}
         />
       )
     } else if (showEditTrip) {
       return (
-        <EditTripModal 
+        <EditTripModal
           hideModal={this.toggleEditTripModal}
           trip={trip}
         />
@@ -226,7 +232,7 @@ class Trip extends React.Component {
             tripName={tripName}
           />
           <div className="trip-details">
-            <Activities 
+            <Activities
               showCreateModal={this.toggleCreateActivityModal}
               showEditModal={this.toggleEditActivityModal}
               tripId={tripId}
