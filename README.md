@@ -23,7 +23,9 @@ The app supports joining a trip through sharing a code with another user. Users 
 
 Things that aren't quite done yet:
 
-CSRF mitigation hasn't been implemented. We don't yet support checking the open hours of an event that goes past midnight or spans multiple days.
+CSRF mitigation hasn't been implemented. 
+We don't yet support checking the open hours of an event that goes past midnight or spans multiple days. 
+Edit activity open hours isn't properly storing the hours on save. 
 
 ## Deployed app
 http://juicy-buns-tripmates.herokuapp.com/
