@@ -177,7 +177,6 @@ describe('Test /api/trips', () => {
     const createResponse = await createTrip(trip);
     expect(createResponse.statusCode).toBe(200);
     const tripJoinCode = createResponse.body.joinCode;
-    console.log("Trip join code: " + tripJoinCode);
 
     const signoutResponse = await signout();
     expect(signoutResponse.statusCode).toBe(200);

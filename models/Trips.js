@@ -38,7 +38,6 @@ const Activities = require('../models/Activities');
         }
       }
       const joinCode = tempCode;
-      console.log("Creating trip with joinCode: " + joinCode);
 
       const sanitizedName = sanitizer.sanitize(name);
       const sql = `INSERT INTO trip (name, creatorId, startDate, endDate, joinCode) VALUES (?, ?, ?, ?, ?);`;
@@ -104,8 +103,8 @@ const Activities = require('../models/Activities');
       const startHour = parseInt(start.slice(0,2));
       const startMinute = parseInt(start.slice(3,5));
 
-      const endHour = parseInt(start.slice(0,2));
-      const endMinute = parseInt(start.slice(3,5));
+      const endHour = parseInt(end.slice(0,2));
+      const endMinute = parseInt(end.slice(3,5));
 
       if (startHour > endHour) {
         return false;
