@@ -109,7 +109,7 @@ class Trip extends React.Component {
       this.setState({ tripName: res.data.name });
     }).catch(err => {
       console.log(err);
-      if (err.response.status === 403 || rr.response.status === 404) {
+      if (err.response.status === 403 || err.response.status === 404) {
         alert("Another user has deleted this trip.");
         // TODO lead back to trips page? if doesn't already...
       }
