@@ -100,10 +100,17 @@ class EditActivityModal extends React.Component {
             this.props.hideEditModal(null);
           }).catch(err => {
             console.log(err);
+            if (err.response.status === 404) {
+              this.props.hideEditModal(null);
+              alert("Another user has deleted this activity.");
             }
-          );
+          });
         }).catch(err => {
           console.log(err);
+          if (err.response.status === 404) {
+            this.props.hideEditModal(null);
+            alert("Another user has deleted this activity.");
+          }
         });
       }
     } else {
@@ -115,7 +122,7 @@ class EditActivityModal extends React.Component {
         console.log(err);
         if (err.response.status === 404) {
           this.props.hideEditModal(null);
-          alert("This activity has been deleted since a user has deleted this activity.");
+          alert("Another user has deleted this activity.");
         }
         // console.log(err.response.status);
         // console.log(err.response.data.error);
@@ -132,7 +139,11 @@ class EditActivityModal extends React.Component {
   onDelete = () => {
     axios.delete(`/api/activities/${this.props.activity.id}`).then(() => {
       this.props.hideEditModal(null);
-    }).catch(err => console.log(err))
+    }).catch(err => {
+      console.log(err);
+      this.props.hideEditModal(null);
+      alert("Another user has already deleted this activity.");
+    })
   }
 
   render() {
@@ -215,7 +226,7 @@ class EditActivityModal extends React.Component {
           <Button label="Delete" onButtonClick={this.onDelete}/>
         </div>
         {errors.length > 0 &&
-          <div className="login-error-message">
+          <div className="error-message">
             <ul>
               {errors.map((error, i) => {
                   return <li key={i}>{error}</li>;
