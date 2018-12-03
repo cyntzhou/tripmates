@@ -92,7 +92,13 @@ class EditActivityModal extends React.Component {
             axios.put(`/api/activities/${this.props.activity.id}`, bodyContext)
             .then(() => {
               this.props.hideEditModal(null);
-            }).catch(err => console.log(err));
+            }).catch(err => {
+              console.log(err);
+              if (err.response.status === 404) {
+                this.props.hideEditModal(null);
+                alert("Another user has deleted this activity.");
+              }
+            });
           })
       } else {
         axios.post('/api/places', placeBody).then(res => {
