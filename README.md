@@ -33,11 +33,8 @@ Leading to trips page if a trip is deleted (currently sometimes stays on trip pa
 
 Change editing an activity's place, possibly allow for removing a place from activity.
 
-There's a bug where you can't create an activity without a place.
-
 ## Deployed app
 http://juicy-buns-tripmates.herokuapp.com/
-We haven't successfully deployed to Heroku yet.
 
 ## Authorship of files:
 Sophia Kwon: All files in models, routes, and test, relating to events, itineraries, and trips
