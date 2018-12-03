@@ -9,7 +9,7 @@ class CreateActivityModal extends React.Component{
   constructor() {
     super()
     this.state = {
-      name: '',
+      name: null,
       category: null,
       suggestedHours: null,
       suggestedMins: null,
@@ -61,11 +61,17 @@ class CreateActivityModal extends React.Component{
       suggestedMins,
       address,
       placeName,
-      placeId
+      placeId,
+      openHours
     } = this.state;
 
-    let suggestedDuration = null;
+    if (name == null || name == '') {
+      alert("An activity name is required!")
+      return;
+    } 
 
+    let suggestedDuration = null;
+    
     //convert input to minutes
     if (suggestedHours || suggestedMins) {
       const hours = (suggestedHours * 60 || 0) ;

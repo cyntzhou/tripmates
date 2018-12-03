@@ -153,7 +153,6 @@ class EditActivityModal extends React.Component {
     } = this.state;
     console.log(errors);
     this.props.activity.openHours.forEach((timeSeg) => {
-      console.log(timeSeg)
       const formatStart = moment([
         2018, 10, 20,
         parseInt(timeSeg.startTime.substring(0,2)),
