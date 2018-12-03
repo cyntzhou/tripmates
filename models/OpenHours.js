@@ -22,8 +22,8 @@ class OpenHours {
    */
   static async addOpenHours(placeId, day, startTime, endTime) {
     try {
-      const sql = `INSERT INTO openHours (placeId, day, startTime, endTime) VALUES ('${placeId}', '${day}', '${startTime}', '${endTime}');`;
-      const response = await database.query(sql);
+      const sql = `INSERT INTO openHours (placeId, day, startTime, endTime) VALUES (?, ?, ?, ?);`;
+      const response = await database.query(sql, [placeId, day, startTime, endTime]);
       return response;
     } catch (error) {
       throw error;
@@ -37,8 +37,8 @@ class OpenHours {
    */
   static async deleteOpenHoursOnDay(placeId, day) {
     try {
-      const sql = `DELETE FROM openHours WHERE placeId='${placeId}';`;
-      const response = await database.query(sql);
+      const sql = `DELETE FROM openHours WHERE placeId=?;`;
+      const response = await database.query(sql, [placeId]);
       return response;
     } catch (error) {
       throw error;
