@@ -174,6 +174,7 @@ class EditActivityModal extends React.Component {
               type="text" name="newName"
               onChange={this.onChange}
               placeholder={this.props.activity.name}
+              maxLength="40"
             />
           </label>
           <h4>Optional Details</h4>
@@ -184,6 +185,7 @@ class EditActivityModal extends React.Component {
               onChange={this.onChange}
               placeholder={this.props.activity.category?
                 this.props.activity.category : 'category'}
+              maxLength="20"
             />
           </label>
           <label>Suggested Duration:
@@ -206,14 +208,18 @@ class EditActivityModal extends React.Component {
               type="text"
               name="newPlaceName"
               placeholder={this.props.address? this.props.address : 'address'}
-              onChange={this.onChange}/>
+              onChange={this.onChange}
+              maxLength="40"
+              />
           </label>
           <label>Address:
             <input
               type="text"
               name="newAddress"
               placeholder={this.props.address? this.props.address : 'address'}
-              onChange={this.onChange}/>
+              onChange={this.onChange}
+              maxLength="100"
+              />
           </label>
           <p>Open Hours:</p>
           <div>

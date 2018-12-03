@@ -21,12 +21,6 @@ class CreateActivityModal extends React.Component{
   }
 
   updateOpenHours = (newHours) => {
-    // const newHours = this.state.openHours
-    // newHours.push(hourSeg)
-    // this.setState({
-    //   openHours: newHours
-    // })
-
     this.setState({
       openHours: newHours
     })
@@ -86,7 +80,7 @@ class CreateActivityModal extends React.Component{
     }
 
     if (address || placeName) {
-      let placeBody = {name: 'defaul', address: 'default'};
+      let placeBody = {name: null, address: null};
       if (placeName) {
         placeBody['name'] = placeName
       }
@@ -123,11 +117,11 @@ class CreateActivityModal extends React.Component{
         <h3>Create Activity</h3>
         <form>
           <label>Activity Name:
-            <input type="text" name="name" onChange={this.onChange}/>
+            <input type="text" name="name" onChange={this.onChange} maxLength="40"/>
           </label>
           <h4>Optional Details</h4>
           <label>Category:
-            <input type="text" name="category" onChange={this.onChange}/>
+            <input type="text" name="category" onChange={this.onChange} maxLength="20"/>
           </label>
           <label>Suggested Duration:
             <input type="number" min="0" name="suggestedHours" placeholder="hours" onChange={this.onChange}/>
@@ -135,10 +129,10 @@ class CreateActivityModal extends React.Component{
           </label>
           <p>Place:</p>
           <label>Name:
-            <input type="text" name="placeName" onChange={this.onChange}/>
+            <input type="text" name="placeName" onChange={this.onChange} maxLength="40"/>
           </label>
           <label>Address:
-            <input type="text" name="address" onChange={this.onChange}/>
+            <input type="text" name="address" onChange={this.onChange} maxLength="100"/>
           </label>
           <p>Open Hours:</p>
           <div>
