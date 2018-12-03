@@ -108,6 +108,7 @@ class CreateActivityModal extends React.Component{
           if (err.response.status === 403) {
             this.props.hideCreateModal(null);
             alert("You cannot create an activity since another user has deleted this trip.");
+            // TODO lead back to trips page
           }
         });
       }).catch(err => console.log(err));

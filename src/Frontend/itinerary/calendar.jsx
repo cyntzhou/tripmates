@@ -41,8 +41,8 @@ class Calendar extends React.Component {
   saveEvent = (event, start, end) => {
     const formattedStart = formatDate(start);
     const formattedEnd = formatDate(end);
-    
-    const bodyContent = { 
+
+    const bodyContent = {
       newStart: formattedStart,
       newEnd: formattedEnd
     };
@@ -52,6 +52,13 @@ class Calendar extends React.Component {
       })
       .catch(err => {
         console.log(err);
+        if (err.response.status === 403) {
+          alert("You cannot edit this event since another user has deleted this trip.");
+          // TODO lead back to trips page
+        }
+        if (err.response.status === 404) {
+          alert("You cannot edit this event since another user has deleted it.");
+        }
       });
   }
 

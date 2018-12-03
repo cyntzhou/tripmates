@@ -96,7 +96,11 @@ router.put('/:id', async (req, res) => {
       }).end();
     } else {
       const itinerary = await Itineraries.findOneById(event.itineraryId);
-      if (await Trips.checkMembership(req.session.name, itinerary.tripId)) {
+      if (itinerary === undefined) {
+        res.status(404).json({
+          error: `Itinerary not found.`,
+        }).end();
+      } else if (await Trips.checkMembership(req.session.name, itinerary.tripId)) {
         if (await Trips.validDateTimeRange(req.body.newStart, req.body.newEnd)) {
           const trip = await Trips.findOneById(itinerary.tripId);
           if (await Trips.validDateTimeRange(trip.startDate, req.body.newStart.substring(0, 10)) && await Trips.validDateTimeRange(req.body.newEnd.substring(0,10), trip.endDate)) {
@@ -143,7 +147,11 @@ router.delete('/:id', async (req, res) => {
       }).end();
     } else {
       const itinerary = await Itineraries.findOneById(event.itineraryId);
-      if (await Trips.checkMembership(req.session.name, itinerary.tripId)) {
+      if (itinerary === undefined) {
+        res.status(404).json({
+          error: `Itinerary not found.`,
+        }).end();
+      } else if (await Trips.checkMembership(req.session.name, itinerary.tripId)) {
         const deleted = await Events.deleteOne(req.params.id);
         res.status(200).json(deleted).end();
       } else {
