@@ -21,11 +21,11 @@ const Activities = require('../models/Activities');
    */
   static async addOne(itineraryId, activityId, start, end) {
     try {
-      const sql = `INSERT INTO event (itineraryId, activityId, startDateTime, endDateTime) VALUES ('${itineraryId}', '${activityId}', '${start}', '${end}');`;
-      const insertId = await database.query(sql).then(res => res.insertId);
+      const sql = `INSERT INTO event (itineraryId, activityId, startDateTime, endDateTime) VALUES (?, ?, ?, ?);`;
+      const insertId = await database.query(sql, [itineraryId, activityId, start, end]).then(res => res.insertId);
 
-      const selectSQL = `SELECT * FROM event WHERE id='${insertId}'`;
-      const response = await database.query(selectSQL).then(res => res);
+      const selectSQL = `SELECT * FROM event WHERE id=?`;
+      const response = await database.query(selectSQL, [insertId]).then(res => res);
       return response[0];
     } catch (error) {
       throw error;
@@ -39,8 +39,8 @@ const Activities = require('../models/Activities');
    */
   static async findOneById(id) {
     try {
-      const sql = `SELECT * FROM event WHERE id='${id}';`;
-      const response = await database.query(sql);
+      const sql = `SELECT * FROM event WHERE id=?;`;
+      const response = await database.query(sql, [id]);
       return response[0];
     } catch (error) {
       throw error;
@@ -56,10 +56,10 @@ const Activities = require('../models/Activities');
    */
   static async updateOne(id, newStart, newEnd) {
     try {
-      const sql = `UPDATE event SET startDateTime='${newStart}', endDateTime='${newEnd}' WHERE id='${id}';`;
-      const updateResponse = await database.query(sql);
-      const selectSQL = `SELECT * FROM event WHERE id='${id}';`;
-      const response = await database.query(selectSQL).then(res => res);
+      const sql = `UPDATE event SET startDateTime=?, endDateTime=? WHERE id=?;`;
+      const updateResponse = await database.query(sql, [newStart, newEnd, id]);
+      const selectSQL = `SELECT * FROM event WHERE id=?;`;
+      const response = await database.query(selectSQL, [id]).then(res => res);
       return response[0];
     } catch (error) {
       throw error;
@@ -73,8 +73,8 @@ const Activities = require('../models/Activities');
    */
   static async deleteOne(id) {
     try {
-      const sql = `DELETE FROM event WHERE id='${id}';`;
-      const response = await database.query(sql);
+      const sql = `DELETE FROM event WHERE id=?;`;
+      const response = await database.query(sql, [id]);
       return response[0];
     } catch (err) {
       throw err;
@@ -144,12 +144,34 @@ const Activities = require('../models/Activities');
       console.log("activity.openHours: " + activity.openHours);
       console.log(activity.openHours);
       console.log("Length of activity.openHours: " + activity.openHours.length);
+      console.log("Start date: " + new Date(start));
+
+      const startDate = new Date(start);
+      const startDayOfWeek = startDate.getDay();
+      console.log("start day of week: " + startDayOfWeek);
+
+      const endDate = new Date(end);
+      const endDayOfWeek = endDate.getDay();
+
       // if (activity.placeId === 0) { // activity doesn't have place
       //   return true;
       // }
       if (activity.openHours.length === 0) { // activity doesn't have place or place doesn't have hours
         return true;
       }
+
+      for (let i=0; i<activity.openHours.length; i++) {
+        const openHour = activity.openHours[i];
+        if (openHour.day === startDayOfWeek) {
+          if (Trips.timesInOrder(openHour.startTime, start)) {
+            // if the event ends before the open hour ends
+            //  return true
+          }
+        }
+      }
+      // return false
+
+
 
 
 

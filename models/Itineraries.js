@@ -19,11 +19,11 @@ class Itineraries {
   static async addOne(name, tripId) {
     try {
       const sanitizedName = sanitizer.sanitize(name);
-      const sql = `INSERT INTO itinerary (name, tripId, starred) VALUES ('${sanitizedName}', '${tripId}', 'false');`;
-      const insertId = await database.query(sql).then(res => res.insertId);
+      const sql = `INSERT INTO itinerary (name, tripId, starred) VALUES (?, ?, 'false');`;
+      const insertId = await database.query(sql, [sanitizedName, tripId]).then(res => res.insertId);
 
-      const selectSQL = `SELECT * FROM itinerary WHERE id='${insertId}'`;
-      const response = await database.query(selectSQL).then(res => res);
+      const selectSQL = `SELECT * FROM itinerary WHERE id=?`;
+      const response = await database.query(selectSQL, [insertId]).then(res => res);
       return response[0];
     } catch (error) {
       throw error;
@@ -37,8 +37,8 @@ class Itineraries {
    */
   static async findOneById(id) {
     try {
-      const sql = `SELECT * FROM itinerary WHERE id='${id}';`;
-      const response = await database.query(sql);
+      const sql = `SELECT * FROM itinerary WHERE id=?;`;
+      const response = await database.query(sql, [id]);
       return response[0];
     } catch (error) {
       throw error;
@@ -52,10 +52,10 @@ class Itineraries {
    */
   static async starOne(id) {
   	try {
-  		const sql = `UPDATE itinerary SET starred='1' WHERE id='${id}';`;
-      const updateResponse = await database.query(sql);
-      const selectSQL = `SELECT * FROM itinerary WHERE id='${id}';`;
-      const response = await database.query(selectSQL).then(res => res);
+  		const sql = `UPDATE itinerary SET starred='1' WHERE id=?;`;
+      const updateResponse = await database.query(sql, [id]);
+      const selectSQL = `SELECT * FROM itinerary WHERE id=?;`;
+      const response = await database.query(selectSQL, [id]).then(res => res);
       return response[0];
   	} catch (error) {
       throw error;
@@ -69,10 +69,10 @@ class Itineraries {
    */
   static async unstarOne(id) {
   	try {
-  		const sql = `UPDATE itinerary SET starred='0' WHERE id='${id}';`;
-      const updateResponse = await database.query(sql);
-      const selectSQL = `SELECT * FROM itinerary WHERE id='${id}';`;
-      const response = await database.query(selectSQL).then(res => res);
+  		const sql = `UPDATE itinerary SET starred='0' WHERE id=?;`;
+      const updateResponse = await database.query(sql, [id]);
+      const selectSQL = `SELECT * FROM itinerary WHERE id=?;`;
+      const response = await database.query(selectSQL, [id]).then(res => res);
       return response[0];
   	} catch (error) {
       throw error;
@@ -88,10 +88,10 @@ class Itineraries {
   static async updateNameOne(id, newName) {
   	try {
   		const sanitizedName = sanitizer.sanitize(newName);
-  		const sql = `UPDATE itinerary SET name='${sanitizedName}' WHERE id='${id}';`;
-      const updateResponse = await database.query(sql);
-      const selectSQL = `SELECT * FROM itinerary WHERE id='${id}';`;
-      const response = await database.query(selectSQL).then(res => res);
+  		const sql = `UPDATE itinerary SET name=? WHERE id=?;`;
+      const updateResponse = await database.query(sql, [sanitizedName, id]);
+      const selectSQL = `SELECT * FROM itinerary WHERE id=?;`;
+      const response = await database.query(selectSQL, [id]).then(res => res);
       return response[0];
   	} catch (error) {
       throw error;
@@ -105,11 +105,11 @@ class Itineraries {
    */
   static async deleteOne(id) {
   	try {
-      const itinSql = `DELETE FROM itinerary WHERE id='${id}';`;
-      const itinResponse = await database.query(itinSql);
+      const itinSql = `DELETE FROM itinerary WHERE id=?;`;
+      const itinResponse = await database.query(itinSql, [id]);
 
-      const eventSql = `DELETE FROM event WHERE itineraryId='${id}';`;
-      const eventResponse = await database.query(eventSql);
+      const eventSql = `DELETE FROM event WHERE itineraryId=?;`;
+      const eventResponse = await database.query(eventSql, [id]);
 
       return itinResponse[0];
     } catch (err) {
@@ -124,8 +124,8 @@ class Itineraries {
    */
   static async findAllForTrip(tripId) {
   	try {
-      const selectSQL = `SELECT * FROM itinerary WHERE tripId='${tripId}';`;
-      const response = await database.query(selectSQL).then(res => res);
+      const selectSQL = `SELECT * FROM itinerary WHERE tripId=?;`;
+      const response = await database.query(selectSQL, [tripId]).then(res => res);
       return response;
   	} catch (error) {
       throw error;
