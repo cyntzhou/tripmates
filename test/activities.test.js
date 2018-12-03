@@ -92,13 +92,13 @@ const place2 = {
 const hours1 = {
   day: 2,
   startTime: '09:20:00',
-  duration: 30,
+  endTime: '09:50'
 };
 
 const hours2 = {
   day: 4,
   startTime: '11:40:00',
-  duration: 120,
+  endTime: '13:00'
 };
 
 describe('Test /api/activities', () => {
@@ -141,7 +141,7 @@ describe('Test /api/activities', () => {
     expect(createdActivity.id).toBe(createResponse.body.insertId);
     expect(createdActivity.name).toBe(activity.name);
     expect(createdActivity.suggestedDuration).toBe(activity.suggestedDuration);
-    expect(createdActivity.placeId).toBe(0);
+    expect(createdActivity.placeId).toBe(null);
     expect(createdActivity.tripId).toBe(activity.tripId);
     expect(createdActivity.category).toBe(activity.category);
 
@@ -245,7 +245,7 @@ describe('Test /api/activities', () => {
     expect(getPlaceRes.body.name).toBe(newPlace.name);
     expect(getPlaceRes.body.address).toBe(newPlace.address);
   });
-  
+
 });
 
 afterAll(async () => {
