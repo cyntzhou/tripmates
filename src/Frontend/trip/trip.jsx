@@ -12,6 +12,8 @@ import EditActivityModal from "../activity/edit-activity-modal.jsx";
 import EditTripModal from "./edit-trip-modal.jsx";
 import TripnameBar from "./tripname-bar.jsx";
 import { formatDate } from "../utils.js";
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 class Trip extends React.Component {
   constructor() {
@@ -96,7 +98,7 @@ class Trip extends React.Component {
     return axios.get(`/api/trips/${tripId}/activities`).then(res => {
       this.setState({ activities: res.data });
       // console.log('activities', res.data);
-      callBack();
+      if (callBack) callBack();
     });
   }
 
@@ -133,10 +135,11 @@ class Trip extends React.Component {
   toggleEditItineraryModal = () => {
     this.setState({showEditItinerary: !this.state.showEditItinerary});
   }
-  toggleCreateEventModal = (start, end) => {
+  toggleCreateEventModal = (start, end, draggedActivityId) => { //TODO: set defaults
     this.setState({
       createEventStart: start,
       createEventEnd: end,
+      draggedActivityId: draggedActivityId,
       showCreateEvent: !this.state.showCreateEvent
     });
   }
@@ -158,7 +161,6 @@ class Trip extends React.Component {
     const selectedEvent = { ...event };
     selectedEvent.start = formatDate(event.start);
     selectedEvent.end = formatDate(event.end);
-    console.log(selectedEvent);
     this.setState({
       showEditEvent: true,
       selectedEvent: selectedEvent
@@ -168,6 +170,10 @@ class Trip extends React.Component {
   render() {
     var trip = this.props.location.state.trip
     var tripId = this.props.match.params.id;
+
+    const defaultDate = trip.startDate === "" ? formatDate(new Date()).substring(0,10) : trip.startDate;
+    const defaultStart = defaultDate + "T12:00";
+    const defaultEnd = defaultDate + "T13:00";
 
     const {
       activities,
@@ -184,7 +190,8 @@ class Trip extends React.Component {
       showEditEvent,
       createEventEnd,
       createEventStart,
-      tripName
+      tripName,
+      draggedActivityId
     } = this.state;
 
     if (showCreateActivity) {
@@ -222,6 +229,7 @@ class Trip extends React.Component {
               showCreateModal={this.toggleCreateActivityModal}
               showEditModal={this.toggleEditActivityModal}
               tripId={tripId}
+              toggleCreateEventModal={this.toggleCreateEventModal}
             />
             <Itinerary
               toggleCreateItineraryModal={this.toggleCreateItineraryModal}
@@ -232,6 +240,7 @@ class Trip extends React.Component {
               existingEvents={existingEvents}
               handleSelectItinerary={this.handleSelectItinerary}
               handleSelectEvent={this.handleSelectEvent}
+              defaultDate={defaultDate}
             />
 
             <CreateItineraryModal
@@ -252,10 +261,13 @@ class Trip extends React.Component {
               showModal={showCreateEvent}
               toggleModal={this.toggleCreateEventModal}
               itinerary={itinerary}
-              start={createEventStart}
+              start={createEventStart} //TODO
               end={createEventEnd}
               editEventsDone={this.editEventsDone}
               activities={activities}
+              activityId={draggedActivityId}
+              defaultStart={defaultStart}
+              defaultEnd={defaultEnd}
             />
 
             <EditEventModal
@@ -272,4 +284,4 @@ class Trip extends React.Component {
   }
 }
 
-export default Trip;
+export default DragDropContext(HTML5Backend)(Trip);

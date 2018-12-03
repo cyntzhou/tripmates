@@ -11,25 +11,34 @@ class CreateEventModal extends React.Component {
     this.state = {
       start: "",
       end: "",
-      activityId: 1, // TODO
+      activityId: 1,
       errors: []
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      start: nextProps.start,
-      end: nextProps.end
-    });
+    if (nextProps.start !== "" && nextProps.end !== "") {
+      this.setState({
+        start: nextProps.start,
+        end: nextProps.end
+      });
+    } else if (nextProps.defaultStart !== "" && nextProps.defaultEnd !== "") {
+      this.setState({
+        start: nextProps.defaultStart,
+        end: nextProps.defaultEnd
+      });
+    }
+    if (nextProps.activityId) {
+      this.setState({
+        activityId: nextProps.activityId
+      });
+    }
   }
 
   handleCreate = () => {
     const { start, end, activityId } = this.state;
     const { itinerary, toggleModal, editEventsDone } = this.props;
     const errors = [];
-    // if (name.length === 0) {
-    //   errors.push("Please enter a name.");
-    // }
     if (errors.length > 0) {
       this.setState({ errors: errors });
       return;
@@ -75,7 +84,8 @@ class CreateEventModal extends React.Component {
     const {
       start,
       end,
-      errors
+      errors,
+      activityId
     } = this.state;
 
     const {
@@ -88,7 +98,10 @@ class CreateEventModal extends React.Component {
       <Modal show={showModal} handleClose={toggleModal}>
         <div>
           Activity: 
-          <select onChange={this.handleSelectActivity}>
+          <select 
+            onChange={this.handleSelectActivity}
+            value={activityId}
+          >
             {activities.map((activity) => {
               return (
                 <option value={activity.id} key={activity.id}>{activity.name}</option>
