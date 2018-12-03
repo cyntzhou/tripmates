@@ -2,6 +2,9 @@ const database = require('../database');
 
 const sanitizer = require('sanitizer');
 
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 const Users = require('../models/Users');
 const Activities = require('../models/Activities');
 
@@ -28,24 +31,25 @@ const Activities = require('../models/Activities');
       let tempCode = '';
       while (true) {
         tempCode = await Trips.generateRandomCode(codeLength);
-        const codeSql = `SELECT * FROM trip WHERE joinCode='${tempCode}'`;
-        const codeResponse = await database.query(codeSql).then(res => res);
+        const codeSql = `SELECT * FROM trip WHERE joinCode=?`;
+        const codeResponse = await database.query(codeSql, [tempCode]).then(res => res);
         if (codeResponse.length === 0) { // there isn't already a trip with this joinCode
           break;
         }
       }
       const joinCode = tempCode;
+      console.log("Creating trip with joinCode: " + joinCode);
 
       const sanitizedName = sanitizer.sanitize(name);
-      const sql = `INSERT INTO trip (name, creatorId, startDate, endDate, joinCode) VALUES ('${sanitizedName}', '${creatorId}', '${startDate}', '${endDate}', '${joinCode}');`;
-      const insertId = await database.query(sql).then(res => res.insertId);
+      const sql = `INSERT INTO trip (name, creatorId, startDate, endDate, joinCode) VALUES (?, ?, ?, ?, ?);`;
+      const insertId = await database.query(sql, [sanitizedName, creatorId, startDate, endDate, joinCode]).then(res => res.insertId);
 
       // Make creator a member of trip
-      const sqlMembership = `INSERT INTO tripMembership (userId, tripId) VALUES ('${creatorId}', '${insertId}');`;
-      const membershipResponse = await database.query(sqlMembership).then(res => res);
+      const sqlMembership = `INSERT INTO tripMembership (userId, tripId) VALUES (?, ?);`;
+      const membershipResponse = await database.query(sqlMembership, [creatorId, insertId]).then(res => res);
 
-      const selectSQL = `SELECT * FROM trip WHERE id='${insertId}'`;
-      const response = await database.query(selectSQL).then(res => res);
+      const selectSQL = `SELECT * FROM trip WHERE id=?`;
+      const response = await database.query(selectSQL, [insertId]).then(res => res);
       return response[0];
     } catch (error) {
       throw error;
@@ -59,8 +63,8 @@ const Activities = require('../models/Activities');
    */
   static async findOneById(id) {
     try {
-      const sql = `SELECT * FROM trip WHERE id='${id}';`;
-      const response = await database.query(sql);
+      const sql = `SELECT * FROM trip WHERE id=?;`;
+      const response = await database.query(sql, [id]);
       return response[0];
     } catch (error) {
       throw error;
@@ -75,8 +79,8 @@ const Activities = require('../models/Activities');
    */
 	static async checkMembership(userId, tripId) {
 	 	try {
-	    const selectSQL = `SELECT * FROM tripMembership WHERE userId='${userId}' and tripId='${tripId}';`;
-	    const response = await database.query(selectSQL).then(res => res);
+	    const selectSQL = `SELECT * FROM tripMembership WHERE userId=? and tripId=?;`;
+	    const response = await database.query(selectSQL, [userId, tripId]).then(res => res);
 	    if (response.length === 0) {
 	    	return false;
 	    } else {
@@ -86,6 +90,40 @@ const Activities = require('../models/Activities');
 	    throw error;
 	  }
 	}
+
+  /**
+   * Check whether two times are in order (i.e. start is not after end)
+   * This function assumes that start and end are in correct format: HH:MM
+   * If start and end are the same time, they're considered to be in order
+   * @param {string} start - start time
+   * @param {string} end - end time
+   * @return {boolean} - whether these times are in order
+   */
+   static async timesInOrder(start, end) {
+    try {
+      const startHour = parseInt(start.slice(0,2));
+      const startMinute = parseInt(start.slice(3,5));
+
+      const endHour = parseInt(start.slice(0,2));
+      const endMinute = parseInt(start.slice(3,5));
+
+      if (startHour > endHour) {
+        return false;
+      } else if (startHour < endHour) {
+        return true;
+      } else { // start and end on same hour
+        if (startMinute > endMinute) {
+          return false;
+        } else if (startMinute < endMinute) {
+          return true;
+        } else { // start and end on same minute, i.e. same times
+          return true;
+        }
+      }
+    } catch (error) {
+      throw error;
+    }
+   }
 
 	/**
    * Check whether a certain date range or date/time range is valid (i.e. end is after start)
@@ -169,10 +207,10 @@ const Activities = require('../models/Activities');
   static async updateOne(id, newName, newStart, newEnd) {
   	try {
       const sanitizedName = sanitizer.sanitize(newName);
-      const sql = `UPDATE trip SET name='${sanitizedName}', startDate='${newStart}', endDate='${newEnd}' WHERE id='${id}';`;
-      const updateResponse = await database.query(sql);
-      const selectSQL = `SELECT * FROM trip WHERE id='${id}';`;
-      const response = await database.query(selectSQL).then(res => res);
+      const sql = `UPDATE trip SET name=?, startDate=?, endDate=? WHERE id=?;`;
+      const updateResponse = await database.query(sql, [sanitizedName, newStart, newEnd, id]);
+      const selectSQL = `SELECT * FROM trip WHERE id=?;`;
+      const response = await database.query(selectSQL, [id]).then(res => res);
       return response[0];
     } catch (error) {
       throw error;
@@ -186,8 +224,8 @@ const Activities = require('../models/Activities');
    */
   static async findMyTrips(userId) {
   	try {
-  		const sql = `SELECT tripId FROM tripMembership WHERE userId='${userId}';`;
-  		const response = await database.query(sql).then(res => res);
+  		const sql = `SELECT tripId FROM tripMembership WHERE userId=?;`;
+  		const response = await database.query(sql, [userId]).then(res => res);
   		return response;
   	} catch (error) {
       throw error;
@@ -201,17 +239,17 @@ const Activities = require('../models/Activities');
    */
   static async deleteOne(id) {
   	try {
-      const tripSql = `DELETE FROM trip WHERE id='${id}';`;
-      const tripResponse = await database.query(tripSql);
+      const tripSql = `DELETE FROM trip WHERE id=?;`;
+      const tripResponse = await database.query(tripSql, [id]);
 
-      const membershipSql = `DELETE FROM tripMembership WHERE tripId='${id}';`;
-      const membershipResponse = await database.query(membershipSql);
+      const membershipSql = `DELETE FROM tripMembership WHERE tripId=?;`;
+      const membershipResponse = await database.query(membershipSql, [id]);
 
-      const activitySql = `DELETE FROM activity WHERE tripId='${id}';`;
-      const activityResponse = await database.query(activitySql);
+      const activitySql = `DELETE FROM activity WHERE tripId=?;`;
+      const activityResponse = await database.query(activitySql, [id]);
 
-      const itinerarySql = `DELETE FROM itinerary WHERE tripId='${id}';`;
-      const itineraryResponse = await database.query(itinerarySql);
+      const itinerarySql = `DELETE FROM itinerary WHERE tripId=?;`;
+      const itineraryResponse = await database.query(itinerarySql, [id]);
 
       const activities = await Activities.getAllTripActivities(id);
       activities.forEach(function(activity) {
@@ -231,6 +269,7 @@ const Activities = require('../models/Activities');
    *    name: string,
    *    startDate: string,
    *    endDate: string,
+   *    joinCode: string,
    *    members: string[] (array of usernames)
    * }
    */
@@ -238,14 +277,15 @@ const Activities = require('../models/Activities');
     try {
       let tripDetails = new Object();
 
-      const tripSql = `SELECT * FROM trip WHERE id='${id}';`;
-      const tripResponse = await database.query(tripSql);
+      const tripSql = `SELECT * FROM trip WHERE id=?;`;
+      const tripResponse = await database.query(tripSql, [id]);
       tripDetails.name = tripResponse[0].name;
       tripDetails.startDate = tripResponse[0].startDate;
       tripDetails.endDate = tripResponse[0].endDate;
+      tripDetails.joinCode = tripResponse[0].joinCode;
 
-      const memberSql = `SELECT * FROM tripMembership WHERE tripId='${id}';`;
-      const memberResponse = await database.query(memberSql).then(res => res);
+      const memberSql = `SELECT * FROM tripMembership WHERE tripId=?;`;
+      const memberResponse = await database.query(memberSql, [id]).then(res => res);
       let members = [];
       for (let i=0; i<memberResponse.length; i++) {
         const memberId = memberResponse[i].userId;
@@ -285,8 +325,8 @@ const Activities = require('../models/Activities');
    */
   static async findOneByJoinCode(joinCode) {
     try {
-      const sql = `SELECT * FROM trip WHERE joinCode='${joinCode}';`;
-      const response = await database.query(sql);
+      const sql = `SELECT * FROM trip WHERE joinCode=?;`;
+      const response = await database.query(sql, [joinCode]);
       return response[0];
     } catch (error) {
       throw error;
@@ -301,8 +341,8 @@ const Activities = require('../models/Activities');
    */
   static async addMember(userId, tripId) {
     try {
-      const sqlMembership = `INSERT INTO tripMembership (userId, tripId) VALUES ('${userId}', '${tripId}');`;
-      const membershipResponse = await database.query(sqlMembership).then(res => res);
+      const sqlMembership = `INSERT INTO tripMembership (userId, tripId) VALUES (?, ?);`;
+      const membershipResponse = await database.query(sqlMembership, [userId, tripId]).then(res => res);
       return membershipResponse;
     } catch (error) {
       throw error;

@@ -119,6 +119,7 @@ router.delete('/:id', async (req, res) => {
  *    name: string,
  *    startDate: string,
  *    endDate: string,
+ *    joinCode: string
  *    members: string[] (array of usernames)
  * }
  * @throws {401} - if user not logged in
