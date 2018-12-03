@@ -20,11 +20,13 @@ class OpenHoursCalendar extends React.Component {
     this.setState({ openHours: nextProps.openHours });
   }
 
-  moveEvent = ({ event, start, end }) => {
+  moveEvent = (slotInfo) => {
     const { openHours } = this.state
+    const { event, start, end, resourceId } = slotInfo
 
     const idx = openHours.indexOf(event)
 
+    event.resourceId = resourceId
     const updatedEvent = { ...event, start, end }
 
     const nextOpenHours = [...openHours]
@@ -34,16 +36,16 @@ class OpenHoursCalendar extends React.Component {
   }
 
   resizeEvent = ({ event, start, end }) => {
-    const { events } = this.state
+    const { openHours } = this.state
 
-    const nextEvents = events.map(existingEvent => {
+    const nextEvents = openHours.map(existingEvent => {
       return existingEvent.id == event.id
         ? { ...existingEvent, start, end }
         : existingEvent
     })
 
     this.setState({
-      events: nextEvents,
+      openHours: nextEvents,
     })
   }
 

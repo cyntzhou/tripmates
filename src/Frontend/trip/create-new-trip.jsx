@@ -11,9 +11,9 @@ class CreateNewTrip extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: '',
-      startDate: '',
-      endDate: ''
+      name: null,
+      startDate: null,
+      endDate: null
     }
   }
 
@@ -24,7 +24,12 @@ class CreateNewTrip extends React.Component {
   }
 
   setStartDate = (day) => {
-    const dateString = moment(day).format("YYYY-MM-DD");
+    let dateString;
+    if (day == undefined) {
+      dateString = moment(null).format("YYYY-MM-DD");
+    } else {
+      dateString = moment(day).format("YYYY-MM-DD");
+    }
     this.setState({
       startDate: dateString,
     })
@@ -39,12 +44,24 @@ class CreateNewTrip extends React.Component {
 
   onSave = () => {
     const {name, startDate, endDate} = this.state;
-    const bodyContext = {name, startDate, endDate};
-    axios.post('/api/trips', bodyContext).then(() => {
-      this.props.hideModal();
-    }).catch(
-      err => console.log(err)
-    );
+    if (name == null || name == '') {
+      alert('A trip name is required')
+    } else {
+      if (moment(endDate).isAfter(startDate)) {
+        const bodyContext = {
+          name, 
+          startDate: startDate, 
+          endDate: endDate
+        };
+        axios.post('/api/trips', bodyContext).then(() => {
+          this.props.hideModal();
+        }).catch(
+          err => console.log(err)
+        );
+      } else {
+        alert('please choose valid dates')
+      }
+    }
   }
 
   render() {
@@ -53,7 +70,7 @@ class CreateNewTrip extends React.Component {
         <h3>Create New Trip</h3>
         <form>
           <label>Trip Name:
-            <input type="text" name="name" onChange={this.setName}/>
+            <input type="text" name="name" onChange={this.setName} maxLength="40"/>
           </label>
           <label>Start Date:
             <DayPickerInput onDayChange={this.setStartDate}/>
