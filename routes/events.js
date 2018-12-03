@@ -48,14 +48,8 @@ router.post('/', async (req, res) => {
             if (await Trips.validDateTimeRange(req.body.start, req.body.end)) {
               const trip = await Trips.findOneById(itinerary.tripId);
               if (await Trips.validDateTimeRange(trip.startDate, req.body.start.substring(0, 10)) && Trips.validDateTimeRange(req.body.end.substring(0,10), trip.endDate)) {
-                if (await Events.conflictsWithOtherEvent(req.body.start, req.body.end, req.body.itineraryId)) {
-                  res.status(400).json({
-                    error: `Time conflicts with other event in this itinerary.`,
-                  }).end();
-                } else {
-                  const event = await Events.addOne(req.body.itineraryId, req.body.activityId, req.body.start, req.body.end);
-                  res.status(200).json(event).end();
-                }
+                const event = await Events.addOne(req.body.itineraryId, req.body.activityId, req.body.start, req.body.end);
+                res.status(200).json(event).end();
               } else {
                 res.status(400).json({
                   error: `Event must happen during trip.`
@@ -106,14 +100,8 @@ router.put('/:id', async (req, res) => {
         if (await Trips.validDateTimeRange(req.body.newStart, req.body.newEnd)) {
           const trip = await Trips.findOneById(itinerary.tripId);
           if (await Trips.validDateTimeRange(trip.startDate, req.body.newStart.substring(0, 10)) && await Trips.validDateTimeRange(req.body.newEnd.substring(0,10), trip.endDate)) {
-            if (await Events.conflictsWithOtherEvent(req.body.newStart, req.body.newEnd, event.itineraryId)) {
-              res.status(400).json({
-                error: `Time conflicts with other event in this itinerary.`,
-              }).end();
-            } else {
-              const updatedEvent = await Events.updateOne(req.params.id, req.body.newStart, req.body.newEnd);
-              res.status(200).json(updatedEvent).end();
-            }
+            const updatedEvent = await Events.updateOne(req.params.id, req.body.newStart, req.body.newEnd);
+            res.status(200).json(updatedEvent).end();
           } else {
             res.status(400).json({
               error: `Event must happen during trip.`
@@ -165,6 +153,20 @@ router.delete('/:id', async (req, res) => {
       }
     }
   }
+});
+
+/**
+ * Test endpoint, to make sure Events.duringOpenHours works
+ * TODO: delete this endpoint
+ * @name GET/api/events/test
+ * @param {number} activityId - id of activity
+ * @param {string} start - start date-time of event
+ * @param {string} end - end date-time of event
+ * @return {boolean} - whether or not the event takes place during its place's open hours
+ */
+router.get('/test', async (req, res) => {
+  const duringOpenHours = await Events.duringOpenHours(req.body.start, req.body.end, req.body.activityId);
+  res.status(200).json(duringOpenHours).end();
 });
 
 module.exports = router;

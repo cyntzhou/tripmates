@@ -1,6 +1,7 @@
 const database = require('../database');
 
 const Trips = require('../models/Trips');
+const Activities = require('../models/Activities');
 
 /**
  * @class Events
@@ -105,18 +106,57 @@ const Trips = require('../models/Trips');
    */
   static async conflictsWithOtherEvent(start, end, itineraryId) {
     try {
-      // for every event in itinerary,
-      // check whether it conflicts with the new event
-      // by checking whether either one ends before the other starts. if so, then it doesn't conflict.
-      // if any of them conflicts, return true. otherwise, return false
       const otherEvents = await Events.findAllForItinerary(itineraryId);
       for (let i=0; i < otherEvents.length; i++) {
         const event = otherEvents[i];
+        // Check whether one of the events ends before the other starts. If so, then they don't conflict
         if (!(Trips.validDateTimeRange(end, event.startDateTime) || Trips.validDateTimeRange(event.endDateTime, start))) {
           return true;
         }
       }
       return false;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Determine whether an event takes place during the open hours of its activity's place
+   * Assumes that start/end is a valid time range (i.e. end is not before start), and that start and end are appropriately formatted date-time strings
+   * @param {string} start - date/time this event starts
+   * @param {string} end - date/time this event ends
+   * @param {number} activityId - id of Activity for this event
+   * @return {boolean} - true if this event's activity doesn't have a place, this event's activity's place doesn't have open hours, 
+   * or this event takes place during the open hours of its activity's place. false otherwise (i.e. if the event happens while the place is closed)
+   */
+  static async duringOpenHours(start, end, activityId) {
+    try {
+      // find whether this activity has a place
+      // find whether this place has open hours
+      // get the open hours
+      // for each continous block of open hours (careful with this: 24 hour places, past midnight, etc.),
+      // find whether this event takes place completely within the block
+      // if there is such a block that completely encompasses the event, return true
+      // if not, return false
+
+      const activity = await Activities.getActivity(activityId);
+      console.log("activity.placeId: " + activity.placeId);
+      console.log("activity.openHours: " + activity.openHours);
+      console.log(activity.openHours);
+      console.log("Length of activity.openHours: " + activity.openHours);
+      if (activity.placeId === 0) { // activity doesn't have place
+        return true;
+      }
+      if (activity.openHours.length === 0) {
+        return true;
+      }
+
+
+
+      return true;
+
+
+      
     } catch (error) {
       throw error;
     }
