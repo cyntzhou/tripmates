@@ -85,6 +85,7 @@ class EditTripModal extends React.Component {
       startDate,
       endDate
     } = this.props.trip;
+
     return (
       <div>
         <h3>Edit Trip Details</h3>
