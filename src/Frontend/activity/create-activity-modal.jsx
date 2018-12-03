@@ -17,6 +17,7 @@ class CreateActivityModal extends React.Component{
       placeName: null,
       openHours: [],
       placeId: null,
+      errors: []
     }
   }
 
@@ -78,8 +79,9 @@ class CreateActivityModal extends React.Component{
       placeId,
       category
     }
+    const errors = [];
 
-    if (address || placeName) {
+    if ((address || openHours) && placeName) {
       let placeBody = {name: null, address: null};
       if (placeName) {
         placeBody['name'] = placeName
@@ -106,12 +108,20 @@ class CreateActivityModal extends React.Component{
           }
         });
       }).catch(err => console.log(err));
+    } else if ((address || openHours) && !placeName) {
+      errors.push("To add a place, you must add a place name.");
+      if (errors.length > 0) {
+        this.setState({
+          errors: errors
+        });
+      }
     }
   }
 
   render() {
     const {
-      openHours
+      openHours,
+      errors
     } = this.state
     return (
       <div className="modal-container">
@@ -144,6 +154,16 @@ class CreateActivityModal extends React.Component{
           <Button label="Cancel" onButtonClick={this.props.hideCreateModal}/>
           <Button label="Create" onButtonClick={this.onSave}/>
         </div>
+
+        {errors.length > 0 &&
+          <div className="error-message">
+            <ul>
+              {errors.map((error, i) => {
+                  return <li key={i}>{error}</li>;
+              })}
+            </ul>
+          </div>
+        }
       </div>
     )
   }
