@@ -92,13 +92,13 @@ const place2 = {
 const hours1 = {
   day: 2,
   startTime: '09:20:00',
-  duration: 30,
+  endTime: '09:50'
 };
 
 const hours2 = {
   day: 4,
   startTime: '11:40:00',
-  duration: 120,
+  endTime: '13:00'
 };
 
 describe('Test /api/activities', () => {
