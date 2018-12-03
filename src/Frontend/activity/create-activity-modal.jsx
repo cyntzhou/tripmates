@@ -68,10 +68,10 @@ class CreateActivityModal extends React.Component{
     if (name == null || name == '') {
       alert("An activity name is required!")
       return;
-    } 
+    }
 
     let suggestedDuration = null;
-    
+
     //convert input to minutes
     if (suggestedHours || suggestedMins) {
       const hours = (suggestedHours * 60 || 0) ;
@@ -114,13 +114,25 @@ class CreateActivityModal extends React.Component{
           }
         });
       }).catch(err => console.log(err));
-    } else if ((address || openHours) && !placeName) {
+    } else if ((address !== null || openHours.length !== 0) && !placeName) {
       errors.push("To add a place, you must add a place name.");
       if (errors.length > 0) {
         this.setState({
           errors: errors
         });
       }
+    } else {
+      axios.post('/api/activities', bodyContext).then(() => {
+        this.props.hideCreateModal();
+        this.props.editActivitiesDone();
+      }).catch(err => {
+        console.log(err);
+        if (err.response.status === 403) {
+          this.props.hideCreateModal(null);
+          alert("You cannot create an activity since another user has deleted this trip.");
+          // TODO lead back to trips page
+        }
+      });
     }
   }
 
