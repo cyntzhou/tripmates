@@ -3,6 +3,7 @@ const database = require('../database');
 const sanitizer = require('sanitizer');
 
 const Users = require('../models/Users');
+const Activities = require('../models/Activities');
 
 /**
  * @class Trips
@@ -199,6 +200,10 @@ const Users = require('../models/Users');
       const itinerarySql = `DELETE FROM itinerary WHERE tripId='${id}';`;
       const itineraryResponse = await database.query(itinerarySql);
 
+      const activities = await Activities.getAllTripActivities(id);
+      activities.forEach(function(activity) {
+        Activities.deleteActivity(activity.id);
+      });
       return tripResponse[0];
     } catch (err) {
     	throw err;
