@@ -46,7 +46,9 @@ class CreateActivityModal extends React.Component{
       }
       axios.post(`/api/places/${this.state.placeId}/hours`, hoursBody)
         .then()
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err);
+        })
     })
   }
 
@@ -55,7 +57,7 @@ class CreateActivityModal extends React.Component{
       [event.target.name]: event.target.value
     });
   }
-  
+
   onSave = () => {
     const {
       name,
@@ -87,7 +89,7 @@ class CreateActivityModal extends React.Component{
       let placeBody = {name: 'defaul', address: 'default'};
       if (placeName) {
         placeBody['name'] = placeName
-      } 
+      }
       if (address) {
         placeBody['address'] = address;
       }
@@ -101,7 +103,13 @@ class CreateActivityModal extends React.Component{
           this.createHours();
           this.props.hideCreateModal();
           this.props.editActivitiesDone();
-        }).catch(err => console.log(err));
+        }).catch(err => {
+          console.log(err);
+          if (err.response.status === 403) {
+            this.props.hideCreateModal(null);
+            alert("You cannot create an activity since another user has deleted this trip.");
+          }
+        });
       }).catch(err => console.log(err));
     }
   }

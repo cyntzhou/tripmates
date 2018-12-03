@@ -210,6 +210,20 @@ async function deleteEvent(id) {
     .delete(`/api/events/${id}`);
 }
 
+/**
+ * @param {object} event
+ * {
+ *    activityId: number
+ *    start: string
+ *    end: string
+ * }
+ */
+async function eventDuringOpenHours(event) { // TODO delete this
+  return requestApp
+    .get(`/api/events/test`)
+    .send(event);
+}
+
 // activities
 
 /**
@@ -383,5 +397,6 @@ module.exports = {
   getAllActivities,
   filterActivities,
   upvote,
-  downvote
+  downvote,
+  eventDuringOpenHours // TODO delete
 };
