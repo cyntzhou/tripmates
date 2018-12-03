@@ -41,19 +41,20 @@ class EditActivityModal extends React.Component {
       suggestedHours,
       suggestedMins,
       newAddress,
-      newPlaceName
+      newPlaceName,
+      openHours
     } = this.state
     let name, category, suggestedDuration, address
 
     const errors = [];
 
-    if(newName) {
+    if (newName) {
       name = newName;
     } else {
       name = this.props.activity.name;
     }
 
-    if(newCategory) {
+    if (newCategory) {
       category = newCategory;
     } else {
       category = this.props.activity.category;
@@ -74,12 +75,13 @@ class EditActivityModal extends React.Component {
       category
     }
 
-    if(newAddress || newPlaceName) {
+    if(newAddress || newPlaceName || openHours) {
       let placeBody = {}
 
       if (newAddress) {
         placeBody['address'] = newAddress;
-      } else if (newPlaceName) {
+      }
+      if (newPlaceName) {
         placeBody['name'] = newPlaceName;
       }
 
@@ -231,6 +233,7 @@ class EditActivityModal extends React.Component {
           <Button label="Save" onButtonClick={this.onSave}/>
           <Button label="Delete" onButtonClick={this.onDelete}/>
         </div>
+
         {errors.length > 0 &&
           <div className="error-message">
             <ul>
