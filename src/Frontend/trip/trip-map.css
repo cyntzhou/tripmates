@@ -1,0 +1,9 @@
+#trip-map {
+  padding: 100px;
+  margin: auto;
+}
+
+.leaflet-container {
+  height: 600px;
+  width: 800px;
+}

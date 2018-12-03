@@ -12,6 +12,7 @@ import EditActivityModal from "../activity/edit-activity-modal.jsx";
 import EditTripModal from "./edit-trip-modal.jsx";
 import TripnameBar from "./tripname-bar.jsx";
 import { formatDate } from "../utils.js";
+import TripMap from "./trip-map.jsx";
 
 class Trip extends React.Component {
   constructor() {
@@ -223,16 +224,19 @@ class Trip extends React.Component {
               showEditModal={this.toggleEditActivityModal}
               tripId={tripId}
             />
-            <Itinerary
-              toggleCreateItineraryModal={this.toggleCreateItineraryModal}
-              toggleEditItineraryModal={this.toggleEditItineraryModal}
-              toggleCreateEventModal={this.toggleCreateEventModal}
-              itinerary={itinerary}
-              itineraries={itineraries}
-              existingEvents={existingEvents}
-              handleSelectItinerary={this.handleSelectItinerary}
-              handleSelectEvent={this.handleSelectEvent}
-            />
+            <div className="itin-map">
+              <Itinerary
+                toggleCreateItineraryModal={this.toggleCreateItineraryModal}
+                toggleEditItineraryModal={this.toggleEditItineraryModal}
+                toggleCreateEventModal={this.toggleCreateEventModal}
+                itinerary={itinerary}
+                itineraries={itineraries}
+                existingEvents={existingEvents}
+                handleSelectItinerary={this.handleSelectItinerary}
+                handleSelectEvent={this.handleSelectEvent}
+              />
+              <TripMap tripId={tripId} activities={activities}/>
+            </div>
 
             <CreateItineraryModal
               showModal={showCreateItinerary}
