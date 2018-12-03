@@ -17,6 +17,14 @@ Currently activity details (during create and edit) do not include places' open 
 
 The calendar in Itinerary currently allows any dates when creating Events, when we should restrict dates to within the trip's dates. Only month view in Calendar works. Will restrict dates, and support week / day / agenda view in the next milestone.
 
+## Notes for Milestone 2: MVP
+
+The app supports joining a trip through sharing a code with another user. Users can now collaborate on editing their trip, creating, editing, and deleting activitie, events, and itineraries of their trips. As one user deleting an item like a trip or activity can affect another user trying to edit an activity of the trip, we handle concurrency by alerting the user when they try to perform an action, but the item doesn't exist anymore. Also featured is drag and drop on the calendar for creating events and a map that displays activities. 
+
+Things that aren't quite done yet:
+
+TODO
+
 ## Deployed app
 http://juicy-buns-tripmates.herokuapp.com/
 We haven't successfully deployed to Heroku yet.
