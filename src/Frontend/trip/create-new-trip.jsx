@@ -24,7 +24,7 @@ class CreateNewTrip extends React.Component {
   }
 
   setStartDate = (day) => {
-    let dateString;
+  let dateString;
     if (day == undefined) {
       dateString = moment(null).format("YYYY-MM-DD");
     } else {

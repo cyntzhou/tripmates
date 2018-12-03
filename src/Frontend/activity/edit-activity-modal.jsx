@@ -166,10 +166,15 @@ class EditActivityModal extends React.Component {
         parseInt(timeSeg.startTime.substring(0,2)),
         parseInt(timeSeg.startTime.substring(3))
       ]);
+      const formatEnd = moment([
+        2018, 10, 20,
+        parseInt(timeSeg.endTime.substring(0,2)),
+        parseInt(timeSeg.endTime.substring(3))
+      ]);
       openHours.push({
         resourceId: timeSeg.day,
         start: formatStart._d,
-        end: moment(formatStart).add(timeSeg.duration, 'm')._d
+        end: formatEnd._d
       })
     })
 

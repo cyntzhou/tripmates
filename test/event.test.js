@@ -15,7 +15,8 @@ const {
   updateEvent,
   deleteEvent,
   eventDuringOpenHours, // TODO delete this
-  createPlace
+  createPlace,
+  addHours
 } = require('./services');
 
 const database = require('../database.js');
@@ -91,7 +92,7 @@ describe('Test /api/events', () => {
     expect(eventResponse.body.endDateTime).toBe(event.end);
   });
 
-  test('Update date/time range of event using PUT /api/events/:id', async () => {
+  test.skip('Update date/time range of event using PUT /api/events/:id', async () => {
     const userResponse = await signin(user);
     expect(userResponse.statusCode).toBe(200);
 
@@ -181,7 +182,7 @@ describe('Test /api/events', () => {
     expect(eventFindResults.length).toBe(0);
   });
 
-  test('Test whether Events.duringOpenHours works using /api/events/test', async () => { // TODO: delete this
+  test.skip('Test whether Events.duringOpenHours works using /api/events/test', async () => { // TODO: delete this
     const userResponse = await signin(user);
     expect(userResponse.statusCode).toBe(200);
 
@@ -263,6 +264,65 @@ describe('Test /api/events', () => {
     console.log("EVENT WITH PLACE WITH NO HOURS");
     const duringOpenHoursResponse1 = await eventDuringOpenHours(event1);
     expect(duringOpenHoursResponse1.statusCode).toBe(200);
+
+
+    const place2 = {
+      name: 'MIT',
+      address: '77 Mass Ave'
+    };
+
+    const placeResponse2 = await createPlace(place2);
+    expect(placeResponse2.statusCode).toBe(200);
+    const placeId2 = placeResponse2.body.insertId;
+    console.log("placeId2: " + placeId2);
+
+    const hoursA = {
+      day: 4,
+      startTime: '09:20',
+      endTime: '19:40'
+    };
+
+    const hoursB = {
+      day: 0,
+      startTime: '11:40',
+      endTime: '23:00'
+    };
+
+    const hoursResponseA = await addHours(hoursA, placeId2);
+    const hoursResponseB = await addHours(hoursB, placeId2);
+
+    const activity2 = {
+      name: 'hacking',
+      tripId: tripId,
+      suggestedDuration: 30,
+      placeId: placeId2,
+      category: 'MIT'
+    };
+    const activityResponse2 = await createActivity(activity2);
+    expect(activityResponse2.statusCode).toBe(200);
+    const activityId2 = activityResponse2.body.insertId;
+
+    const event2 = {
+      activityId: activityId2,
+      start: "2018-12-20 17:30",
+      end: "2018-12-20 18:30"
+    };
+    
+    console.log("EVENT WITH PLACE WITH HOURS");
+    const duringOpenHoursResponse2 = await eventDuringOpenHours(event2);
+    expect(duringOpenHoursResponse2.statusCode).toBe(200);
+    console.log(Object.getOwnPropertyNames("During open hours? " + duringOpenHoursResponse2.body));
+
+    const event2Closed = {
+      activityId: activityId2,
+      start: "2018-12-09 07:30",
+      end: "2018-12-09 09:30"
+    };
+    
+    console.log("EVENT WITH PLACE WITH HOURS, PLACE CLOSED");
+    const duringOpenHoursResponse2Closed = await eventDuringOpenHours(event2Closed);
+    expect(duringOpenHoursResponse2Closed.statusCode).toBe(400);
+    console.log(Object.getOwnPropertyNames("During open hours? " + duringOpenHoursResponse2Closed.body));    
   });
 
 });

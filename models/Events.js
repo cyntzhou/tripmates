@@ -140,15 +140,9 @@ const Activities = require('../models/Activities');
       // if not, return false
 
       const activity = await Activities.getActivity(activityId);
-      console.log("activity.placeId: " + activity.placeId);
-      console.log("activity.openHours: " + activity.openHours);
-      console.log(activity.openHours);
-      console.log("Length of activity.openHours: " + activity.openHours.length);
-      console.log("Start date: " + new Date(start));
 
       const startDate = new Date(start);
       const startDayOfWeek = startDate.getDay();
-      console.log("start day of week: " + startDayOfWeek);
 
       const endDate = new Date(end);
       const endDayOfWeek = endDate.getDay();
@@ -160,24 +154,20 @@ const Activities = require('../models/Activities');
         return true;
       }
 
+      const startTime = start.slice(11,16);
+      const endTime = end.slice(11,16);
+
       for (let i=0; i<activity.openHours.length; i++) {
         const openHour = activity.openHours[i];
         if (openHour.day === startDayOfWeek) {
-          if (Trips.timesInOrder(openHour.startTime, start)) {
-            // if the event ends before the open hour ends
-            //  return true
+          if (await Trips.timesInOrder(openHour.startTime, startTime)) { // event starts after open hour starts
+            if (await Trips.timesInOrder(endTime, openHour.endTime)) { // event ends before the open hour ends
+              return true;
+            }
           }
         }
       }
-      // return false
-
-
-
-
-
-      return true;
-
-
+      return false
       
     } catch (error) {
       throw error;
