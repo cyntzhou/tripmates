@@ -17,8 +17,14 @@ const router = express.Router();
  */
  router.post('/', async (req, res) => {
    if (req.session.name !== undefined) {
-     const place = await Places.addPlace(req.body.name, req.body.address);
-     res.status(200).json(place).end();
+     if (req.body.name === undefined) {
+       res.status(400).json({
+         error: `Must have a place name.`,
+       }).end();
+     } else {
+       const place = await Places.addPlace(req.body.name, req.body.address);
+       res.status(200).json(place).end();
+     }
    } else {
      res.status(401).json({
        error: `Must be logged in to create place.`,

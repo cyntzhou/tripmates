@@ -9,7 +9,7 @@ class CreateActivityModal extends React.Component{
   constructor() {
     super()
     this.state = {
-      name: '',
+      name: null,
       category: null,
       suggestedHours: null,
       suggestedMins: null,
@@ -17,6 +17,7 @@ class CreateActivityModal extends React.Component{
       placeName: null,
       openHours: [],
       placeId: null,
+      errors: []
     }
   }
 
@@ -29,14 +30,14 @@ class CreateActivityModal extends React.Component{
   createHours = () => {
     console.log(this.state.openHours)
     this.state.openHours.forEach((timeSeg) => {
-      var a = moment(timeSeg.start)
-      var b = moment(timeSeg.end)
-      const dur = b.diff(a, 'minutes')
+      // var a = moment(timeSeg.start)
+      // var b = moment(timeSeg.end)
+      // const dur = b.diff(a, 'minutes')
       const hoursBody = {
         placeId: this.state.placeId,
         day: timeSeg.resourceId,
         startTime: moment(timeSeg.start).format('HH:mm'),
-        duration: dur
+        endTime: moment(timeSeg.end).format('HH:mm')
       }
       axios.post(`/api/places/${this.state.placeId}/hours`, hoursBody)
         .then()
@@ -60,11 +61,17 @@ class CreateActivityModal extends React.Component{
       suggestedMins,
       address,
       placeName,
-      placeId
+      placeId,
+      openHours
     } = this.state;
 
-    let suggestedDuration = null;
+    if (name == null || name == '') {
+      alert("An activity name is required!")
+      return;
+    } 
 
+    let suggestedDuration = null;
+    
     //convert input to minutes
     if (suggestedHours || suggestedMins) {
       const hours = (suggestedHours * 60 || 0) ;
@@ -78,8 +85,9 @@ class CreateActivityModal extends React.Component{
       placeId,
       category
     }
+    const errors = [];
 
-    if (address || placeName) {
+    if ((address || openHours) && placeName) {
       let placeBody = {name: null, address: null};
       if (placeName) {
         placeBody['name'] = placeName
@@ -106,12 +114,20 @@ class CreateActivityModal extends React.Component{
           }
         });
       }).catch(err => console.log(err));
+    } else if ((address || openHours) && !placeName) {
+      errors.push("To add a place, you must add a place name.");
+      if (errors.length > 0) {
+        this.setState({
+          errors: errors
+        });
+      }
     }
   }
 
   render() {
     const {
-      openHours
+      openHours,
+      errors
     } = this.state
     return (
       <div className="modal-container">
@@ -144,6 +160,16 @@ class CreateActivityModal extends React.Component{
           <Button label="Cancel" onButtonClick={this.props.hideCreateModal}/>
           <Button label="Create" onButtonClick={this.onSave}/>
         </div>
+
+        {errors.length > 0 &&
+          <div className="error-message">
+            <ul>
+              {errors.map((error, i) => {
+                  return <li key={i}>{error}</li>;
+              })}
+            </ul>
+          </div>
+        }
       </div>
     )
   }

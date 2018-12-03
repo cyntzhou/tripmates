@@ -4,14 +4,16 @@ import styles from "./trips.css";
 import AddButton from "../components/add-button.jsx";
 import TripItem from "./trip-item.jsx";
 import CreateTripModal from "./create-trip-modal.jsx";
-
+import ShareTripModal from "./share-trip-modal.jsx";
 
 class Trips extends React.Component {
   constructor() {
     super() 
     this.state = {
-      showModal: false,
-      tripsList: []
+      showCreateTripModal: false,
+      showShareTripModal: false,
+      tripsList: [],
+      selectedTrip: null
     }
     this.getTrips = this.getTrips.bind(this);
   }
@@ -41,20 +43,34 @@ class Trips extends React.Component {
     }).catch(err => console.log(err));
   }
 
-  showModal = () => {
-    this.setState({show: true});
+  showCreateTripModal = () => {
+    this.setState({showCreateTripModal: true});
   }
 
   hideModal = () => {
-    this.setState({show: false});
+    this.setState({showCreateTripModal: false});
     this.getTrips();
+  }
+
+  toggleShareTripModal = (trip) => {
+    if (trip) {
+      this.setState({ selectedTrip: trip });
+    }
+    this.setState({ showShareTripModal: !this.state.showShareTripModal });
   }
 
   render() {
     console.log(this.state);
+    const {
+      showCreateTripModal,
+      showShareTripModal,
+      tripsList,
+      selectedTrip
+    } = this.state;
+
     return (
       <div className="trips">
-        {this.state.show ? (
+        {showCreateTripModal ? (
           <CreateTripModal 
             hideModal={this.hideModal} 
           />
@@ -62,16 +78,23 @@ class Trips extends React.Component {
           <>
             <div className="trip-header">
               <h1>My Trips</h1>
-              <AddButton onButtonClick={this.showModal}/>
+              <AddButton onButtonClick={this.showCreateTripModal}/>
             </div>
             <div className="trip-body">
-              {this.state.tripsList.map(function(trip, index){
+              {this.state.tripsList.map((trip, index) => {
                 return <TripItem 
                   key={index}
                   trip={trip}
+                  toggleShareTripModal={this.toggleShareTripModal}
                 />
               })}
             </div>
+
+            <ShareTripModal
+              showModal={showShareTripModal}
+              toggleModal={this.toggleShareTripModal}
+              trip={selectedTrip}
+            />
           </>
         )}
       </div>
