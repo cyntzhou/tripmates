@@ -24,8 +24,14 @@ The app supports joining a trip through sharing a code with another user. Users 
 Things that aren't quite done yet:
 
 CSRF mitigation hasn't been implemented. 
+
 We don't yet support checking the open hours of an event that goes past midnight or spans multiple days. 
+
 Edit activity open hours isn't properly storing the hours on save. 
+
+Leading to trips page if a trip is deleted (currently sometimes stays on trip page).
+
+Change editing an activity's place, possibly allow for removing a place from activity.
 
 ## Deployed app
 http://juicy-buns-tripmates.herokuapp.com/
@@ -46,13 +52,11 @@ Janice Lee: All files in models, routes, and test, relating to users, activities
 ## Run locally
 Copy `.env_template` to a file named `.env` in the base repo. Fill in database configurations.
 
-`npm run dev` runs both the server and client. Head to `localhost:8080`
+In the base repo, run `npm start` to start the server.
 
-`npm run server` runs only the Express server app on your env's PORT, or port 3000.
+Then, `cd client` and `npm start` to start the client. 
 
-`npm run client` runs only the React front-end app on port 8080.
-
-When running both, `webpack.dev.config.js` specifies a proxy that redirects requests from `localhost:8080/api` to `localhost:3000/api`
+Head to `localhost:3000`.
 
 ## Test
 `npm test`

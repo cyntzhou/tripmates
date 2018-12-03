@@ -69,7 +69,7 @@ class EditTripModal extends React.Component {
       this.props.history.push('/trips');
     }).catch(err => {
       console.log(err);
-      if (err.response.status === 403 || rr.response.status === 404) {
+      if (err.response.status === 403 || err.response.status === 404) {
         alert("Another user has already deleted this trip.");
         this.props.hideModal();
         // TODO lead back to trips page? if doesn't already...
