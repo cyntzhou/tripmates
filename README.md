@@ -17,6 +17,10 @@ Currently activity details (during create and edit) do not include places' open 
 
 The calendar in Itinerary currently allows any dates when creating Events, when we should restrict dates to within the trip's dates. Only month view in Calendar works. Will restrict dates, and support week / day / agenda view in the next milestone.
 
+Leading to trips page if a trip is deleted (currently sometimes stays on trip page).
+
+Change editing an activity's place, possibly allow for removing a place from activity.
+
 ## Notes for Milestone 2: MVP
 
 The app supports joining a trip through sharing a code with another user. Users can now collaborate on editing their trip, creating, editing, and deleting activities, events, and itineraries of their trips. As one user deleting an item like a trip or activity can affect another user trying to edit an activity of the trip, we handle concurrency by alerting the user when they try to perform an action, but the item doesn't exist anymore. In addition, the user is prevented from creating an event during times when the place associated with that event is closed. Also featured is drag and drop on the calendar for creating events and a map that displays activities. 
