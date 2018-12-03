@@ -88,8 +88,8 @@ const Activities = require('../models/Activities');
    */
   static async findAllForItinerary(itineraryId) {
     try {
-      const selectSQL = `SELECT * FROM event WHERE itineraryId='${itineraryId}';`;
-      const response = await database.query(selectSQL).then(res => res);
+      const selectSQL = `SELECT * FROM event WHERE itineraryId=?;`;
+      const response = await database.query(selectSQL, [itineraryId]).then(res => res);
       return response;
     } catch (error) {
       throw error;

@@ -18,12 +18,12 @@ class OpenHours {
    * @param {int} placeId - id of place
    * @param {int} day - day of week
    * @param {string} startTime - starting time
-   * @param {int} duration - duration in minutes
+   * @param {string} endTime - ending time
    */
-  static async addOpenHours(placeId, day, startTime, duration) {
+  static async addOpenHours(placeId, day, startTime, endTime) {
     try {
-      const sql = `INSERT INTO openHours (placeId, day, startTime, duration) VALUES (?, ?, ?, ?);`;
-      const response = await database.query(sql, [placeId, day, startTime, duration]);
+      const sql = `INSERT INTO openHours (placeId, day, startTime, endTime) VALUES (?, ?, ?, ?);`;
+      const response = await database.query(sql, [placeId, day, startTime, endTime]);
       return response;
     } catch (error) {
       throw error;
