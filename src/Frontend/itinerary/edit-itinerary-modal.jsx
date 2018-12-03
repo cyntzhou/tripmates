@@ -39,7 +39,7 @@ class EditItineraryModal extends React.Component {
       this.setState({ errors: errors });
       return;
     }
-    
+
     const bodyContent = { newName: name };
     axios
       .put(`/api/itineraries/${itinerary.id}/name`, bodyContent)
@@ -52,6 +52,17 @@ class EditItineraryModal extends React.Component {
       })
       .catch(err => {
         console.log(err);
+
+        if (err.response.status === 403) {
+          alert("You cannot edit this itinerary since another user has deleted this trip.");
+          // TODO lead back to trips page
+        }
+        if (err.response.status === 404) {
+          alert("You cannot edit this itinerary since another user has deleted it.");
+          toggleModal();
+          editItinerariesDone(null);
+        }
+
         const errors = [err.response.data.error];
         this.setState({ errors: errors });
       })
@@ -69,6 +80,15 @@ class EditItineraryModal extends React.Component {
       })
       .catch(err => {
         console.log(err);
+        if (err.response.status === 403) {
+          alert("You cannot delete this itinerary since another user has deleted this trip.");
+          // TODO lead back to trips page
+        }
+        if (err.response.status === 404) {
+          alert("You cannot delete this itinerary since another user has already deleted it.");
+          toggleModal();
+          editItinerariesDone(null);
+        }
         const errors = [err.response.data.error];
         this.setState({ errors: errors });
       })
@@ -121,7 +141,7 @@ class EditItineraryModal extends React.Component {
         </div>
 
         <div>
-          <Button 
+          <Button
             label="Delete Itinerary"
             colorClassName="btn-red"
             onButtonClick={this.handleDelete}

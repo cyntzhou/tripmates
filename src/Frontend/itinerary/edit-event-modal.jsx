@@ -35,8 +35,8 @@ class EditEventModal extends React.Component {
 
     const formattedStart = start.replace("T", " ") + ":00";
     const formattedEnd = end.replace("T", " ") + ":00";
-    
-    const bodyContent = { 
+
+    const bodyContent = {
       newStart: formattedStart,
       newEnd: formattedEnd
     };
@@ -48,6 +48,15 @@ class EditEventModal extends React.Component {
       })
       .catch(err => {
         console.log(err);
+        if (err.response.status === 403) {
+          alert("You cannot edit this event since another user has deleted this trip.");
+          // TODO lead back to trips page
+        }
+        if (err.response.status === 404) {
+          alert("You cannot edit since the event or current itinerary has been deleted.");
+          toggleModal();
+          editEventsDone();
+        }
         const errors = [err.response.data.error];
         this.setState({
           errors: errors
@@ -65,6 +74,15 @@ class EditEventModal extends React.Component {
       })
       .catch(err => {
         console.log(err);
+        if (err.response.status === 403) {
+          alert("You cannot delete this event since another user has deleted this trip.");
+          // TODO lead back to trips page
+        }
+        if (err.response.status === 404) {
+          alert("You cannot delete since the event or current itinerary has been deleted.");
+          toggleModal();
+          editEventsDone();
+        }
         const errors = [err.response.data.error];
         this.setState({
           errors: errors
@@ -95,27 +113,27 @@ class EditEventModal extends React.Component {
     return (
       <Modal show={showModal} handleClose={toggleModal}>
         <div>
-          Start: 
-          <input 
-            type="datetime-local" 
+          Start:
+          <input
+            type="datetime-local"
             value={start}
-            // min="2018-06-07T00:00" 
-            // max="2018-06-14T00:00" 
+            // min="2018-06-07T00:00"
+            // max="2018-06-14T00:00"
             onChange={this.handleChangeStart}
           />
         </div>
 
         <div>
-          End: 
-          <input 
-            type="datetime-local" 
+          End:
+          <input
+            type="datetime-local"
             value={end}
-            // min="2018-06-07T00:00" 
-            // max="2018-06-14T00:00" 
+            // min="2018-06-07T00:00"
+            // max="2018-06-14T00:00"
             onChange={this.handleChangeEnd}
           />
         </div>
-        
+
 
         {errors.length > 0 &&
           <div className="settings-error-message">
@@ -138,7 +156,7 @@ class EditEventModal extends React.Component {
           />
         </div>
 
-        <Button 
+        <Button
           label="Delete"
           onButtonClick={this.handleDelete}
           colorClassName="btn-red"

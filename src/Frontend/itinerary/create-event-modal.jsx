@@ -37,10 +37,10 @@ class CreateEventModal extends React.Component {
 
     const formattedStart = start.replace("T", " ") + ":00";
     const formattedEnd = end.replace("T", " ") + ":00";
-    
-    const bodyContent = { 
-      itineraryId: itinerary.id, 
-      activityId: activityId, 
+
+    const bodyContent = {
+      itineraryId: itinerary.id,
+      activityId: activityId,
       start: formattedStart,
       end: formattedEnd
     };
@@ -52,10 +52,19 @@ class CreateEventModal extends React.Component {
       })
       .catch(err => {
         console.log(err);
+        console.log(err);
+        if (err.response.status === 403) {
+          alert("You cannot edit this event since another user has deleted this trip.");
+          // TODO lead back to trips page
+        }
+        if (err.response.status === 404) {
+          alert("You cannot create this event since this itinerary or activity has been deleted.");
+          toggleModal();
+        }
         const errors = [err.response.data.error];
         this.setState({
           errors: errors
-        })
+        });
       });
   }
 
@@ -87,7 +96,7 @@ class CreateEventModal extends React.Component {
     return (
       <Modal show={showModal} handleClose={toggleModal}>
         <div>
-          Activity: 
+          Activity:
           <select onChange={this.handleSelectActivity}>
             {activities.map((activity) => {
               return (
@@ -98,27 +107,27 @@ class CreateEventModal extends React.Component {
         </div>
 
         <div>
-          Start: 
-          <input 
-            type="datetime-local" 
+          Start:
+          <input
+            type="datetime-local"
             value={start}
-            // min="2018-06-07T00:00" 
-            // max="2018-06-14T00:00" 
+            // min="2018-06-07T00:00"
+            // max="2018-06-14T00:00"
             onChange={this.handleChangeStart}
           />
         </div>
 
         <div>
-          End: 
-          <input 
-            type="datetime-local" 
+          End:
+          <input
+            type="datetime-local"
             value={end}
-            // min="2018-06-07T00:00" 
-            // max="2018-06-14T00:00" 
+            // min="2018-06-07T00:00"
+            // max="2018-06-14T00:00"
             onChange={this.handleChangeEnd}
           />
         </div>
-        
+
 
         {errors.length > 0 &&
           <div className="settings-error-message">
