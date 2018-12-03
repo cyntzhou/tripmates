@@ -12,7 +12,7 @@ class OpenHoursCalendar extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      openHours: props.openHours,
+      openHours: this.props.openHours
     }
   }
 
@@ -20,26 +20,17 @@ class OpenHoursCalendar extends React.Component {
     this.setState({ openHours: nextProps.openHours });
   }
 
-  moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
-    const { events } = this.state
+  moveEvent = ({ event, start, end }) => {
+    const { openHours } = this.state
 
-    const idx = events.indexOf(event)
-    let allDay = event.allDay
+    const idx = openHours.indexOf(event)
 
-    if (!event.allDay && droppedOnAllDaySlot) {
-      allDay = true
-    } else if (event.allDay && !droppedOnAllDaySlot) {
-      allDay = false
-    }
+    const updatedEvent = { ...event, start, end }
 
-    const updatedEvent = { ...event, start, end, allDay }
+    const nextOpenHours = [...openHours]
+    nextOpenHours.splice(idx, 1, updatedEvent)
 
-    const nextEvents = [...events]
-    nextEvents.splice(idx, 1, updatedEvent)
-
-    this.setState({
-      events: nextEvents,
-    })
+    this.props.updateHours(nextOpenHours)
   }
 
   resizeEvent = ({ event, start, end }) => {
@@ -56,10 +47,17 @@ class OpenHoursCalendar extends React.Component {
     })
   }
 
-  createEvent = ({ start, end }) => {
-    const startDateTime = new Date(start).toISOString().slice(0,16);
-    const endDateTime = new Date(start).toISOString().slice(0,16);
-    // this.props.toggleCreateEventModal(startDateTime, endDateTime);
+  createEvent = (slotInfo) => {
+    const { openHours } = this.state
+
+    const nextOpenHours = [...openHours]
+    nextOpenHours.push({
+      resourceId: slotInfo.resourceId, 
+      start: slotInfo.start, 
+      end: slotInfo.end
+    })
+    
+    this.props.updateHours(nextOpenHours)
   }
 
   render() {
@@ -84,6 +82,7 @@ class OpenHoursCalendar extends React.Component {
         onEventResize={this.resizeEvent}
         onSelectSlot={this.createEvent}
         defaultView={BigCalendar.Views.DAY}
+        views={['day']}
         defaultDate={new Date(2018, 10, 20)}
         resources={dayMap}
         resourceIdAccessor="resourceId"

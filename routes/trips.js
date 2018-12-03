@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
 	      error: `Must be logged in to create trip.`,
 	    }).end();
 	} else {
-	  	if (Trips.validDateTimeRange(req.body.startDate, req.body.endDate)) {
+	  	if (await Trips.validDateTimeRange(req.body.startDate, req.body.endDate)) {
 	  		const trip = await Trips.addOne(req.body.name, req.session.name, req.body.startDate, req.body.endDate);
 		  	res.status(200).json(trip).end();
 	  	} else {
@@ -59,8 +59,8 @@ router.put('/:id', async (req, res) => {
         error: `Trip not found.`,
       }).end();
     } else {
-      if (Trips.checkMembership(req.session.name, req.params.id)) {
-        if (Trips.validDateTimeRange(req.body.newStart, req.body.newEnd)) {
+      if (await Trips.checkMembership(req.session.name, req.params.id)) {
+        if (await Trips.validDateTimeRange(req.body.newStart, req.body.newEnd)) {
           const trip = await Trips.updateOne(req.params.id, req.body.newName, req.body.newStart, req.body.newEnd);
           res.status(200).json(trip).end();
         } else {
@@ -137,7 +137,7 @@ router.get('/:id', async (req, res) => {
         error: `Trip not found.`,
       }).end();
     } else {
-      if (Trips.checkMembership(req.session.name, req.params.id)) {
+      if (await Trips.checkMembership(req.session.name, req.params.id)) {
         const tripDetails = await Trips.getTripDetails(req.params.id);
         res.status(200).json(tripDetails).end();
       } else {
@@ -170,7 +170,7 @@ router.get('/:id/itineraries', async (req, res) => {
         error: `Trip not found.`,
       }).end();
     } else {
-      if (Trips.checkMembership(req.session.name, req.params.id)) {
+      if (await Trips.checkMembership(req.session.name, req.params.id)) {
         const itineraries = await Itineraries.findAllForTrip(req.params.id);
         res.status(200).json(itineraries).end();
       } else {

@@ -19,8 +19,7 @@ const router = express.Router();
  * @throws {401} - if user not logged in
  * @throws {404} - if itinerary with given id not found, or activity with given id not found
  * @throws {403} - if user is not a member of the trip
- * @throws {400} - if date/time range is invalid
- * @throws {400} - if activity and itinerary aren't in the same trip
+ * @throws {400} - if date/time range is invalid, or if activity and itinerary aren't in the same trip, or if event conflicts with other event in itinerary
  */
 router.post('/', async (req, res) => {
   if (req.session.name === undefined) {
@@ -34,7 +33,7 @@ router.post('/', async (req, res) => {
         error: `Itinerary not found.`,
       }).end();
     } else {
-      if (Trips.checkMembership(req.session.name, itinerary.tripId)) {
+      if (await Trips.checkMembership(req.session.name, itinerary.tripId)) {
         const activity = await Activities.getActivity(req.body.activityId);
         if (activity === undefined) {
           res.status(404).json({
@@ -46,11 +45,17 @@ router.post('/', async (req, res) => {
               error: `Activity not in this trip.`,
             }).end();
           } else {
-            if (Trips.validDateTimeRange(req.body.start, req.body.end)) {
+            if (await Trips.validDateTimeRange(req.body.start, req.body.end)) {
               const trip = await Trips.findOneById(itinerary.tripId);
-              if (Trips.validDateTimeRange(trip.startDate, req.body.start.substring(0, 10)) && Trips.validDateTimeRange(req.body.end.substring(0,10), trip.endDate)) {
-                const event = await Events.addOne(req.body.itineraryId, req.body.activityId, req.body.start, req.body.end);
-                res.status(200).json(event).end();
+              if (await Trips.validDateTimeRange(trip.startDate, req.body.start.substring(0, 10)) && Trips.validDateTimeRange(req.body.end.substring(0,10), trip.endDate)) {
+                if (await Events.conflictsWithOtherEvent(req.body.start, req.body.end, req.body.itineraryId)) {
+                  res.status(400).json({
+                    error: `Time conflicts with other event in this itinerary.`,
+                  }).end();
+                } else {
+                  const event = await Events.addOne(req.body.itineraryId, req.body.activityId, req.body.start, req.body.end);
+                  res.status(200).json(event).end();
+                }
               } else {
                 res.status(400).json({
                   error: `Event must happen during trip.`
@@ -82,7 +87,7 @@ router.post('/', async (req, res) => {
  * @throws {401} - if user not logged in
  * @throws {404} - if event with given id not found
  * @throws {403} - if user is not a member of trip
- * @throws {400} - if date/time range is invalid
+ * @throws {400} - if date/time range is invalid, or if event conflicts with other event in itinerary
  */
 router.put('/:id', async (req, res) => {
   if (req.session.name === undefined) {
@@ -97,12 +102,18 @@ router.put('/:id', async (req, res) => {
       }).end();
     } else {
       const itinerary = await Itineraries.findOneById(event.itineraryId);
-      if (Trips.checkMembership(req.session.name, itinerary.tripId)) {
-        if (Trips.validDateTimeRange(req.body.newStart, req.body.newEnd)) {
+      if (await Trips.checkMembership(req.session.name, itinerary.tripId)) {
+        if (await Trips.validDateTimeRange(req.body.newStart, req.body.newEnd)) {
           const trip = await Trips.findOneById(itinerary.tripId);
-          if (Trips.validDateTimeRange(trip.startDate, req.body.newStart.substring(0, 10)) && Trips.validDateTimeRange(req.body.newEnd.substring(0,10), trip.endDate)) {
-            const updatedEvent = await Events.updateOne(req.params.id, req.body.newStart, req.body.newEnd);
-          res.status(200).json(updatedEvent).end();
+          if (await Trips.validDateTimeRange(trip.startDate, req.body.newStart.substring(0, 10)) && await Trips.validDateTimeRange(req.body.newEnd.substring(0,10), trip.endDate)) {
+            if (await Events.conflictsWithOtherEvent(req.body.newStart, req.body.newEnd, event.itineraryId)) {
+              res.status(400).json({
+                error: `Time conflicts with other event in this itinerary.`,
+              }).end();
+            } else {
+              const updatedEvent = await Events.updateOne(req.params.id, req.body.newStart, req.body.newEnd);
+              res.status(200).json(updatedEvent).end();
+            }
           } else {
             res.status(400).json({
               error: `Event must happen during trip.`
@@ -144,7 +155,7 @@ router.delete('/:id', async (req, res) => {
       }).end();
     } else {
       const itinerary = await Itineraries.findOneById(event.itineraryId);
-      if (Trips.checkMembership(req.session.name, itinerary.tripId)) {
+      if (await Trips.checkMembership(req.session.name, itinerary.tripId)) {
         const deleted = await Events.deleteOne(req.params.id);
         res.status(200).json(deleted).end();
       } else {

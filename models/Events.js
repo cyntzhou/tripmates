@@ -1,5 +1,7 @@
 const database = require('../database');
 
+const Trips = require('../models/Trips');
+
 /**
  * @class Events
  * Stores all Events.
@@ -88,6 +90,33 @@ const database = require('../database');
       const selectSQL = `SELECT * FROM event WHERE itineraryId='${itineraryId}';`;
       const response = await database.query(selectSQL).then(res => res);
       return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Determine whether an event conflicts with other events in the same itinerary
+   * Assumes that start/end is a valid time range (i.e. end is not before start), and that start and end are appropriately formatted date-time strings
+   * @param {string} start - date/time this event starts
+   * @param {string} end - date/time this event ends
+   * @param {number} itineraryId - id of Itinerary for this event
+   * @return {boolean} - true if this event conflicts with another event, false if not
+   */
+  static async conflictsWithOtherEvent(start, end, itineraryId) {
+    try {
+      // for every event in itinerary,
+      // check whether it conflicts with the new event
+      // by checking whether either one ends before the other starts. if so, then it doesn't conflict.
+      // if any of them conflicts, return true. otherwise, return false
+      const otherEvents = await Events.findAllForItinerary(itineraryId);
+      for (let i=0; i < otherEvents.length; i++) {
+        const event = otherEvents[i];
+        if (!(Trips.validDateTimeRange(end, event.startDateTime) || Trips.validDateTimeRange(event.endDateTime, start))) {
+          return true;
+        }
+      }
+      return false;
     } catch (error) {
       throw error;
     }
