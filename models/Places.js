@@ -22,8 +22,8 @@ class Places {
     try {
       const sanitizedName = sanitizer.sanitize(name);
       const sanitizedAddress = sanitizer.sanitize(address);
-      const sql = `INSERT INTO place (name, address) VALUES ('${sanitizedName}', '${sanitizedAddress}');`;
-      const response = await database.query(sql);
+      const sql = `INSERT INTO place (name, address) VALUES (?, ?);`;
+      const response = await database.query(sql, [sanitizedName, sanitizedAddress]);
       return response;
     } catch (error) {
       throw error;
@@ -36,8 +36,8 @@ class Places {
    */
   static async getPlace(id) {
     try {
-      const sql = `SELECT * FROM place WHERE id='${id}';`;
-      const response = await database.query(sql);
+      const sql = `SELECT * FROM place WHERE id=?;`;
+      const response = await database.query(sql, [id]);
       return response;
     } catch (error) {
       throw error;
@@ -54,8 +54,8 @@ class Places {
     try {
       const sanitizedName = sanitizer.sanitize(name);
       const sanitizedAddress = sanitizer.sanitize(address);
-      const sql = `UPDATE place SET name='${sanitizedName}', address='${sanitizedAddress}' WHERE id='${id}';`;
-      const response = await database.query(sql);
+      const sql = `UPDATE place SET name=?, address=? WHERE id=?;`;
+      const response = await database.query(sql, [sanitizedName, sanitizedAddress, id]);
       return response;
     } catch (error) {
       throw error;
@@ -69,11 +69,11 @@ class Places {
    */
   static async deletePlace(id) {
     try {
-      const sql = `DELETE * FROM place WHERE id='${id}';`;
-      const response = await database.query(sql);
+      const sql = `DELETE * FROM place WHERE id=?;`;
+      const response = await database.query(sql, [id]);
 
-      const membershipSql = `DELETE FROM openHours WHERE placeId='${id}';`;
-      const membershipResponse = await database.query(membershipSql);
+      const membershipSql = `DELETE FROM openHours WHERE placeId=?;`;
+      const membershipResponse = await database.query(membershipSql, [id]);
 
       return response;
     } catch (error) {

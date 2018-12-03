@@ -28,8 +28,8 @@ class Users {
       const response = await bcrypt.hash(password, saltRounds)
         .then(async function(hash) {
           // Store hash in your password DB.
-          const sql = `INSERT INTO user (username, password) VALUES ('${username}', '${hash}');`;
-          const sqlResponse = await database.query(sql);
+          const sql = `INSERT INTO user (username, password) VALUES (?, ?);`;
+          const sqlResponse = await database.query(sql, [username, hash]);
           return sqlResponse;
       });
       return response;
@@ -45,8 +45,8 @@ class Users {
    */
   static async findOne(username) {
     try {
-      const sql = `SELECT * FROM user WHERE username='${username}';`;
-      const response = await database.query(sql);
+      const sql = `SELECT * FROM user WHERE username=?;`;
+      const response = await database.query(sql, [username]);
       return response[0];
     } catch (error) {
       throw error;
@@ -60,8 +60,8 @@ class Users {
    */
   static async findOneById(id) {
     try {
-      const sql = `SELECT * FROM user WHERE id='${id}';`;
-      const response = await database.query(sql);
+      const sql = `SELECT * FROM user WHERE id=?;`;
+      const response = await database.query(sql, [id]);
       return response[0];
     } catch (error) {
       throw error;
@@ -90,8 +90,8 @@ class Users {
    */
   static async updateUsernameOne(id, newName) {
     try {
-      const sql = `UPDATE user SET username='${newName}' WHERE id='${id}';`;
-      const response = await database.query(sql);
+      const sql = `UPDATE user SET username=? WHERE id=?;`;
+      const response = await database.query(sql, [newName, id]);
       return response;
     } catch (err) { throw err; }
   }
@@ -107,8 +107,8 @@ class Users {
       const response = await bcrypt.hash(password, saltRounds)
         .then(async function(hash) {
           // Store hash in your password DB.
-          const sql = `UPDATE user SET password='${hash}' WHERE id='${id}';`;
-          const sqlResponse = await database.query(sql);
+          const sql = `UPDATE user SET password=? WHERE id=?;`;
+          const sqlResponse = await database.query(sql, [hash, id]);
           return sqlResponse;
       });
     } catch (err) { throw err; }
@@ -121,11 +121,11 @@ class Users {
    */
   static async deleteOne(id) {
     try {
-      const sql = `DELETE FROM user WHERE id='${id}';`;
-      const response = await database.query(sql);
+      const sql = `DELETE FROM user WHERE id=?;`;
+      const response = await database.query(sql, [id]);
 
-      const membershipSql = `DELETE FROM tripMembership WHERE userId='${id}';`;
-      const membershipResponse = await database.query(membershipSql);
+      const membershipSql = `DELETE FROM tripMembership WHERE userId=?;`;
+      const membershipResponse = await database.query(membershipSql, [id]);
 
       return response;
     } catch (err) { throw err; }

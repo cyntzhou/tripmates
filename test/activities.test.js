@@ -141,7 +141,7 @@ describe('Test /api/activities', () => {
     expect(createdActivity.id).toBe(createResponse.body.insertId);
     expect(createdActivity.name).toBe(activity.name);
     expect(createdActivity.suggestedDuration).toBe(activity.suggestedDuration);
-    expect(createdActivity.placeId).toBe(0);
+    expect(createdActivity.placeId).toBe(null);
     expect(createdActivity.tripId).toBe(activity.tripId);
     expect(createdActivity.category).toBe(activity.category);
 
@@ -245,7 +245,7 @@ describe('Test /api/activities', () => {
     expect(getPlaceRes.body.name).toBe(newPlace.name);
     expect(getPlaceRes.body.address).toBe(newPlace.address);
   });
-  
+
 });
 
 afterAll(async () => {
