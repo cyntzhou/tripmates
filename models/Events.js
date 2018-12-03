@@ -143,11 +143,11 @@ const Activities = require('../models/Activities');
       console.log("activity.placeId: " + activity.placeId);
       console.log("activity.openHours: " + activity.openHours);
       console.log(activity.openHours);
-      console.log("Length of activity.openHours: " + activity.openHours);
-      if (activity.placeId === 0) { // activity doesn't have place
-        return true;
-      }
-      if (activity.openHours.length === 0) {
+      console.log("Length of activity.openHours: " + activity.openHours.length);
+      // if (activity.placeId === 0) { // activity doesn't have place
+      //   return true;
+      // }
+      if (activity.openHours.length === 0) { // activity doesn't have place or place doesn't have hours
         return true;
       }
 

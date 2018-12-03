@@ -43,7 +43,8 @@ class Itinerary extends React.Component {
       itineraries,
       handleSelectItinerary,
       existingEvents,
-      handleSelectEvent
+      handleSelectEvent,
+      defaultDate
     } = this.props;
 
     const itinerariesList = itineraries.map((itinerary, i) => {
@@ -95,11 +96,17 @@ class Itinerary extends React.Component {
         </div>
 
         {itineraries.length > 0 &&
-          <Calendar
-            existingEvents={existingEvents}
-            toggleCreateEventModal={toggleCreateEventModal}
-            handleSelectEvent={handleSelectEvent}
-          />
+          <>
+            <div>
+            To create an event on the itinerary, drag an Activity to the calendar, or click a slot in the calendar.
+            </div>
+            <Calendar
+              existingEvents={existingEvents}
+              toggleCreateEventModal={toggleCreateEventModal}
+              handleSelectEvent={handleSelectEvent}
+              defaultDate={defaultDate}
+            />
+          </>
         }
 
         {itineraries.length === 0 &&

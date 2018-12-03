@@ -26,7 +26,8 @@ class Activities extends React.Component {
   render() {
     const {
       showEditModal,
-      showCreateModal
+      showCreateModal,
+      toggleCreateEventModal
     } = this.props
     return (
       <div className="activities-container">
@@ -42,6 +43,7 @@ class Activities extends React.Component {
               key={index}
               showEditModal={showEditModal} 
               activity={act}
+              toggleCreateEventModal={toggleCreateEventModal}
             />)
           })}
       </div>

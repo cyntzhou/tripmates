@@ -245,7 +245,7 @@ describe('Test /api/activities', () => {
     expect(getPlaceRes.body.name).toBe(newPlace.name);
     expect(getPlaceRes.body.address).toBe(newPlace.address);
   });
-
+  
 });
 
 afterAll(async () => {

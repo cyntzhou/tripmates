@@ -9,3 +9,7 @@
   justify-content: center;
   margin-top: 1.5em;
 }
+
+.error-message {
+  color: red;
+}
