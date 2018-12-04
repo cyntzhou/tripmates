@@ -47,7 +47,7 @@ Cynthia Zhou: All files in `src/Frontend/itinerary`, `src/Frontend/user`, and so
 Janice Lee: All files in models, routes, and test, relating to users, activities, places, open hours
 
 ## Installation
-`npm i`
+`npm i` in base repo, and `npm i` in `client` repo.
 
 ## Run locally
 Copy `.env_template` to a file named `.env` in the base repo. Fill in database configurations.

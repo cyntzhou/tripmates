@@ -45,7 +45,6 @@ class EditItineraryModal extends React.Component {
       .put(`/api/itineraries/${itinerary.id}/name`, bodyContent)
       .then(res => {
         const itinerary = res.data;
-        console.log(itinerary);
         toggleModal();
         editItinerariesDone(itinerary);
         // eventBus.$emit('change-username-success', true);

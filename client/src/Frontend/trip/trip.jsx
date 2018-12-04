@@ -143,10 +143,12 @@ class Trip extends React.Component {
     this.setState({showEditItinerary: !this.state.showEditItinerary});
   }
   toggleCreateEventModal = (start, end, draggedActivityId) => { //TODO: set defaults
+    const firstActivityId = this.state.activities.length > 0 ? this.state.activities[0].id : 1;
+    const activityId = draggedActivityId ? draggedActivityId : firstActivityId;
     this.setState({
       createEventStart: start,
       createEventEnd: end,
-      draggedActivityId: draggedActivityId,
+      draggedActivityId: activityId,
       showCreateEvent: !this.state.showCreateEvent
     });
   }

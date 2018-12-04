@@ -53,6 +53,7 @@ class CreateEventModal extends React.Component {
       start: formattedStart,
       end: formattedEnd
     };
+    console.log(bodyContent);
     axios
       .post(`/api/events`, bodyContent)
       .then(res => {

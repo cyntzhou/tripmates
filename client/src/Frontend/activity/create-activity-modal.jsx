@@ -28,7 +28,6 @@ class CreateActivityModal extends React.Component{
   }
 
   createHours = () => {
-    console.log(this.state.openHours)
     this.state.openHours.forEach((timeSeg) => {
       // var a = moment(timeSeg.start)
       // var b = moment(timeSeg.end)
