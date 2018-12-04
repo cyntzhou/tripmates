@@ -35,7 +35,6 @@ Change editing an activity's place, possibly allow for removing a place from act
 
 ## Deployed app
 http://juicy-buns-tripmates.herokuapp.com/
-We haven't successfully deployed to Heroku yet.
 
 ## Authorship of files:
 Sophia Kwon: All files in models, routes, and test, relating to events, itineraries, and trips
