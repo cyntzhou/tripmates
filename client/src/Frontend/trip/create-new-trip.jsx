@@ -49,8 +49,8 @@ class CreateNewTrip extends React.Component {
     } else {
       if (moment(endDate).isSameOrAfter(startDate)) {
         const bodyContext = {
-          name, 
-          startDate: startDate, 
+          name,
+          startDate: startDate,
           endDate: endDate
         };
         axios.post('/api/trips', bodyContext).then(() => {
@@ -69,13 +69,13 @@ class CreateNewTrip extends React.Component {
       <div>
         <h3>Create New Trip</h3>
         <form>
-          <label>Trip Name:
-            <input type="text" name="name" onChange={this.setName} maxLength="40"/>
+          <label className="required">Trip Name:
+            <input type="text" name="name" onChange={this.setName} maxLength="40" required/>
           </label>
-          <label>Start Date:
+          <label className="required">Start Date:
             <DayPickerInput onDayChange={this.setStartDate}/>
           </label>
-          <label>End Date:
+          <label className="required">End Date:
             <DayPickerInput onDayChange={this.setEndDate}/>
           </label>
         </form>

@@ -3,6 +3,7 @@ import axios from "axios";
 import Modal from "../components/modal.jsx";
 import Textfield from "../components/textfield.jsx";
 import Button from "../components/button.jsx";
+import styles from "./event.css";
 
 class CreateEventModal extends React.Component {
   constructor(props) {
@@ -106,9 +107,9 @@ class CreateEventModal extends React.Component {
 
     return (
       <Modal show={showModal} handleClose={toggleModal}>
-        <div>
-          Activity: 
-          <select 
+        <div className="required">
+          Activity:
+          <select
             onChange={this.handleSelectActivity}
             value={activityId}
           >
@@ -120,7 +121,7 @@ class CreateEventModal extends React.Component {
           </select>
         </div>
 
-        <div>
+        <div className="required">
           Start:
           <input
             type="datetime-local"
@@ -128,10 +129,11 @@ class CreateEventModal extends React.Component {
             // min="2018-06-07T00:00"
             // max="2018-06-14T00:00"
             onChange={this.handleChangeStart}
+            required
           />
         </div>
 
-        <div>
+        <div className="required">
           End:
           <input
             type="datetime-local"
@@ -139,6 +141,7 @@ class CreateEventModal extends React.Component {
             // min="2018-06-07T00:00"
             // max="2018-06-14T00:00"
             onChange={this.handleChangeEnd}
+            required
           />
         </div>
 
