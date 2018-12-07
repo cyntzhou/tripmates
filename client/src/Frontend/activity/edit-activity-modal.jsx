@@ -36,7 +36,7 @@ class EditActivityModal extends React.Component {
 
   deleteHours = (placeId) => {
     const hoursBody = { placeId }
-    axios.delete(`api/places/${placeId}/hours`, hoursBody)
+    axios.delete(`/api/places/${placeId}/hours`, hoursBody)
     .then()
     .catch(err => console.log(err));
   }
@@ -99,14 +99,18 @@ class EditActivityModal extends React.Component {
       category
     }
 
-    if(newAddress || newPlaceName || openHours) {
+    if(newAddress || newPlaceName || openHours.length > 0) {
       let placeBody = {}
 
       if (newAddress) {
         placeBody['address'] = newAddress;
+      } else {
+        placeBody['address'] = activity.address;
       }
       if (newPlaceName) {
         placeBody['name'] = newPlaceName;
+      } else {
+        placeBody['name'] = activity.newPlaceName
       }
       if (activity.placeId) {
         bodyContext['placeId'] = activity.placeId;
@@ -123,11 +127,13 @@ class EditActivityModal extends React.Component {
               }
             });
           })
-
-        this.deleteHours(activity.placeId);
-        this.createHours(activity.placeId);
+        if (openHours.length > 0) {
+          if (activity.openHours.length > 0) {
+            this.deleteHours(activity.placeId);
+          }
+          this.createHours(activity.placeId);
+        }
       } else {
-        console.log('no place yet')
         let newPlaceId;
         axios.post('/api/places', placeBody).then(res => {
           bodyContext['placeId'] = res.data.insertId;
@@ -150,14 +156,12 @@ class EditActivityModal extends React.Component {
           }
         });
 
-        if (openHours) {
-          console.log('newId', newPlaceId)
-          this.deleteHours(newPlaceId);
+        if (openHours.length > 0) {
+          // this.deleteHours(newPlaceId);
           this.createHours(newPlaceId);
         }
       }
     } else {
-      bodyContext['placeId'] = this.props.activity.placeId;
       axios.put(`/api/activities/${this.props.activity.id}`, bodyContext)
       .then(() => {
         this.props.hideEditModal(null);

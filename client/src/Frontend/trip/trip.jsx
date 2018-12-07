@@ -11,6 +11,7 @@ import EditEventModal from "../itinerary/edit-event-modal.jsx";
 import EditActivityModal from "../activity/edit-activity-modal.jsx";
 import EditTripModal from "./edit-trip-modal.jsx";
 import TripnameBar from "./tripname-bar.jsx";
+import NotFound from "../components/not-found.jsx";
 import { formatDate } from "../utils.js";
 import TripMap from "./trip-map.jsx";
 import { DragDropContext } from 'react-dnd';
@@ -36,7 +37,8 @@ class Trip extends React.Component {
       existingEvents: [],
       selectedEvent: null,
       tripName: "",
-      trip: null
+      trip: null,
+      notFound: false
     }
   }
 
@@ -115,8 +117,7 @@ class Trip extends React.Component {
     }).catch(err => {
       console.log(err);
       if (err.response.status === 403 || err.response.status === 404) {
-        alert("Another user has deleted this trip.");
-        // TODO lead back to trips page? if doesn't already...
+        this.setState({ notFound: true });
       }
     });
   }
@@ -205,10 +206,9 @@ class Trip extends React.Component {
       createEventStart,
       tripName,
       draggedActivityId,
-      trip
+      trip,
+      notFound
     } = this.state;
-
-    console.log(trip);
 
     const defaultDate = trip ?
       (trip.startDate === "" ? formatDate(new Date()).substring(0,10) : trip.startDate)
@@ -216,12 +216,10 @@ class Trip extends React.Component {
     const defaultStart = trip ? defaultDate + "T12:00" : "";
     const defaultEnd = defaultDate + "T13:00";
 
-    if (showCreateActivity) {
+    if (!this.props.location.state || !this.props.location.state.trip || notFound) {
       return (
-        <CreateActivityModal
-          hideCreateModal={this.toggleCreateActivityModal}
-          tripId={trip.tripId}
-          editActivitiesDone={this.editActivitiesDone}
+        <NotFound
+          message="Trip has either been deleted or has never existed."
         />
       )
     } else if (showEditActivity) {
@@ -254,6 +252,14 @@ class Trip extends React.Component {
               tripId={tripId}
               toggleCreateEventModal={this.toggleCreateEventModal}
             />
+
+            <CreateActivityModal
+              showModal={showCreateActivity}
+              toggleModal={this.toggleCreateActivityModal}
+              tripId={trip ? trip.tripId : null}
+              editActivitiesDone={this.editActivitiesDone}
+            />
+
             <div className="itin-map">
               <Itinerary
                 toggleCreateItineraryModal={this.toggleCreateItineraryModal}
