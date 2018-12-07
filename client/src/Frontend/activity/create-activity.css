@@ -1,8 +1,12 @@
-.modal-container {
+#title {
+  text-align: center;
+  font-size: 1.5em;
+}
+/* .modal-container {
   display: flex;
   flex-direction: column;
   background-color: var(--white);
-}
+} */
 
 .btns-container {
   display: flex;
@@ -17,4 +21,9 @@
 .required:before {
   content:"*";
   font-weight:bold;
+}
+
+.hours-cal {
+  height: 25em;
+  padding: 1em;
 }

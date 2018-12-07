@@ -202,15 +202,16 @@ class Trip extends React.Component {
       draggedActivityId
     } = this.state;
 
-    if (showCreateActivity) {
-      return (
-        <CreateActivityModal
-          hideCreateModal={this.toggleCreateActivityModal}
-          tripId={trip.tripId}
-          editActivitiesDone={this.editActivitiesDone}
-        />
-      )
-    } else if (showEditActivity) {
+    // if (showCreateActivity) {
+    //   return (
+    //     <CreateActivityModal
+    //       hideCreateModal={this.toggleCreateActivityModal}
+    //       tripId={trip.tripId}
+    //       editActivitiesDone={this.editActivitiesDone}
+    //     />
+    //   )
+    // } 
+    if (showEditActivity) {
       return (
         <EditActivityModal
           hideEditModal={this.toggleEditActivityModal}
@@ -239,6 +240,14 @@ class Trip extends React.Component {
               tripId={tripId}
               toggleCreateEventModal={this.toggleCreateEventModal}
             />
+            
+            <CreateActivityModal
+              showModal={showCreateActivity}
+              toggleModal={this.toggleCreateActivityModal}
+              tripId={trip.tripId}
+              editActivitiesDone={this.editActivitiesDone}
+            />
+
             <div className="itin-map">
               <Itinerary
                 toggleCreateItineraryModal={this.toggleCreateItineraryModal}

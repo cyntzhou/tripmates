@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import moment from 'moment';
 import styles from "./create-activity.css";
+import Modal from '../components/modal.jsx';
 import Button from "../components/button.jsx";
 import OpenHoursCalendar from './hours-calender.jsx';
 
@@ -99,12 +100,12 @@ class CreateActivityModal extends React.Component{
         bodyContext['placeId'] = res.data.insertId
         axios.post('/api/activities', bodyContext).then(() => {
           this.createHours();
-          this.props.hideCreateModal();
+          this.props.toggleModal();
           this.props.editActivitiesDone();
         }).catch(err => {
           console.log(err);
           if (err.response.status === 403) {
-            this.props.hideCreateModal(null);
+            this.props.toggleModal();
             alert("You cannot create an activity since another user has deleted this trip.");
             // TODO lead back to trips page
           }
@@ -119,12 +120,12 @@ class CreateActivityModal extends React.Component{
       }
     } else {
       axios.post('/api/activities', bodyContext).then(() => {
-        this.props.hideCreateModal();
+        this.props.toggleModal();
         this.props.editActivitiesDone();
       }).catch(err => {
         console.log(err);
         if (err.response.status === 403) {
-          this.props.hideCreateModal(null);
+          this.props.toggleModal();
           alert("You cannot create an activity since another user has deleted this trip.");
           // TODO lead back to trips page
         }
@@ -137,9 +138,14 @@ class CreateActivityModal extends React.Component{
       openHours,
       errors
     } = this.state
+
+    const {
+      showModal,
+      toggleModal
+    } = this.props;
     return (
-      <div className="modal-container">
-        <h3>Create Activity</h3>
+      <Modal show={showModal} handleClose={toggleModal}>
+        <h3 id="title">Create Activity</h3>
         <form>
           <label className="required">Activity Name:
             <input type="text" name="name" onChange={this.onChange} maxLength="40" required/>
@@ -160,12 +166,12 @@ class CreateActivityModal extends React.Component{
             <input type="text" name="address" onChange={this.onChange} maxLength="100"/>
           </label>
           <p>Open Hours:</p>
-          <div>
+          <div className="hours-cal">
             <OpenHoursCalendar openHours={openHours} updateHours={this.updateOpenHours} />
           </div>
         </form>
         <div className="btns-container">
-          <Button label="Cancel" onButtonClick={this.props.hideCreateModal}/>
+          <Button label="Cancel" onButtonClick={toggleModal}/>
           <Button label="Create" onButtonClick={this.onSave}/>
         </div>
 
@@ -178,7 +184,7 @@ class CreateActivityModal extends React.Component{
             </ul>
           </div>
         }
-      </div>
+      </Modal>
     )
   }
 }
