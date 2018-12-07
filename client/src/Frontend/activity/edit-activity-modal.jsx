@@ -3,10 +3,11 @@ import axios from "axios";
 import moment from 'moment';
 import Button from "../components/button.jsx";
 import OpenHoursCalendar from './hours-calender.jsx';
+import Modal from '../components/modal.jsx';
 import styles from "./edit-activity.css";
 
 class EditActivityModal extends React.Component {
-  constructor(props) {
+constructor(props) {
     super(props)
     this.state = {
       newName: null,
@@ -195,10 +196,15 @@ class EditActivityModal extends React.Component {
       errors,
       openHours
     } = this.state;
+
+    const {
+      showModal,
+      toggleModal
+    } = this.props;
     return (
-      <div className="modal-container">
-        <h3>Edit Activity</h3>
-        <form>
+      <Modal show={showModal} handleClose={toggleModal} className="modal-container">
+        <h3 id="title">Edit Activity</h3>
+        <form id="edit-form">
           <label className="required">Activity Name:
             <input
               type="text" name="newName"
@@ -234,33 +240,37 @@ class EditActivityModal extends React.Component {
             />
           </label>
           <p>Place:</p>
-          <label>Name:
-            <input
-              type="text"
-              name="newPlaceName"
-              placeholder={this.props.address? this.props.address : 'address'}
-              onChange={this.onChange}
-              maxLength="40"
-              />
-          </label>
-          <label>Address:
-            <input
-              type="text"
-              name="newAddress"
-              placeholder={this.props.address? this.props.address : 'address'}
-              onChange={this.onChange}
-              maxLength="100"
-              />
-          </label>
-          <p>Open Hours:</p>
           <div>
+            <label>Name:
+              <input
+                type="text"
+                name="newPlaceName"
+                placeholder={this.props.address? this.props.address : 'address'}
+                onChange={this.onChange}
+                maxLength="40"
+                />
+            </label>
+            <label>Address:
+              <input
+                type="text"
+                name="newAddress"
+                placeholder={this.props.address? this.props.address : 'address'}
+                onChange={this.onChange}
+                maxLength="100"
+                />
+            </label>
+          </div>
+          <p>Open Hours:</p>
+          <div className="hours-cal">
             <OpenHoursCalendar openHours={openHours} updateHours={this.updateOpenHours} />
           </div>
         </form>
-        <div className="btns-container">
-          <Button label="Cancel" onButtonClick={this.props.hideEditModal}/>
-          <Button label="Save" onButtonClick={this.onSave}/>
-          <Button label="Delete" onButtonClick={this.onDelete}/>
+        <div className="edit-buttons">
+          <Button colorClassName="btn-red-background" label="Delete" onButtonClick={this.onDelete}/>
+          <div id="save-cancel">
+            <Button colorClassName="btn-gray-background" label="Cancel" onButtonClick={toggleModal}/>
+            <Button label="Save" onButtonClick={this.onSave}/>
+          </div>
         </div>
 
         {errors.length > 0 &&
@@ -272,7 +282,7 @@ class EditActivityModal extends React.Component {
             </ul>
           </div>
         }
-      </div>
+      </Modal>
     )
   }
 }

@@ -1,17 +1,26 @@
+#create-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#hours, #mins {
+  width: 5em;
+}
+
 #title {
   text-align: center;
   font-size: 1.5em;
 }
-/* .modal-container {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--white);
-} */
+
+#optional-details {
+  text-align: center;
+}
 
 .btns-container {
   display: flex;
   justify-content: center;
-  margin-top: 1.5em;
+  margin-top: 1em;
 }
 
 .error-message {
@@ -24,6 +33,7 @@
 }
 
 .hours-cal {
-  height: 25em;
-  padding: 1em;
+  height: 22em;
+  width: 90%;
+  padding: 0 1em;
 }

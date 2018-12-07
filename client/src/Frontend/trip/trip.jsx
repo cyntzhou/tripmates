@@ -223,7 +223,8 @@ class Trip extends React.Component {
     if (showEditActivity) {
       return (
         <EditActivityModal
-          hideEditModal={this.toggleEditActivityModal}
+          showModal={showEditActivity}
+          toggleModal={this.toggleEditActivityModal}
           tripId={trip.tripId}
           activity={this.state.activityToEdit}
         />

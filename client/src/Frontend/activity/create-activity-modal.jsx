@@ -146,32 +146,34 @@ class CreateActivityModal extends React.Component{
     return (
       <Modal show={showModal} handleClose={toggleModal}>
         <h3 id="title">Create Activity</h3>
-        <form>
+        <form id="create-form">
           <label className="required">Activity Name:
             <input type="text" name="name" onChange={this.onChange} maxLength="40" required/>
           </label>
-          <h4>Optional Details</h4>
+          <h4 id="optional-details">Optional Details</h4>
           <label>Category:
             <input type="text" name="category" onChange={this.onChange} maxLength="20"/>
           </label>
           <label>Suggested Duration:
-            <input type="number" min="0" name="suggestedHours" placeholder="hours" onChange={this.onChange}/>
-            <input type="number" min="0" name="suggestedMins" placeholder="mins" onChange={this.onChange}/>
+            <input id="hours" type="number" min="0" name="suggestedHours" placeholder="hours" onChange={this.onChange}/>
+            <input id="mins" type="number" min="0" name="suggestedMins" placeholder="mins" onChange={this.onChange}/>
           </label>
           <p>Place:</p>
-          <label>Name:
-            <input type="text" name="placeName" onChange={this.onChange} maxLength="40"/>
-          </label>
-          <label>Address:
-            <input type="text" name="address" onChange={this.onChange} maxLength="100"/>
-          </label>
+          <div>
+            <label>Name:
+              <input type="text" name="placeName" onChange={this.onChange} maxLength="40"/>
+            </label>
+            <label>Address:
+              <input type="text" name="address" onChange={this.onChange} maxLength="100"/>
+            </label>
+          </div>
           <p>Open Hours:</p>
           <div className="hours-cal">
             <OpenHoursCalendar openHours={openHours} updateHours={this.updateOpenHours} />
           </div>
         </form>
         <div className="btns-container">
-          <Button label="Cancel" onButtonClick={toggleModal}/>
+          <Button colorClassName="btn-gray-background" label="Cancel" onButtonClick={toggleModal}/>
           <Button label="Create" onButtonClick={this.onSave}/>
         </div>
 

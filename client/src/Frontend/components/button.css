@@ -3,7 +3,7 @@
 }
 .btn {
   width: 100px;
-  height: 50px;
+  height: 38px;
   border-radius: 5%;
   font-size: 1em;
   border: 0;
@@ -21,6 +21,16 @@
 .btn-yellow-background {
   color: black;
   background-color: var(--yellow);
+}
+
+.btn-gray-background {
+  color: var(--white);
+  background-color: var(--gray);
+}
+
+.btn-red-background {
+  color: var(--white);
+  background-color: var(--red);
 }
 
 .btn-red {

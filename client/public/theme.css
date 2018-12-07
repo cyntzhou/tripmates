@@ -8,6 +8,17 @@
   --yellow: #FFF4C5;
   --white: #FFFFFF;
   --gray: #C4C4C4;
+  --light-gray: #F7F7F7;
+  --red: #E14646;
+}
+
+
+input {
+  background-color: var(--light-gray);
+  border: 0;
+  border-bottom: solid 1px var(--dark-green);
+  padding: 0.2em;
+  margin: 0.1em 0.5em;
 }
 
 body {
