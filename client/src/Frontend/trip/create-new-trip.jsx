@@ -47,7 +47,7 @@ class CreateNewTrip extends React.Component {
     if (name == null || name == '') {
       alert('A trip name is required')
     } else {
-      if (moment(endDate).isAfter(startDate)) {
+      if (moment(endDate).isSameOrAfter(startDate)) {
         const bodyContext = {
           name, 
           startDate: startDate, 

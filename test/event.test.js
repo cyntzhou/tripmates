@@ -92,8 +92,7 @@ describe('Test /api/events', () => {
     expect(eventResponse.body.endDateTime).toBe(event.end);
   });
 
-  // TODO: fix this test case
-  test.skip('Update date/time range of event using PUT /api/events/:id', async () => {
+  test('Update date/time range of event using PUT /api/events/:id', async () => {
     const userResponse = await signin(user);
     expect(userResponse.statusCode).toBe(200);
 

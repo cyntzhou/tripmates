@@ -115,7 +115,7 @@ router.put('/:id', async (req, res) => {
           const trip = await Trips.findOneById(itinerary.tripId);
           if (await Trips.validDateTimeRange(trip.startDate, req.body.newStart.substring(0, 10)) && await Trips.validDateTimeRange(req.body.newEnd.substring(0,10), trip.endDate)) {
             
-            if (await Events.duringOpenHours(req.body.start, req.body.end, req.body.activityId)) {
+            if (await Events.duringOpenHours(req.body.start, req.body.end, event.activityId)) {
               const updatedEvent = await Events.updateOne(req.params.id, req.body.newStart, req.body.newEnd);
               res.status(200).json(updatedEvent).end();
             } else {
