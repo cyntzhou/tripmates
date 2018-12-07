@@ -15,9 +15,9 @@ class EditActivityModal extends React.Component {
       suggestedMins: null,
       newPlaceName: null,
       newAddress: null,
-      openHours: [],
+      openHours: props.activity.formatedHours,
       currHours: Math.floor(this.props.activity.suggestedDuration/60),
-      currMins: this.props.activity.suggestedDuration%60,
+      currMins: props.activity.suggestedDuration%60,
       errors: []
     }
   }
@@ -34,6 +34,29 @@ class EditActivityModal extends React.Component {
     });
   }
 
+  deleteHours = (placeId) => {
+    const hoursBody = { placeId }
+    axios.delete(`api/places/${placeId}/hours`, hoursBody)
+    .then()
+    .catch(err => console.log(err));
+  }
+
+  createHours = (placeId) => {
+    this.state.openHours.forEach((timeSeg) => {
+      const hoursBody = {
+        placeId,
+        day: timeSeg.resourceId,
+        startTime: moment(timeSeg.start).format('HH:mm'),
+        endTime: moment(timeSeg.end).format('HH:mm')
+      }
+      axios.post(`/api/places/${placeId}/hours`, hoursBody)
+        .then()
+        .catch(err => {
+          console.log(err);
+        })
+    })
+  }
+
   onSave = () => {
     const {
       newName,
@@ -44,6 +67,7 @@ class EditActivityModal extends React.Component {
       newPlaceName,
       openHours
     } = this.state
+    const { activity } = this.props
     let name, category, suggestedDuration, address
 
     const errors = [];
@@ -84,12 +108,11 @@ class EditActivityModal extends React.Component {
       if (newPlaceName) {
         placeBody['name'] = newPlaceName;
       }
-
-      if (this.props.activity.placeId) {
-        axios.put(`/api/places/${this.props.activity.placeId}`, placeBody)
-          .then(res => {
-            bodyContext['placeId'] = res.data.insertId;
-            axios.put(`/api/activities/${this.props.activity.id}`, bodyContext)
+      if (activity.placeId) {
+        bodyContext['placeId'] = activity.placeId;
+        axios.put(`/api/places/${activity.placeId}`, placeBody)
+          .then(() => {
+            axios.put(`/api/activities/${activity.id}`, bodyContext)
             .then(() => {
               this.props.hideEditModal(null);
             }).catch(err => {
@@ -100,9 +123,15 @@ class EditActivityModal extends React.Component {
               }
             });
           })
+
+        this.deleteHours(activity.placeId);
+        this.createHours(activity.placeId);
       } else {
+        console.log('no place yet')
+        let newPlaceId;
         axios.post('/api/places', placeBody).then(res => {
           bodyContext['placeId'] = res.data.insertId;
+          newPlaceId = res.data.insertId;
           axios.put(`/api/activities/${this.props.activity.id}`, bodyContext)
           .then(() => {
             this.props.hideEditModal(null);
@@ -120,6 +149,12 @@ class EditActivityModal extends React.Component {
             alert("Another user has deleted this activity.");
           }
         });
+      
+        if (openHours) {
+          console.log('newId', newPlaceId)
+          this.deleteHours(newPlaceId);
+          this.createHours(newPlaceId);
+        }
       }
     } else {
       bodyContext['placeId'] = this.props.activity.placeId;
@@ -132,9 +167,6 @@ class EditActivityModal extends React.Component {
           this.props.hideEditModal(null);
           alert("Another user has deleted this activity.");
         }
-        // console.log(err.response.status);
-        // console.log(err.response.data.error);
-
         if (errors.length > 0) {
           this.setState({
             errors: errors
@@ -159,35 +191,17 @@ class EditActivityModal extends React.Component {
       errors,
       openHours
     } = this.state;
-    console.log(errors);
-    this.props.activity.openHours.forEach((timeSeg) => {
-      const formatStart = moment([
-        2018, 10, 20,
-        parseInt(timeSeg.startTime.substring(0,2)),
-        parseInt(timeSeg.startTime.substring(3))
-      ]);
-      const formatEnd = moment([
-        2018, 10, 20,
-        parseInt(timeSeg.endTime.substring(0,2)),
-        parseInt(timeSeg.endTime.substring(3))
-      ]);
-      openHours.push({
-        resourceId: timeSeg.day,
-        start: formatStart._d,
-        end: formatEnd._d
-      })
-    })
-
     return (
       <div className="modal-container">
         <h3>Edit Activity</h3>
         <form>
-          <label>Activity Name:
+          <label className="required">Activity Name:
             <input
               type="text" name="newName"
               onChange={this.onChange}
               placeholder={this.props.activity.name}
               maxLength="40"
+              required
             />
           </label>
           <h4>Optional Details</h4>

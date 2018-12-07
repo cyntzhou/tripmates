@@ -21,6 +21,7 @@ class Navbar extends React.Component {
 
   render() {
     const {showUserDropdown} = this.state;
+    const {loggedIn} = this.props;
     return (
       <div>
         <ul className="navbar-ul">
@@ -31,16 +32,18 @@ class Navbar extends React.Component {
             </Link>
           </li>
           <li className="navbar-li">
-            <a href="#" className="user-dropdown"
-              onMouseEnter={this.toggleUserDropdown}
-              onMouseLeave={this.toggleUserDropdown}
-            >
-              <i className="fa fa-user-circle fa-2x"/>
-            </a>
+            {loggedIn &&
+              <a href="#" className="user-dropdown"
+                onMouseEnter={this.toggleUserDropdown}
+                onMouseLeave={this.toggleUserDropdown}
+              >
+                <i className="fa fa-user-circle fa-2x"/>
+              </a>
+            }
           </li>
         </ul>
 
-        {showUserDropdown &&
+        {showUserDropdown && loggedIn &&
           <div className="user-dropdown-content"
             onMouseEnter={this.toggleUserDropdown}
             onMouseLeave={this.toggleUserDropdown}

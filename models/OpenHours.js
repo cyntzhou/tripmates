@@ -35,7 +35,7 @@ class OpenHours {
    * @param {int} placeId - id of place
    * @param {int} day - day of week
    */
-  static async deleteOpenHoursOnDay(placeId, day) {
+  static async deleteOpenHoursForPlace(placeId) {
     try {
       const sql = `DELETE FROM openHours WHERE placeId=?;`;
       const response = await database.query(sql, [placeId]);

@@ -3,6 +3,7 @@ import axios from "axios";
 import Modal from "../components/modal.jsx";
 import Textfield from "../components/textfield.jsx";
 import Button from "../components/button.jsx";
+import styles from "./itinerary.css";
 
 class CreateItineraryModal extends React.Component {
   constructor(props) {
@@ -75,12 +76,13 @@ class CreateItineraryModal extends React.Component {
 
     return (
       <Modal show={showModal} handleClose={toggleModal}>
-        <span>Enter a name for your new Itinerary: </span>
+        <span className="required">Enter a name for your new Itinerary: </span>
         <Textfield
           placeholder="name"
           onChange={this.handleChangeName}
           value={name}
           maxLength={40}
+          required
         />
 
         {errors.length > 0 &&
