@@ -197,6 +197,15 @@ class Trip extends React.Component {
       notFound
     } = this.state;
 
+    // if (showCreateActivity) {
+    //   return (
+    //     <CreateActivityModal
+    //       hideCreateModal={this.toggleCreateActivityModal}
+    //       tripId={trip.tripId}
+    //       editActivitiesDone={this.editActivitiesDone}
+    //     />
+    //   )
+    // } 
     if (!this.props.location.state || !this.props.location.state.trip || notFound) {
       return (
         <NotFound
@@ -211,15 +220,7 @@ class Trip extends React.Component {
     const defaultStart = defaultDate + "T12:00";
     const defaultEnd = defaultDate + "T13:00";
 
-    if (showCreateActivity) {
-      return (
-        <CreateActivityModal
-          hideCreateModal={this.toggleCreateActivityModal}
-          tripId={trip.tripId}
-          editActivitiesDone={this.editActivitiesDone}
-        />
-      )
-    } else if (showEditActivity) {
+    if (showEditActivity) {
       return (
         <EditActivityModal
           hideEditModal={this.toggleEditActivityModal}
@@ -248,6 +249,14 @@ class Trip extends React.Component {
               tripId={tripId}
               toggleCreateEventModal={this.toggleCreateEventModal}
             />
+
+            <CreateActivityModal
+              showModal={showCreateActivity}
+              toggleModal={this.toggleCreateActivityModal}
+              tripId={trip.tripId}
+              editActivitiesDone={this.editActivitiesDone}
+            />
+
             <div className="itin-map">
               <Itinerary
                 toggleCreateItineraryModal={this.toggleCreateItineraryModal}
