@@ -20,7 +20,7 @@ const router = express.Router();
  */
  router.post('/', async (req, res) => {
    if (req.session.name !== undefined) {
-    const trip = await Trips.findOneById(req.params.id);
+    const trip = await Trips.findOneById(req.body.tripId);
     if (trip === undefined) {
       res.status(404).json({
         error: `Trip not found.`,
@@ -54,21 +54,25 @@ const router = express.Router();
   router.get('/:id', async (req, res) => {
     if (req.session.name !== undefined) {
       const activity = await Activities.getActivity(parseInt(req.params.id));
-      const trip = await Trips.findOneById(req.params.id);
-      if (trip === undefined) {
-        res.status(404).json({
-          error: `Trip not found.`,
-        }).end();
-      } else if (activity === undefined) {
+      if (activity === undefined) {
         res.status(404).json({
           error: `Activity not found.`,
         }).end();
-      } else if (await Trips.checkMembership(req.session.name, activity.tripId)) {
-        res.status(200).json(activity).end();
       } else {
-        res.status(403).json({
-          error: `Must be member of trip to get trip activities.`,
-        }).end();
+        const trip = await Trips.findOneById(activity.tripId);
+        if (trip === undefined) {
+          res.status(404).json({
+            error: `Trip not found.`,
+          }).end();
+        } else {
+          if (await Trips.checkMembership(req.session.name, activity.tripId)) {
+            res.status(200).json(activity).end();
+          } else {
+            res.status(403).json({
+              error: `Must be member of trip to get trip activities.`,
+            }).end();
+          }
+        }
       }
     } else {
       res.status(401).json({
@@ -93,22 +97,26 @@ const router = express.Router();
   router.put('/:id', async (req, res) => {
     if (req.session.name !== undefined) {
       const activity = await Activities.getActivity(parseInt(req.params.id));
-      const trip = await Trips.findOneById(req.params.id);
-      if (trip === undefined) {
-        res.status(404).json({
-          error: `Trip not found.`,
-        }).end();
-      } else if (activity === undefined) {
+      if (activity === undefined) {
         res.status(404).json({
           error: `Activity not found.`,
         }).end();
-      } else if (await Trips.checkMembership(req.session.name, activity.tripId)) {
-        const activity = await Activities.editActivity(parseInt(req.params.id), req.body.name, req.body.suggestedDuration, req.body.placeId, req.body.category);
-        res.status(200).json(activity).end();
       } else {
-        res.status(403).json({
-          error: `Must be member of trip to get trip activities.`,
-        }).end();
+        const trip = await Trips.findOneById(activity.tripId);
+        if (trip === undefined) {
+          res.status(404).json({
+            error: `Trip not found.`,
+          }).end();
+        } else {
+          if (await Trips.checkMembership(req.session.name, activity.tripId)) {
+            const activity = await Activities.editActivity(parseInt(req.params.id), req.body.name, req.body.suggestedDuration, req.body.placeId, req.body.category);
+            res.status(200).json(activity).end();
+          } else {
+            res.status(403).json({
+              error: `Must be member of trip to get trip activities.`,
+            }).end();
+          }
+        }
       }
     } else {
       res.status(401).json({
@@ -156,14 +164,13 @@ const router = express.Router();
   router.put('/:id/upvote', async (req, res) => {
     if (req.session.name !== undefined) {
       const activity = await Activities.getActivity(parseInt(req.params.id));
-      const trip = await Trips.findOneById(req.params.id);
-      if (trip === undefined) {
-        res.status(404).json({
-          error: `Trip not found.`,
-        }).end();
-      } else if (activity === undefined) {
+      if (activity === undefined) {
         res.status(404).json({
           error: `Activity not found.`,
+        }).end();
+      } else if (!await Trips.findOneById(activity.tripId)) {
+        res.status(404).json({
+          error: `Trip not found.`,
         }).end();
       } else if (await Trips.checkMembership(req.session.name, activity.tripId)) {
         let id = req.params.id;
@@ -216,6 +223,10 @@ const router = express.Router();
         res.status(404).json({
           error: `Activity not found.`,
         }).end();
+      } else if (!await Trips.findOneById(activity.tripId)) {
+        res.status(404).json({
+          error: `Trip not found.`,
+        }).end();
       } else if (await Trips.checkMembership(req.session.name, activity.tripId)) {
         let id = req.params.id;
         let userId = req.body.userId;
@@ -253,9 +264,15 @@ const router = express.Router();
   * @return {Activity[]} - all activities with category
   * @throws {401} - if user not logged in
   * @throws {403} - if user is not a member of trip
+  * @throws {404} - trip not found
   */
  router.get('/', async (req, res) => {
-   if (await Trips.checkMembership(req.session.name, req.body.tripId)) {
+   const trip = await Trips.findOneById(req.body.tripId);
+   if (trip === undefined) {
+     res.status(404).json({
+       error: `Trip not found.`,
+     }).end();
+   } else if (await Trips.checkMembership(req.session.name, req.body.tripId)) {
      if (req.session.name !== undefined) {
        let activities = await Activities.filterByCategory(req.body.tripId, req.query.category);
        res.status(200).json(activities).end();
