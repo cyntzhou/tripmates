@@ -158,7 +158,7 @@ const router = express.Router();
           error: `Place not found.`,
         }).end();
       } else {
-        const hours = await OpenHours.deleteOpenHoursOnDay(req.params.placeId, req.body.day);
+        const hours = await OpenHours.deleteOpenHoursForPlace(req.params.placeId);
         res.status(200).json(hours).end();
       }
     } else {

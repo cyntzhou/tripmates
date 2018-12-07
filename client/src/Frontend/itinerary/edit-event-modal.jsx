@@ -3,6 +3,7 @@ import axios from "axios";
 import Modal from "../components/modal.jsx";
 import Textfield from "../components/textfield.jsx";
 import Button from "../components/button.jsx";
+import styles from "./event.css";
 
 class EditEventModal extends React.Component {
   constructor(props) {
@@ -112,7 +113,7 @@ class EditEventModal extends React.Component {
 
     return (
       <Modal show={showModal} handleClose={toggleModal}>
-        <div>
+        <div className="required">
           Start:
           <input
             type="datetime-local"
@@ -123,7 +124,7 @@ class EditEventModal extends React.Component {
           />
         </div>
 
-        <div>
+        <div className="required">
           End:
           <input
             type="datetime-local"
