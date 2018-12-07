@@ -46,7 +46,7 @@ class EditTripModal extends React.Component {
 
   onSave = () => {
     const {name, startDate, endDate, tripId} = this.state;
-    if (moment(endDate).isAfter(startDate)) {
+    if (moment(endDate).isSameOrAfter(startDate)) {
       const bodyContext = {newName: name, newStart: startDate, newEnd: endDate};
       axios.put(`/api/trips/${tripId}`, bodyContext).then(() => {
         this.props.hideModal();
