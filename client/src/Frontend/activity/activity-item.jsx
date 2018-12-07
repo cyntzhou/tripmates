@@ -1,6 +1,7 @@
 import React from "react";
 import { DragSource } from 'react-dnd';
 import { ITEM } from '../itemTypes';
+import moment from 'moment';
 import styles from "./activity-item.css";
 
 const source = {
@@ -35,6 +36,28 @@ class ActivityItem extends React.Component {
     })
   }
 
+  getOpenHours = () => {
+    const hours = [];
+    this.props.activity.openHours.forEach((timeSeg) => {
+      const formatStart = moment([
+        2018, 10, 20,
+        parseInt(timeSeg.startTime.substring(0,2)),
+        parseInt(timeSeg.startTime.substring(3))
+      ]);
+      const formatEnd = moment([
+        2018, 10, 20,
+        parseInt(timeSeg.endTime.substring(0,2)),
+        parseInt(timeSeg.endTime.substring(3))
+      ]);
+      hours.push({
+        resourceId: timeSeg.day,
+        start: formatStart._d,
+        end: formatEnd._d
+      })
+    })
+    return hours
+  }
+
   render() {
     const {
       activity,
@@ -52,6 +75,7 @@ class ActivityItem extends React.Component {
 
     const suggestedHours = Math.floor(suggestedDuration/60) || 0;
     const suggestedMin = suggestedDuration%60;
+    activity['formatedHours'] = this.getOpenHours();
 
     return connectDragSource(
       <div 

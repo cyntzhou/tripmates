@@ -15,7 +15,7 @@ class EditActivityModal extends React.Component {
       suggestedMins: null,
       newPlaceName: null,
       newAddress: null,
-      openHours: [],
+      openHours: props.activity.formatedHours,
       currHours: Math.floor(this.props.activity.suggestedDuration/60),
       currMins: this.props.activity.suggestedDuration%60,
       errors: []
@@ -159,25 +159,6 @@ class EditActivityModal extends React.Component {
       errors,
       openHours
     } = this.state;
-    console.log(errors);
-    this.props.activity.openHours.forEach((timeSeg) => {
-      const formatStart = moment([
-        2018, 10, 20,
-        parseInt(timeSeg.startTime.substring(0,2)),
-        parseInt(timeSeg.startTime.substring(3))
-      ]);
-      const formatEnd = moment([
-        2018, 10, 20,
-        parseInt(timeSeg.endTime.substring(0,2)),
-        parseInt(timeSeg.endTime.substring(3))
-      ]);
-      openHours.push({
-        resourceId: timeSeg.day,
-        start: formatStart._d,
-        end: formatEnd._d
-      })
-    })
-
     return (
       <div className="modal-container">
         <h3>Edit Activity</h3>
