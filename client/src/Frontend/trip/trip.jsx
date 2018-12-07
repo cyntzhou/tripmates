@@ -11,6 +11,7 @@ import EditEventModal from "../itinerary/edit-event-modal.jsx";
 import EditActivityModal from "../activity/edit-activity-modal.jsx";
 import EditTripModal from "./edit-trip-modal.jsx";
 import TripnameBar from "./tripname-bar.jsx";
+import NotFound from "../components/not-found.jsx";
 import { formatDate } from "../utils.js";
 import TripMap from "./trip-map.jsx";
 import { DragDropContext } from 'react-dnd';
@@ -109,8 +110,6 @@ class Trip extends React.Component {
     }).catch(err => {
       console.log(err);
       if (err.response.status === 403 || err.response.status === 404) {
-        alert("Another user has deleted this trip.");
-        // TODO lead back to trips page? if doesn't already...
       }
     });
   }
@@ -176,13 +175,6 @@ class Trip extends React.Component {
   }
 
   render() {
-    var trip = this.props.location.state.trip
-    var tripId = this.props.match.params.id;
-
-    const defaultDate = trip.startDate === "" ? formatDate(new Date()).substring(0,10) : trip.startDate;
-    const defaultStart = defaultDate + "T12:00";
-    const defaultEnd = defaultDate + "T13:00";
-
     const {
       activities,
       itineraries,
@@ -201,6 +193,20 @@ class Trip extends React.Component {
       tripName,
       draggedActivityId
     } = this.state;
+
+    if (!this.props.location.state || !this.props.location.state.trip || !tripName) {
+      return (
+        <NotFound
+          message="Trip has either been deleted or has never existed."
+        />
+      )
+    }
+    var trip = this.props.location.state.trip
+    var tripId = this.props.match.params.id;
+
+    const defaultDate = trip.startDate === "" ? formatDate(new Date()).substring(0,10) : trip.startDate;
+    const defaultStart = defaultDate + "T12:00";
+    const defaultEnd = defaultDate + "T13:00";
 
     if (showCreateActivity) {
       return (

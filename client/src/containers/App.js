@@ -5,8 +5,9 @@ import Login from "../Frontend/user/login.jsx";
 import Settings from "../Frontend/user/settings.jsx";
 import Trip from "../Frontend/trip/trip.jsx";
 import Navbar from "../Frontend/components/navbar.jsx";
+import NotFound from "../Frontend/components/not-found.jsx";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import { Redirect } from 'react-router';
+import { Redirect, Switch } from 'react-router';
 import { withCookies } from 'react-cookie';
 
 const COOKIE_AGE = 6*60*60; // 6 hours (in seconds)
@@ -55,70 +56,74 @@ class App extends Component {
 
   render () {
     const { cookies } = this.props;
-
+    const loggedIn = cookies.get("username") ? true : false;
     return (
       <Router>
         <div className="App">
           <header className="App-header">
             <Navbar
               logout={this.logout}
+              loggedIn={loggedIn}
             />
           </header>
 
           <div>
-            <Route exact path="/login" 
-              render={(props) => <Login 
-                {...props}
-                cookies={cookies}
-                userHasAuthenticated={this.userHasAuthenticated} 
-              />}
-            />
-
-            <Route exact path="/" 
-              render={(props) => (
-                cookies.get("username") ? (
-                  <Redirect to="/trips"/>
-                ) : (
-                  <Redirect to="/login"/>
-                )
-              )}
-            />
-            <Route exact path="/trips" 
-              render={(props) => (
-                cookies.get("username") ? (
-                  <Trips 
-                    {...props}
-                    cookies={cookies}
-                  />
-                ) : (
-                  <Redirect to="/login"/>
-                )
-              )}
-            />
-            <Route exact path="/settings" 
-              render={(props) => (
-                cookies.get("username") ? (
-                  <Settings 
-                    {...props}
-                    cookies={cookies}
-                  />
-                ) : (
-                  <Redirect to="/login"/>
-                )
-              )}
-            />
-            <Route path="/trips/:id"
-              render={(props) => (
-                cookies.get("username") ? (
-                <Trip 
+            <Switch>
+              <Route exact path="/login" 
+                render={(props) => <Login 
                   {...props}
                   cookies={cookies}
-                />
-                ) : (
-                  <Redirect to="/login"/>
-                )
-              )}
-            />
+                  userHasAuthenticated={this.userHasAuthenticated} 
+                />}
+              />
+
+              <Route exact path="/" 
+                render={(props) => (
+                  cookies.get("username") ? (
+                    <Redirect to="/trips"/>
+                  ) : (
+                    <Redirect to="/login"/>
+                  )
+                )}
+              />
+              <Route exact path="/trips" 
+                render={(props) => (
+                  cookies.get("username") ? (
+                    <Trips 
+                      {...props}
+                      cookies={cookies}
+                    />
+                  ) : (
+                    <Redirect to="/login"/>
+                  )
+                )}
+              />
+              <Route exact path="/settings" 
+                render={(props) => (
+                  cookies.get("username") ? (
+                    <Settings 
+                      {...props}
+                      cookies={cookies}
+                    />
+                  ) : (
+                    <Redirect to="/login"/>
+                  )
+                )}
+              />
+              <Route path="/trips/:id"
+                render={(props) => (
+                  cookies.get("username") ? (
+                  <Trip 
+                    {...props}
+                    cookies={cookies}
+                  />
+                  ) : (
+                    <Redirect to="/login"/>
+                  )
+                )}
+              />
+              <Route component={NotFound}/>
+            </Switch>
           </div>
         </div>
       </Router>
