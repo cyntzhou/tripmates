@@ -39,9 +39,10 @@ app.use('/api/places', placesRouter);
 
 app.use(express.static(__dirname + '/public'));
 
-const port = process.env.PORT || 5000;
-app.listen(port);
-
-console.log(`Listening on ${port}`);
+if (process.env.NODE_ENV !== "test") {
+  const port = process.env.PORT || 5000;
+  app.listen(port);
+  console.log(`Listening on ${port}`);
+}
 
 module.exports = app;
