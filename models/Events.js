@@ -139,35 +139,75 @@ const Activities = require('../models/Activities');
       // if there is such a block that completely encompasses the event, return true
       // if not, return false
 
+      // Handling events past midnight:
+      // determine whether event goes past midnight. if not, do normal checks as already implemented.
+      // if event goes past midnight:
+      // determine all blocks of time we need to check (1 block per date this event happens over) 
+      //  e.g. Mon 6pm - Wed 1pm requires checks for blocks Mon 6pm-midnight, Tues all day, Wed midnight-1pm
+      // for each block, check whether it's during open hours. 
+      // if at least one of the blocks is not during open hours, return false. otherwise, if all the blocks are during open hours, return true
+
       const activity = await Activities.getActivity(activityId);
 
-      const startDate = new Date(start);
-      const startDayOfWeek = startDate.getDay();
-
-      const endDate = new Date(end);
-      const endDayOfWeek = endDate.getDay();
-
-      // if (activity.placeId === 0) { // activity doesn't have place
-      //   return true;
-      // }
       if (activity.openHours.length === 0) { // activity doesn't have place or place doesn't have hours
         return true;
       }
 
+      const startDate = new Date(start);
+      const startDayOfWeek = startDate.getDay() + 1; // front end 1-indexes days of week
+
+      const endDate = new Date(end);
+      const endDayOfWeek = endDate.getDay() + 1; // front end 1-indexes days of week
+
       const startTime = start.slice(11,16);
       const endTime = end.slice(11,16);
 
-      for (let i=0; i<activity.openHours.length; i++) {
-        const openHour = activity.openHours[i];
-        if (openHour.day === startDayOfWeek) {
-          if (await Trips.timesInOrder(openHour.startTime, startTime)) { // event starts after open hour starts
-            if (await Trips.timesInOrder(endTime, openHour.endTime)) { // event ends before the open hour ends
-              return true;
+      // All blocks of time in eventBlocks must be during open hours in order for the event to be during open hours.
+      let eventBlocks = []; // array of objects in format {day (1-indexed day of week), startTime, endTime}
+      // check whether event goes past midnight / lasts multiple days
+      if (start.slice(0, 10) !== end.slice(0, 10)) { // if event goes multiple days
+        // Add start day to event blocks
+        eventBlocks.push({day: startDayOfWeek, startTime: startTime, endTime: "23:59"});
+        // Add intermediate days between start and end, if applicable
+        let currentDay = new Date();
+        currentDay.setDate(startDate.getDate()+1); // day after start date
+        let currentDayString = currentDay.getFullYear() + "-" + (currentDay.getMonth()+1) + "-" + currentDay.getDate();
+        while ((currentDayString) !== end.slice(0,10)) {
+          eventBlocks.push({day: currentDay.getDay()+1, startTime: "00:00", endTime: "23:59"});
+          currentDay.setDate(currentDay.getDate()+1);
+          currentDayString = currentDay.getFullYear() + "-" + (currentDay.getMonth()+1) + "-" + currentDay.getDate();
+        }
+        // Add end day to event blocks
+        eventBlocks.push({day: endDayOfWeek, startTime: "00:00", endTime: endTime});
+      } else {
+        // Only 1 block to check if event takes place on only 1 day
+        eventBlocks.push({day: startDayOfWeek, startTime: startTime, endTime: endTime});
+      }
+
+      // Check whether each block is during open hours
+      for (let b=0; b<eventBlocks.length; b++) {
+        const eventBlock = eventBlocks[b];
+        let openDuringBlock = false;
+
+        // Checking open hours
+        for (let i=0; i<activity.openHours.length; i++) {
+          const openHour = activity.openHours[i];
+          if (openHour.day === eventBlock.day) {
+            if (await Trips.timesInOrder(openHour.startTime, eventBlock.startTime)) { // event starts after open hour starts
+              if (await Trips.timesInOrder(eventBlock.endTime, openHour.endTime)) { // event ends before the open hour ends
+                openDuringBlock = true;
+                break;
+              }
             }
           }
         }
+
+        if (!openDuringBlock) {
+          return false; // if any event block is not during open hours, the entire event is not during open hours
+        }
       }
-      return false
+      return true; // all event blocks during open hours
+      
       
     } catch (error) {
       throw error;
