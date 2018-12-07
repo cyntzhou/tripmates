@@ -142,10 +142,10 @@ const Activities = require('../models/Activities');
       const activity = await Activities.getActivity(activityId);
 
       const startDate = new Date(start);
-      const startDayOfWeek = startDate.getDay();
+      const startDayOfWeek = startDate.getDay() + 1; // front end 1-indexes days of week
 
       const endDate = new Date(end);
-      const endDayOfWeek = endDate.getDay();
+      const endDayOfWeek = endDate.getDay() + 1;
 
       // if (activity.placeId === 0) { // activity doesn't have place
       //   return true;

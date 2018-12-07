@@ -277,13 +277,13 @@ describe('Test /api/events', () => {
     console.log("placeId2: " + placeId2);
 
     const hoursA = {
-      day: 4,
+      day: 5,
       startTime: '09:20',
       endTime: '19:40'
     };
 
     const hoursB = {
-      day: 0,
+      day: 1,
       startTime: '11:40',
       endTime: '23:00'
     };
