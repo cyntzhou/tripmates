@@ -52,7 +52,6 @@ class Trip extends React.Component {
   getItineraries = (itinerary) => {
     const tripId = this.props.match.params.id;
     return axios.get(`/api/trips/${tripId}/itineraries`).then(res => {
-      // console.log('itineraries', res.data);
       const newState = {
         itineraries: res.data
       }
@@ -62,7 +61,7 @@ class Trip extends React.Component {
         newState["itinerary"] = itinerary;
       }
 
-      if (newState["itinerary"] !== null) {
+      if (newState["itinerary"] !== null && newState["itinerary"] !== undefined) {
         this.getEvents(newState["itinerary"]).then(() => {
           this.setState(newState);
         });
