@@ -272,27 +272,6 @@ constructor(props) {
             </label>
           </div>
           <p>Open Hours:</p>
-          <div>
-            <label>Name:
-              <input
-                type="text"
-                name="newPlaceName"
-                placeholder={this.props.address? this.props.address : 'address'}
-                onChange={this.onChange}
-                maxLength="40"
-                />
-            </label>
-            <label>Address:
-              <input
-                type="text"
-                name="newAddress"
-                placeholder={this.props.address? this.props.address : 'address'}
-                onChange={this.onChange}
-                maxLength="100"
-                />
-            </label>
-          </div>
-          <p>Open Hours:</p>
           <div className="hours-cal">
             <OpenHoursCalendar openHours={openHours} updateHours={this.updateOpenHours} />
           </div>
