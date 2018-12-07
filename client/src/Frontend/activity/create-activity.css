@@ -13,3 +13,8 @@
 .error-message {
   color: red;
 }
+
+.required:before {
+  content:"*";
+  font-weight:bold;
+}

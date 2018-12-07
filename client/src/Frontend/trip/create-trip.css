@@ -5,3 +5,8 @@
   width: 75%;
   padding: 1.5em;
 }
+
+.required:before {
+  content:"*";
+  font-weight:bold;
+}

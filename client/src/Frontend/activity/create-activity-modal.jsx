@@ -144,8 +144,8 @@ class CreateActivityModal extends React.Component{
       <div className="modal-container">
         <h3>Create Activity</h3>
         <form>
-          <label>Activity Name:
-            <input type="text" name="name" onChange={this.onChange} maxLength="40"/>
+          <label className="required">Activity Name:
+            <input type="text" name="name" onChange={this.onChange} maxLength="40" required/>
           </label>
           <h4>Optional Details</h4>
           <label>Category:

@@ -90,13 +90,13 @@ class EditTripModal extends React.Component {
       <div>
         <h3>Edit Trip Details</h3>
         <form>
-          <label>Trip Name:
-            <input type="text" name="name" onChange={this.setName} placeholder={name} maxLength="40"/>
+          <label className="required">Trip Name:
+            <input type="text" name="name" onChange={this.setName} placeholder={name} maxLength="40" required/>
           </label>
-          <label>Start Date:
+          <label className="required">Start Date:
             <DayPickerInput onDayChange={this.setStartDate} value={startDate}/>
           </label>
-          <label>End Date:
+          <label className="required">End Date:
             <DayPickerInput onDayChange={this.setEndDate} value={endDate}/>
           </label>
         </form>

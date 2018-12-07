@@ -182,12 +182,13 @@ class EditActivityModal extends React.Component {
       <div className="modal-container">
         <h3>Edit Activity</h3>
         <form>
-          <label>Activity Name:
+          <label className="required">Activity Name:
             <input
               type="text" name="newName"
               onChange={this.onChange}
               placeholder={this.props.activity.name}
               maxLength="40"
+              required
             />
           </label>
           <h4>Optional Details</h4>

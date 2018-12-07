@@ -73,3 +73,8 @@
 .itinerary-container i {
   cursor: pointer;
 }
+
+.required:before {
+  content:"*";
+  font-weight:bold;
+}
