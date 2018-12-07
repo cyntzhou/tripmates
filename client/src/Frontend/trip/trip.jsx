@@ -37,6 +37,7 @@ class Trip extends React.Component {
       existingEvents: [],
       selectedEvent: null,
       tripName: "",
+      trip: null,
       notFound: false
     }
   }
@@ -107,7 +108,12 @@ class Trip extends React.Component {
   getTrip = () => {
     const tripId = this.props.match.params.id;
     return axios.get(`/api/trips/${tripId}`).then(res => {
-      this.setState({ tripName: res.data.name });
+      const trip = res.data;
+      trip['tripId'] = tripId;
+      this.setState({
+        tripName: res.data.name,
+        trip: trip
+      });
     }).catch(err => {
       console.log(err);
       if (err.response.status === 403 || err.response.status === 404) {
@@ -165,6 +171,9 @@ class Trip extends React.Component {
   editActivitiesDone = () => {
     this.getActivities();
   }
+  editTripDone = () => {
+    this.getTrip();
+  }
 
   handleSelectEvent = (event) => {
     const selectedEvent = { ...event };
@@ -177,6 +186,9 @@ class Trip extends React.Component {
   }
 
   render() {
+    // var trip = this.props.location.state.trip;
+    var tripId = this.props.match.params.id;
+
     const {
       activities,
       itineraries,
@@ -194,33 +206,23 @@ class Trip extends React.Component {
       createEventStart,
       tripName,
       draggedActivityId,
+      trip,
       notFound
     } = this.state;
 
-    // if (showCreateActivity) {
-    //   return (
-    //     <CreateActivityModal
-    //       hideCreateModal={this.toggleCreateActivityModal}
-    //       tripId={trip.tripId}
-    //       editActivitiesDone={this.editActivitiesDone}
-    //     />
-    //   )
-    // } 
+    const defaultDate = trip ?
+      (trip.startDate === "" ? formatDate(new Date()).substring(0,10) : trip.startDate)
+      : "";
+    const defaultStart = trip ? defaultDate + "T12:00" : "";
+    const defaultEnd = defaultDate + "T13:00";
+
     if (!this.props.location.state || !this.props.location.state.trip || notFound) {
       return (
         <NotFound
           message="Trip has either been deleted or has never existed."
         />
       )
-    }
-    var trip = this.props.location.state.trip
-    var tripId = this.props.match.params.id;
-
-    const defaultDate = trip.startDate === "" ? formatDate(new Date()).substring(0,10) : trip.startDate;
-    const defaultStart = defaultDate + "T12:00";
-    const defaultEnd = defaultDate + "T13:00";
-
-    if (showEditActivity) {
+    } else if (showEditActivity) {
       return (
         <EditActivityModal
           showModal={showEditActivity}
@@ -234,6 +236,7 @@ class Trip extends React.Component {
         <EditTripModal
           hideModal={this.toggleEditTripModal}
           trip={trip}
+          editTripDone={this.editTripDone}
         />
       )
     } else {
@@ -254,7 +257,7 @@ class Trip extends React.Component {
             <CreateActivityModal
               showModal={showCreateActivity}
               toggleModal={this.toggleCreateActivityModal}
-              tripId={trip.tripId}
+              tripId={trip ? trip.tripId : null}
               editActivitiesDone={this.editActivitiesDone}
             />
 

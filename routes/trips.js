@@ -84,7 +84,7 @@ router.put('/:id', async (req, res) => {
  * @return {Trip} - the deleted trip
  * @throws {401} - if user not logged in
  * @throws {404} - if trip with given id not found
- * @throws {403} - if user is not the creator of the trip
+ * @throws {403} - if user is not a member of the trip
  */
 router.delete('/:id', async (req, res) => {
 	if (req.session.name === undefined) {
@@ -98,14 +98,15 @@ router.delete('/:id', async (req, res) => {
 				error: `Trip not found.`,
 			}).end();
 		} else {
-			if (req.session.name !== trip.creatorId) {
-				res.status(403).json({
-					error: `You cannot delete a trip you did not create.`,
-				}).end();
-			} else {
-				const deleted = await Trips.deleteOne(req.params.id);
-				res.status(200).json(deleted).end();
-			}
+
+      if (await Trips.checkMembership(req.session.name, req.params.id)) {
+        const deleted = await Trips.deleteOne(req.params.id);
+        res.status(200).json(deleted).end();
+      } else {
+        res.status(403).json({
+          error: `You cannot delete a trip you are not a member of.`,
+        }).end();
+      }
 		}
 	}
 });

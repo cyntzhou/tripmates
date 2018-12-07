@@ -50,6 +50,7 @@ class EditTripModal extends React.Component {
       const bodyContext = {newName: name, newStart: startDate, newEnd: endDate};
       axios.put(`/api/trips/${tripId}`, bodyContext).then(() => {
         this.props.hideModal();
+        this.props.editTripDone();
       }).catch(err => {
         console.log(err);
         if (err.response.status === 403 || err.response.status === 404) {
@@ -81,17 +82,20 @@ class EditTripModal extends React.Component {
 
     const {
       members,
-      name,
       startDate,
       endDate
     } = this.props.trip;
+
+    const {
+      name
+    } = this.state;
 
     return (
       <div>
         <h3>Edit Trip Details</h3>
         <form>
           <label className="required">Trip Name:
-            <input type="text" name="name" onChange={this.setName} placeholder={name} maxLength="40" required/>
+            <input type="text" name="name" onChange={this.setName} placeholder="name" value={name} maxLength="40" required/>
           </label>
           <label className="required">Start Date:
             <DayPickerInput onDayChange={this.setStartDate} value={startDate}/>

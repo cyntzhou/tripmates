@@ -193,10 +193,8 @@ router.delete('/:id', async (req, res) => {
 router.get('/test', async (req, res) => {
   const duringOpenHours = await Events.duringOpenHours(req.body.start, req.body.end, req.body.activityId);
   if (duringOpenHours) {
-    console.log("During open hours");
     res.status(200).json(duringOpenHours).end();
   } else {
-    console.log("Not during open hours");
     res.status(400).json({
       error: `Place closed.`,
     }).end();

@@ -10,12 +10,12 @@ class EditActivityModal extends React.Component {
 constructor(props) {
     super(props)
     this.state = {
-      newName: null,
-      newCategory: null,
-      suggestedHours: null,
-      suggestedMins: null,
-      newPlaceName: null,
-      newAddress: null,
+      newName: props.activity.name,
+      newCategory: props.activity.category ? props.activity.category : null,
+      suggestedHours: props.activity.suggestedDuration ? Math.floor(this.props.activity.suggestedDuration/60) : null,
+      suggestedMins: props.activity.suggestedDuration ? props.activity.suggestedDuration%60 : null,
+      newPlaceName: this.props.activity.placeName ? this.props.activity.placeName : null,
+      newAddress: this.props.activity.address ? this.props.activity.address : null,
       openHours: props.activity.formatedHours,
       currHours: Math.floor(this.props.activity.suggestedDuration/60),
       currMins: props.activity.suggestedDuration%60,
@@ -156,7 +156,7 @@ constructor(props) {
             alert("Another user has deleted this activity.");
           }
         });
-      
+
         if (openHours.length > 0) {
           // this.deleteHours(newPlaceId);
           this.createHours(newPlaceId);
@@ -194,7 +194,13 @@ constructor(props) {
   render() {
     const {
       errors,
-      openHours
+      openHours,
+      newName,
+      newCategory,
+      suggestedHours,
+      suggestedMins,
+      newPlaceName,
+      newAddress
     } = this.state;
 
     const {
@@ -209,7 +215,8 @@ constructor(props) {
             <input
               type="text" name="newName"
               onChange={this.onChange}
-              placeholder={this.props.activity.name}
+              placeholder="name"
+              value={newName}
               maxLength="40"
               required
             />
@@ -220,8 +227,8 @@ constructor(props) {
               type="text"
               name="newCategory"
               onChange={this.onChange}
-              placeholder={this.props.activity.category?
-                this.props.activity.category : 'category'}
+              placeholder="category"
+              value={newCategory ? newCategory : ''}
               maxLength="20"
             />
           </label>
@@ -229,17 +236,42 @@ constructor(props) {
             <input
               type="number" min="0"
               name="suggestedHours"
-              placeholder={`${this.state.currHours? this.state.currHours : ''} hours`}
+              placeholder="hours"
+              value={suggestedHours ? suggestedHours : ''}
               onChange={this.onChange}
             />
             <input
               type="number" min="0"
               name="suggestedMins"
-              placeholder={`${this.state.currMins? this.state.currMins : ''} mins`}
+              placeholder="mins"
+              value={suggestedMins ? suggestedMins: ''}
               onChange={this.onChange}
             />
           </label>
           <p>Place:</p>
+          <div>
+            <label>Name:
+              <input
+                type="text"
+                name="newPlaceName"
+                placeholder="name"
+                value={newPlaceName ? newPlaceName : ''}
+                onChange={this.onChange}
+                maxLength="40"
+                />
+            </label>
+            <label>Address:
+              <input
+                type="text"
+                name="newAddress"
+                placeholder="address"
+                value ={newAddress ? newAddress : ''}
+                onChange={this.onChange}
+                maxLength="100"
+                />
+            </label>
+          </div>
+          <p>Open Hours:</p>
           <div>
             <label>Name:
               <input
