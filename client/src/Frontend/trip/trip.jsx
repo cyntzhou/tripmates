@@ -36,7 +36,8 @@ class Trip extends React.Component {
       createEventEnd: "",
       existingEvents: [],
       selectedEvent: null,
-      tripName: ""
+      tripName: "",
+      notFound: false
     }
   }
 
@@ -110,6 +111,7 @@ class Trip extends React.Component {
     }).catch(err => {
       console.log(err);
       if (err.response.status === 403 || err.response.status === 404) {
+        this.setState({ notFound: true });
       }
     });
   }
@@ -191,10 +193,11 @@ class Trip extends React.Component {
       createEventEnd,
       createEventStart,
       tripName,
-      draggedActivityId
+      draggedActivityId,
+      notFound
     } = this.state;
 
-    if (!this.props.location.state || !this.props.location.state.trip || !tripName) {
+    if (!this.props.location.state || !this.props.location.state.trip || notFound) {
       return (
         <NotFound
           message="Trip has either been deleted or has never existed."
