@@ -27,7 +27,7 @@ const Activities = require('../models/Activities');
   static async addOne(name, creatorId, startDate, endDate) {
     try {
       // Generate join code for trip
-      const codeLength = 40;
+      const codeLength = 6;
       let tempCode = '';
       while (true) {
         tempCode = await Trips.generateRandomCode(codeLength);
