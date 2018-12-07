@@ -39,7 +39,10 @@ class JoinTrip extends React.Component {
     return (
       <div className="form-container">
         <h3>Join Trip</h3>
-        <input type="text" value={codeValue} onChange={this.onChange}/>
+        <p>
+          Ask the trip creator for the trip's 6-digit code and enter it here: 
+          <input type="text" value={codeValue} onChange={this.onChange} placeholder="XXXXXX"/>
+        </p>
         <Button label="Cancel" onButtonClick={this.props.hideModal}/>
         <Button label="Join" onButtonClick={this.handleJoin}/>
 
