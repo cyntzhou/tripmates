@@ -35,7 +35,8 @@ class Trip extends React.Component {
       createEventEnd: "",
       existingEvents: [],
       selectedEvent: null,
-      tripName: ""
+      tripName: "",
+      trip: null
     }
   }
 
@@ -105,7 +106,12 @@ class Trip extends React.Component {
   getTrip = () => {
     const tripId = this.props.match.params.id;
     return axios.get(`/api/trips/${tripId}`).then(res => {
-      this.setState({ tripName: res.data.name });
+      const trip = res.data;
+      trip['tripId'] = tripId;
+      this.setState({
+        tripName: res.data.name,
+        trip: trip
+      });
     }).catch(err => {
       console.log(err);
       if (err.response.status === 403 || err.response.status === 404) {
@@ -164,6 +170,9 @@ class Trip extends React.Component {
   editActivitiesDone = () => {
     this.getActivities();
   }
+  editTripDone = () => {
+    this.getTrip();
+  }
 
   handleSelectEvent = (event) => {
     const selectedEvent = { ...event };
@@ -176,12 +185,8 @@ class Trip extends React.Component {
   }
 
   render() {
-    var trip = this.props.location.state.trip
+    // var trip = this.props.location.state.trip;
     var tripId = this.props.match.params.id;
-
-    const defaultDate = trip.startDate === "" ? formatDate(new Date()).substring(0,10) : trip.startDate;
-    const defaultStart = defaultDate + "T12:00";
-    const defaultEnd = defaultDate + "T13:00";
 
     const {
       activities,
@@ -199,8 +204,17 @@ class Trip extends React.Component {
       createEventEnd,
       createEventStart,
       tripName,
-      draggedActivityId
+      draggedActivityId,
+      trip
     } = this.state;
+
+    console.log(trip);
+
+    const defaultDate = trip ?
+      (trip.startDate === "" ? formatDate(new Date()).substring(0,10) : trip.startDate)
+      : "";
+    const defaultStart = trip ? defaultDate + "T12:00" : "";
+    const defaultEnd = defaultDate + "T13:00";
 
     if (showCreateActivity) {
       return (
@@ -223,6 +237,7 @@ class Trip extends React.Component {
         <EditTripModal
           hideModal={this.toggleEditTripModal}
           trip={trip}
+          editTripDone={this.editTripDone}
         />
       )
     } else {
