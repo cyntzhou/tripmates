@@ -185,6 +185,20 @@ class Trip extends React.Component {
     });
   }
 
+  starItinerary = () => {
+    const { itinerary } = this.state;
+    return axios.put(`/api/itineraries/${itinerary.id}/star`).then(res => {
+      this.editItinerariesDone(res.data);
+    });
+  }
+
+  unstarItinerary = () => {
+    const { itinerary } = this.state;
+    return axios.put(`/api/itineraries/${itinerary.id}/unstar`).then(res => {
+      this.editItinerariesDone(res.data);
+    });
+  }
+
   render() {
     // var trip = this.props.location.state.trip;
     var tripId = this.props.match.params.id;
@@ -272,6 +286,8 @@ class Trip extends React.Component {
                 handleSelectItinerary={this.handleSelectItinerary}
                 handleSelectEvent={this.handleSelectEvent}
                 defaultDate={defaultDate}
+                starItinerary={this.starItinerary}
+                unstarItinerary={this.unstarItinerary}
               />
               <TripMap tripId={tripId} activities={activities}/>
             </div>

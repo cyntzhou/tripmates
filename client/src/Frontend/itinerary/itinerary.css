@@ -15,6 +15,13 @@
   margin-right: 1em;
 }
 
+.itinerary-star {
+  margin-left: .5em;
+  margin-right: .5em;
+  color: yellow;
+  text-shadow: 0px 0px 3px #000;
+}
+
 .center-vertically {
   display: flex;
   flex-direction: column;
@@ -27,6 +34,7 @@
 
 .itinerary-dropdown-button {
   width: 2em;
+  height: 1.5em;
   border-radius: 5%;
   font-size: 1em;
   color: var(--white);
@@ -42,8 +50,7 @@
 .itinerary-dropdown {
   position: absolute;
   z-index: 5;
-  top: 11vh;
-  right: 1vh;
+  top: 17vh;
   text-align: left;
 }
 
@@ -53,7 +60,7 @@
 }
 
 .itinerary-item-container {
-  text-align: center;
+  text-align: left;
   background-color: var(--mid-green);
   border-top: 0.5px solid var(--dark-green);
   border-bottom: 0.5px solid var(--dark-green);

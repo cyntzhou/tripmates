@@ -44,7 +44,9 @@ class Itinerary extends React.Component {
       handleSelectItinerary,
       existingEvents,
       handleSelectEvent,
-      defaultDate
+      defaultDate,
+      starItinerary,
+      unstarItinerary
     } = this.props;
 
     const itinerariesList = itineraries.map((itinerary, i) => {
@@ -54,7 +56,13 @@ class Itinerary extends React.Component {
           key={i}
           onClick={handleSelectItinerary(itinerary)}
         >
-          <h3>{itinerary.name}</h3>
+          {itinerary.starred === 0 &&
+            <i className="far fa-star fa-sm"></i>
+          }
+          {itinerary.starred === 1 &&
+            <i className="fas fa-star fa-sm"></i>
+          }
+          {itinerary.name}
         </div>
       )
     });
@@ -73,6 +81,22 @@ class Itinerary extends React.Component {
               <hr/>
 
               <span className="itinerary-name center-vertically">
+                <span className="itinerary-star center-vertically">
+                  {itinerary.starred === 0 &&
+                    <i 
+                      className="far fa-star fa-lg" 
+                      onClick={starItinerary} 
+                      title="Star this itinerary"
+                    ></i>
+                  }
+                  {itinerary.starred === 1 &&
+                    <i 
+                      className="fas fa-star fa-lg" 
+                      onClick={unstarItinerary}
+                      title="Unstar this itinerary"
+                    ></i>
+                  }
+                </span>
                 <h2 className="center-vertically">{itinerary.name}</h2>
                 <span className="itinerary-edit center-vertically">
                   <i onClick={toggleEditItineraryModal} className="fa fa-edit fa-lg"/>
@@ -80,7 +104,11 @@ class Itinerary extends React.Component {
               </span>
 
               <span className="itinerary-caret center-vertically">
-                <button className="itinerary-dropdown-button" onClick={this.toggleDropdown}>
+                <button 
+                  className="itinerary-dropdown-button" 
+                  onClick={this.toggleDropdown}
+                  title="Select an itinerary"
+                >
                   <i className="fa fa-caret-down" aria-hidden="true"/>
                 </button>
 
