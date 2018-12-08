@@ -28,8 +28,6 @@ class ActivityItem extends React.Component {
     super()
     this.state = {
       expand: false,
-			isUpvoter: false,
-			isDownvoter: false
     }
   }
 
@@ -63,29 +61,31 @@ class ActivityItem extends React.Component {
 
 	upvote = () => {
 		const { activity } = this.state;
-		return axios.put(`/api/activities/${activity.id}/upvote`).then(res => {
+		return axios.put(`/api/activities/${this.props.activity.id}/upvote`).then(res => {
       this.setState({ activities: res.data });
 		});
 	}
 
 	downvote = () => {
 		const { activity } = this.state;
-		return axios.put(`/api/activities/${activity.id}/downvote`).then(res => {
+		return axios.put(`/api/activities/${this.props.activity.id}/downvote`).then(res => {
       this.setState({ activities: res.data });
 		});
 	}
 
 	isUpvoter = () => {
 		const { activity } = this.state;
-		return axios.get(`/api/activities/${activity.id}/upvote`).then(res => {
-      this.setState({ isUpvoter: res.data });
+		axios.get(`/api/activities/${activity.id}/upvote`).then(res => {
+      // this.setState({ isUpvoter: res.data });
+			return res.data;
 		});
 	}
 
 	isDownvoter = () => {
 		const { activity } = this.state;
-		return axios.get(`/api/activities/${activity.id}/downvote`).then(res => {
-      this.setState({ isDownvoter: res.data });
+		axios.get(`/api/activities/${activity.id}/downvote`).then(res => {
+      // this.setState({ isDownvoter: res.data });
+			return res.data;
 		});
 	}
 
@@ -141,32 +141,32 @@ class ActivityItem extends React.Component {
             {suggestedDuration !== 0 && <p>Suggested Duration: {suggestedHours} Hrs {suggestedMin} Min</p>}
             {placeName && <p>Place: {placeName}</p>}
             {address && <p>Address: {address}</p>}
-						{isDownvoter &&
+						{this.isDownvoter &&
 							<i
 								className="fas fa-thumbs-down"
-								onClick={upvote}
+								onClick={this.upvote}
 								title="Upvote this itinerary"
 							></i>
 						}
-						{!isDownvoter &&
+						{!this.isDownvoter &&
 							<i
 								className="far fa-thumbs-down"
-								onClick={downvote}
+								onClick={this.downvote}
 								title="Downvote this itinerary"
 							></i>
 						}
 
-						{isUpvoter &&
+						{this.isUpvoter &&
 							<i
 								className="fas fa-thumbs-up"
-								onClick={downvote}
+								onClick={this.downvote}
 								title="Downvote this activity"
 							></i>
 						}
-						{!isUpvoter &&
+						{!this.isUpvoter &&
 							<i
 								className="far fa-thumbs-up"
-								onClick={upvote}
+								onClick={this.upvote}
 								title="Upvote this activity"
 							></i>
 						}

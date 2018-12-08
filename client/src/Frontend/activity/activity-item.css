@@ -10,6 +10,11 @@ h3 {
   margin: 0.5em;
 }
 
+i {
+  margin-left: .1em;
+  margin-right: .1em;
+}
+
 .positive-vote {
   color: green;
 }
