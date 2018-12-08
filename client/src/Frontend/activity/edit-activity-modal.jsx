@@ -120,10 +120,12 @@ constructor(props) {
             axios.put(`/api/activities/${activity.id}`, bodyContext)
             .then(() => {
               this.props.toggleModal(null);
+              this.props.editActivitiesDone();
             }).catch(err => {
               console.log(err);
               if (err.response.status === 404) {
                 this.props.toggleModal(null);
+                this.props.editActivitiesDone();
                 alert("Another user has deleted this activity.");
               }
             });
@@ -142,10 +144,12 @@ constructor(props) {
           axios.put(`/api/activities/${this.props.activity.id}`, bodyContext)
           .then(() => {
             this.props.toggleModal(null);
+            this.props.editActivitiesDone();
           }).catch(err => {
             console.log(err);
             if (err.response.status === 404) {
               this.props.toggleModal(null);
+              this.props.editActivitiesDone();
               alert("Another user has deleted this activity.");
             }
           });
@@ -153,6 +157,7 @@ constructor(props) {
           console.log(err);
           if (err.response.status === 404) {
             this.props.toggleModal(null);
+            this.props.editActivitiesDone();
             alert("Another user has deleted this activity.");
           }
         });
@@ -166,10 +171,12 @@ constructor(props) {
       axios.put(`/api/activities/${this.props.activity.id}`, bodyContext)
       .then(() => {
         this.props.toggleModal(null);
+        this.props.editActivitiesDone();
       }).catch(err => {
         console.log(err);
         if (err.response.status === 404) {
           this.props.toggleModal(null);
+          this.props.editActivitiesDone();
           alert("Another user has deleted this activity.");
         }
         if (errors.length > 0) {
@@ -184,9 +191,11 @@ constructor(props) {
   onDelete = () => {
     axios.delete(`/api/activities/${this.props.activity.id}`).then(() => {
       this.props.toggleModal(null);
+      this.props.editActivitiesDone();
     }).catch(err => {
       console.log(err);
       this.props.toggleModal(null);
+      this.props.editActivitiesDone();
       alert("Another user has already deleted this activity.");
     })
   }

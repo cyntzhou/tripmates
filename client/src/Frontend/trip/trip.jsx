@@ -243,6 +243,7 @@ class Trip extends React.Component {
           toggleModal={this.toggleEditActivityModal}
           tripId={trip.tripId}
           activity={this.state.activityToEdit}
+          editActivitiesDone={this.editActivitiesDone}
         />
       )
     } else if (showEditTrip) {
