@@ -240,8 +240,9 @@ class Activities {
    */
   static async getUpvoters(id) {
     let upvoters = [];
+    console.log("getting upvoteys???");
     try {
-      const sql = `SELECT userId FROM activityVotes WHERE activityId=? AND value='1';`;
+      const sql = `SELECT userId FROM activityVotes WHERE activityId=? AND value=1;`;
       const response = await database.query(sql, [id]);
       for (let i = 0; i < response.length; i++) {
         upvoters.push(parseInt(response[i].userId));

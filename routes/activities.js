@@ -212,6 +212,7 @@ const router = express.Router();
    * @throws {404} - if activity or trip doesn't exist (invalid ID)
  */
    router.put('/:id/downvote', async (req, res) => {
+    console.log("good");
     if (req.session.name !== undefined) {
       const activity = await Activities.getActivity(parseInt(req.params.id));
       if (activity === undefined) {
@@ -227,16 +228,22 @@ const router = express.Router();
         let userId = req.body.userId;
         let upvoters = await Activities.getUpvoters(id);
         let downvoters = await Activities.getDownvoters(id);
-        if (downvoters.includes(req.body.userId)) {
+        console.log("okkkk");
+        console.log(upvoters);
+        console.log(userId);
+        console.log("-----");
+        if (downvoters.includes(parseInt(req.body.userId))) {
+          console.log("??? here?");
           res.status(400).json({
             error: `Activity already downvoted.`,
           }).end();
         }
-        else if (upvoters.includes(userId)) {
-          // console.log("WOTT");
+        else if (upvoters.includes(parseInt(req.body.userId))) {
+          console.log("should go here!!!!!!");
           let downvote = await Activities.removeUpvote(id, userId);
           res.status(200).json(downvote).end();
         } else {
+          console.log("??? wtf?");
           let downvote = await Activities.downvote(id, userId);
           res.status(200).json(downvote).end();
         }
@@ -264,25 +271,21 @@ const router = express.Router();
    router.get('/:id/downvote', async (req, res) => {
     if (req.session.name !== undefined) {
       const activity = await Activities.getActivity(parseInt(req.params.id));
-      const user = await Users.findOne(req.session.name);
-      if (user === undefined) {
-        console.log("here");
+      if (req.session.name === undefined) {
         res.status(404).json({
-          error: `No user with given username.`,
+          error: `No user found.`,
         }).end();
       } else if (activity === undefined) {
-        console.log("here");
         res.status(404).json({
           error: `Activity not found.`,
         }).end();
       } else if (!await Trips.findOneById(activity.tripId)) {
-        console.log("here");
         res.status(404).json({
           error: `Trip not found.`,
         }).end();
       } else if (await Trips.checkMembership(req.session.name, activity.tripId)) {
         let id = req.params.id;
-        let userId = user.id;
+        let userId = req.session.name;
         console.log(userId);
         let downvoters = await Activities.getDownvoters(id);
         let isDownvoter = downvoters.includes(userId)
@@ -311,13 +314,9 @@ const router = express.Router();
  router.get('/:id/upvote', async (req, res) => {
   if (req.session.name !== undefined) {
     const activity = await Activities.getActivity(parseInt(req.params.id));
-    const user = await Users.findOne(req.session.name);
-    console.log(req.session.name);
-    console.log(user);
-    if (user === undefined) {
-      console.log("HERE!!SDAFSDF");
+    if (req.session.name === undefined) {
       res.status(404).json({
-        error: `No user with given username.`,
+        error: `No user found.`,
       }).end();
     } else if (activity === undefined) {
       res.status(404).json({
@@ -329,7 +328,7 @@ const router = express.Router();
       }).end();
     } else if (await Trips.checkMembership(req.session.name, activity.tripId)) {
       let id = req.params.id;
-      let userId = user.id;
+      let userId = req.session.name;
       let upvoters = await Activities.getUpvoters(id);
       let isUpvoter = upvoters.includes(userId)
       res.status(200).json(isUpvoter).end();

@@ -94,8 +94,8 @@ class ActivityItem extends React.Component {
 		const { activity } = this.props;
 		axios.get(`/api/activities/${activity.id}/upvote`).then(res => {
       this.setState({ isUpvoter: res.data });
-			this.isUpvoter();
-			this.isDownvoter();
+			// this.isUpvoter();
+			// this.isDownvoter();
 		});
 	}
 
@@ -103,8 +103,8 @@ class ActivityItem extends React.Component {
 		const { activity } = this.props;
 		axios.get(`/api/activities/${activity.id}/downvote`).then(res => {
       this.setState({ isDownvoter: res.data });
-			this.isUpvoter();
-			this.isDownvoter();
+			// this.isUpvoter();
+			// this.isDownvoter();
 		});
 	}
 

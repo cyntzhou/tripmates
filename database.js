@@ -108,7 +108,7 @@ class Database {
     	activityId INT REFERENCES activity(id),
     	userId INT REFERENCES user(id),
     	value INT NOT NULL,
-    	PRIMARY KEY (activityId, userId)
+    	PRIMARY KEY (activityId, userId, value)
     );`
     ).catch(err => console.log(err));
   }
