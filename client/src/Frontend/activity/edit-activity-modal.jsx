@@ -184,6 +184,7 @@ constructor(props) {
   onDelete = () => {
     axios.delete(`/api/activities/${this.props.activity.id}`).then(() => {
       this.props.toggleModal(null);
+      this.props.editActivitiesDone();
     }).catch(err => {
       console.log(err);
       this.props.toggleModal(null);

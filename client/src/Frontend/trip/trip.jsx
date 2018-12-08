@@ -100,7 +100,6 @@ class Trip extends React.Component {
     const tripId = this.props.match.params.id;
     return axios.get(`/api/trips/${tripId}/activities`).then(res => {
       this.setState({ activities: res.data });
-      console.log(this.state.activities);
       if (callBack) callBack();
     });
   }
@@ -138,6 +137,7 @@ class Trip extends React.Component {
       showEditActivity: !this.state.showEditActivity,
       activityToEdit: activity
     });
+    
   }
   toggleEditTripModal = () => {
     this.setState({showEditTrip: !this.state.showEditTrip});
@@ -243,6 +243,7 @@ class Trip extends React.Component {
           toggleModal={this.toggleEditActivityModal}
           tripId={trip.tripId}
           activity={this.state.activityToEdit}
+          editActivitiesDone={this.editActivitiesDone}
         />
       )
     } else if (showEditTrip) {
