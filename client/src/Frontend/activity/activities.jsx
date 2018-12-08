@@ -8,9 +8,9 @@ import AddButton from "../components/add-button.jsx";
 class Activities extends React.Component {
   constructor() {
     super()
-    this.state = {
-      activitiesList: []
-    }
+    // this.state = {
+    //   activitiesList: []
+    // }
   }
 
   componentDidMount() {
@@ -18,16 +18,17 @@ class Activities extends React.Component {
   }
 
   getActivities = () => {
-    axios.get(`/api/trips/${this.props.tripId}/activities`).then(res => {
-      this.setState({activitiesList: res.data})
-    })
+    // axios.get(`/api/trips/${this.props.tripId}/activities`).then(res => {
+    //   this.setState({activitiesList: res.data})
+    // })
   }
 
   render() {
     const {
       showEditModal,
       showCreateModal,
-      toggleCreateEventModal
+      toggleCreateEventModal,
+      activitiesList
     } = this.props
     return (
       <div className="activities-container">
@@ -38,7 +39,7 @@ class Activities extends React.Component {
             onButtonClick={showCreateModal}
           />
         </div>
-          {this.state.activitiesList.map(function(act, index){
+          {activitiesList.map(function(act, index){
             return (<ActivityItem 
               key={index}
               showEditModal={showEditModal} 
