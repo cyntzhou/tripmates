@@ -210,7 +210,7 @@ class Activities {
    */
   static async upvote(activityId, userId) {
     try {
-      const sql = `INSERT INTO activityVotes (activityId, userId, value) VALUES (?, ?, '-1');`;
+      const sql = `INSERT INTO activityVotes (activityId, userId, value) VALUES (?, ?, '1');`;
       const response = await database.query(sql, [activityId, userId]);
       return response;
     } catch (error) {
@@ -223,9 +223,9 @@ class Activities {
    * @param {int} aId - id of activity to upvoted
    * @param {string} userId - username of upvoting User
    */
-  static async upvote(activityId, userId) {
+  static async downvote(activityId, userId) {
     try {
-      const sql = `INSERT INTO activityVotes (activityId, userId, value) VALUES (?, ?, '1');`;
+      const sql = `INSERT INTO activityVotes (activityId, userId, value) VALUES (?, ?, '-1');`;
       const response = await database.query(sql, [activityId, userId]);
       return response;
     } catch (error) {
@@ -291,7 +291,7 @@ class Activities {
    * @param {int} id - id of activity
    * @param {int} userId - user ID
    */
-  static async removeUpvote(id, userId) {
+  static async removeDownvote(id, userId) {
     try {
       const sql = `DELETE FROM activityVotes WHERE activityId=? AND userId=? AND value='-1';`;
       const response = await database.query(sql, [id, userId]);
