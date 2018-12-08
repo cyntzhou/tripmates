@@ -48,8 +48,19 @@ class Trip extends React.Component {
     //   this.setState({ activities: res.data });
     //   this.getItineraries();
     // });
+
+
     this.getActivities(this.getItineraries);
     this.getTrip();
+
+    this.intervalCallback(this.getActivities, this.getItineraries, this.getTrip);
+  }
+
+  intervalCallback(cb1, cb2, cb3) {
+    setInterval(function() {
+      cb1(cb2);
+      cb3();
+    }, 5000);
   }
 
   getItineraries = (itinerary) => {
