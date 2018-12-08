@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { uniq } from "lodash";
+import { reverse, sortBy, uniq } from "lodash";
 import styles from "./activities.css";
 import ActivityItem from "./activity-item.jsx";
 import AddButton from "../components/add-button.jsx";
@@ -11,7 +11,8 @@ class Activities extends React.Component {
     super()
     this.state = {
       showCategoriesSelection: false,
-      checkedCategories: []
+      checkedCategories: [],
+      sortedBy: "leastRecent"
     }
   }
 
@@ -44,11 +45,17 @@ class Activities extends React.Component {
       checkedCategories.push(category);
     }
   }
+  
+  handleSortedBy = (event) => {
+    const { sortedBy } = this.state;
+    this.setState({ sortedBy: event.target.value });
+  }
 
   render() {
     const {
       showCategoriesSelection,
-      checkedCategories
+      checkedCategories,
+      sortedBy
     } = this.state;
 
     const {
@@ -69,11 +76,26 @@ class Activities extends React.Component {
       return 0;
     });
 
-    const displayedActivitiesList = checkedCategories.length > 0 ? 
+    let displayedActivitiesList = checkedCategories.length > 0 ? 
       activitiesList.filter((activity) => {
         return checkedCategories.indexOf(activity.category) > -1;
       }) :
       activitiesList;
+
+    if (sortedBy === "mostRecent") {
+      displayedActivitiesList = reverse(displayedActivitiesList);
+    } else if (sortedBy === "name") {
+      displayedActivitiesList.sort((activity1, activity2) => { 
+        if (activity2.name.toLowerCase() > activity1.name.toLowerCase()) {
+          return -1;
+        } else if (activity1.name.toLowerCase() > activity2.name.toLowerCase()) {
+          return 1;
+        }
+        return 0;
+      });
+    } else if (sortedBy === "votes") {
+      displayedActivitiesList = sortBy(displayedActivitiesList, ['votes']);
+    }
 
     const categoriesSelection = (
       <div>
@@ -104,6 +126,7 @@ class Activities extends React.Component {
             onButtonClick={showCreateModal}
           />
         </div>
+
         <div className="activities-filter-category" onClick={this.toggleCategoriesSelection}>
           Filter by Category 
           {!showCategoriesSelection &&
@@ -113,10 +136,20 @@ class Activities extends React.Component {
             <i className="fas fa-caret-up"></i>
           }
         </div>
-
         {showCategoriesSelection &&
           categoriesSelection
         }
+
+        <div>
+          Sort by: 
+          <select onChange={this.handleSortedBy} default="leastRecent">
+            <option value="leastRecent">Least Recent</option>
+            <option value="mostRecent">Most Recent</option>
+            <option value="name">Name</option>
+            <option value="votes">Votes</option>
+          </select>
+        </div>
+
         <div className="activities-list">
           {displayedActivitiesList.map(function(act, index){
             return (<ActivityItem 
