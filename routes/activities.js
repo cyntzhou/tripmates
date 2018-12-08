@@ -2,6 +2,7 @@ const express = require('express');
 
 const Activities = require('../models/Activities');
 const Trips = require('../models/Trips');
+const Users = require('../models/Users');
 
 const router = express.Router();
 
@@ -213,12 +214,7 @@ const router = express.Router();
    router.put('/:id/downvote', async (req, res) => {
     if (req.session.name !== undefined) {
       const activity = await Activities.getActivity(parseInt(req.params.id));
-      const trip = await Trips.findOneById(req.params.id);
-      if (trip === undefined) {
-        res.status(404).json({
-          error: `Trip not found.`,
-        }).end();
-      } else if (activity === undefined) {
+      if (activity === undefined) {
         res.status(404).json({
           error: `Activity not found.`,
         }).end();
@@ -255,6 +251,102 @@ const router = express.Router();
       }).end();
     }
    });
+
+ /**
+   * Check if current user is downvoter of activity.
+   * @name GET/api/activities/:id/downvote
+   * @param {string} id - id of the activity
+   * @return {Boolean} - whether current user is downvoter or not
+   * @throws {401} - if user not logged in
+   * @throws {403} - if user is not a member of trip this activity belongs to
+   * @throws {404} - if activity or trip or user doesn't exist (invalid ID / username)
+ */
+   router.get('/:id/downvote', async (req, res) => {
+    if (req.session.name !== undefined) {
+      const activity = await Activities.getActivity(parseInt(req.params.id));
+      const user = await Users.findOne(req.session.name);
+      if (user === undefined) {
+        res.status(404).json({
+          error: `No user with given username.`,
+        }).end();
+      } else if (trip === undefined) {
+        res.status(404).json({
+          error: `Trip not found.`,
+        }).end();
+      } else if (activity === undefined) {
+        res.status(404).json({
+          error: `Activity not found.`,
+        }).end();
+      } else if (!await Trips.findOneById(activity.tripId)) {
+        res.status(404).json({
+          error: `Trip not found.`,
+        }).end();
+      } else if (await Trips.checkMembership(req.session.name, activity.tripId)) {
+        let id = req.params.id;
+        let userId = user.id;
+        console.log(userId);
+        let downvoters = await Activities.getDownvoters(id);
+        let isDownvoter = downvoters.includes(userId)
+        res.status(200).json(isDownvoter).end();
+      } else {
+        res.status(403).json({
+          error: `Must be member of activity's trip to get downvote activity.`,
+        }).end();
+      }
+    } else {
+      res.status(401).json({
+        error: `Must be logged in to downvote activity.`,
+      }).end();
+    }
+   });
+
+/**
+ * Check if current user is upvoter of activity.
+ * @name GET/api/activities/:id/upvote
+ * @param {string} id - id of the activity
+ * @return {Boolean} - whether current user is downvoter or not
+ * @throws {401} - if user not logged in
+ * @throws {403} - if user is not a member of trip this activity belongs to
+ * @throws {404} - if activity or trip or user doesn't exist (invalid ID / username)
+*/
+ router.get('/:id/upvote', async (req, res) => {
+  if (req.session.name !== undefined) {
+    const activity = await Activities.getActivity(parseInt(req.params.id));
+    const user = await Users.findOne(req.session.name);
+    if (user === undefined) {
+      res.status(404).json({
+        error: `No user with given username.`,
+      }).end();
+    } else if (trip === undefined) {
+      res.status(404).json({
+        error: `Trip not found.`,
+      }).end();
+    } else if (activity === undefined) {
+      res.status(404).json({
+        error: `Activity not found.`,
+      }).end();
+    } else if (!await Trips.findOneById(activity.tripId)) {
+      res.status(404).json({
+        error: `Trip not found.`,
+      }).end();
+    } else if (await Trips.checkMembership(req.session.name, activity.tripId)) {
+      let id = req.params.id;
+      let userId = user.id;
+      console.log(userId);
+      let upvoters = await Activities.getUpvoters(id);
+      let isUpvoter = upvoters.includes(userId)
+      res.status(200).json(isUpvoter).end();
+    } else {
+      res.status(403).json({
+        error: `Must be member of activity's trip to get upvote activity.`,
+      }).end();
+    }
+  } else {
+    res.status(401).json({
+      error: `Must be logged in to upvote activity.`,
+    }).end();
+  }
+ });
 
  /**
   * Get all activities by category of a trip

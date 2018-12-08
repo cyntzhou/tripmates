@@ -3,6 +3,7 @@ import { DragSource } from 'react-dnd';
 import { ITEM } from '../itemTypes';
 import moment from 'moment';
 import styles from "./activity-item.css";
+import axios from "axios";
 
 const source = {
 	beginDrag(props) {
@@ -26,7 +27,9 @@ class ActivityItem extends React.Component {
   constructor() {
     super()
     this.state = {
-      expand: false
+      expand: false,
+			isUpvoter: false,
+			isDownvoter: false
     }
   }
 
@@ -58,19 +61,55 @@ class ActivityItem extends React.Component {
     return hours
   }
 
+	upvote = () => {
+		const { activity } = this.state;
+		return axios.put(`/api/activities/${activity.id}/upvote`).then(res => {
+      this.setState({ activities: res.data });
+		});
+	}
+
+	downvote = () => {
+		const { activity } = this.state;
+		return axios.put(`/api/activities/${activity.id}/downvote`).then(res => {
+      this.setState({ activities: res.data });
+		});
+	}
+
+	isUpvoter = () => {
+		const { activity } = this.state;
+		return axios.get(`/api/activities/${activity.id}/upvote`).then(res => {
+      this.setState({ isUpvoter: res.data });
+		});
+	}
+
+	isDownvoter = () => {
+		const { activity } = this.state;
+		return axios.get(`/api/activities/${activity.id}/downvote`).then(res => {
+      this.setState({ isDownvoter: res.data });
+		});
+	}
+
+
   render() {
     const {
       activity,
       showEditModal,
-      connectDragSource, 
-      isDragging
+      connectDragSource,
+      isDragging,
+			isUpvoter,
+			isDownvoter,
+			upvote,
+			downvote
     } = this.props;
     const {
       name,
       category,
       suggestedDuration,
       address,
-      placeName
+      placeName,
+			votes,
+			upvoters,
+			downvoters
     } = activity;
 
     const suggestedHours = Math.floor(suggestedDuration/60) || 0;
@@ -78,20 +117,59 @@ class ActivityItem extends React.Component {
     activity['formatedHours'] = this.getOpenHours();
 
     return connectDragSource(
-      <div 
-        className="activity-item-container" 
+      <div
+        className="activity-item-container"
         onClick={this.toggleDetails}
-        style={{ 
+        style={{
           opacity: isDragging ? 0.25 : 1,
         }}
       >
         <h3>{name}</h3>
-        {this.state.expand && 
+				{votes > 0 &&
+					<p className="positive-vote">+{votes}</p>
+				}
+				{votes > 0 &&
+					<p className="negative-vote">{votes}</p>
+				}
+				{votes == 0 &&
+					<p>{votes}</p>
+				}
+
+        {this.state.expand &&
           <div className="details">
             {category && <p>Category: {category}</p>}
             {suggestedDuration !== 0 && <p>Suggested Duration: {suggestedHours} Hrs {suggestedMin} Min</p>}
             {placeName && <p>Place: {placeName}</p>}
             {address && <p>Address: {address}</p>}
+						{isDownvoter &&
+							<i
+								className="fas fa-thumbs-down"
+								onClick={upvote}
+								title="Upvote this itinerary"
+							></i>
+						}
+						{!isDownvoter &&
+							<i
+								className="far fa-thumbs-down"
+								onClick={downvote}
+								title="Downvote this itinerary"
+							></i>
+						}
+
+						{isUpvoter &&
+							<i
+								className="fas fa-thumbs-up"
+								onClick={downvote}
+								title="Downvote this activity"
+							></i>
+						}
+						{!isUpvoter &&
+							<i
+								className="far fa-thumbs-up"
+								onClick={upvote}
+								title="Upvote this activity"
+							></i>
+						}
             <i onClick={() => showEditModal(this.props.activity)} className="fa fa-edit"/>
           </div>
         }

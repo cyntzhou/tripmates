@@ -148,7 +148,7 @@ class Trip extends React.Component {
       showEditActivity: !this.state.showEditActivity,
       activityToEdit: activity
     });
-    
+
   }
   toggleEditTripModal = () => {
     this.setState({showEditTrip: !this.state.showEditTrip});

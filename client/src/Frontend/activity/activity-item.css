@@ -9,3 +9,11 @@ h3 {
   font-size: 1em;
   margin: 0.5em;
 }
+
+.positive-vote {
+  color: green;
+}
+
+.negative-vote {
+  color: red;
+}
