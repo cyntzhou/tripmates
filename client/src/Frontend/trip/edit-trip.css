@@ -1,3 +1,44 @@
+#join {
+  display: flex;
+  justify-content: space-between;
+}
+
+#join p {
+  margin: 0.5em 1em;
+  padding: 0.5em;
+}
+
+#code {
+  background-color: var(--light-gray);
+  border: 1px solid var(--dark-green);
+}
+
+.edit-trip-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 1em;
+}
+
+.edit-trip-form label {
+  margin: 0.5em;
+}
+
+.edit-trip-form input {
+  padding: 0.5em;
+  margin-left: 1.2em;
+}
+
+.edit-trip-btns {
+  display: flex;
+  margin-top: 2.5em;
+  justify-content: space-between;
+}
+
+.trip-users {
+  margin: 0.5em 0;
+}
+
 .required:before {
   content:"*";
   font-weight:bold;
