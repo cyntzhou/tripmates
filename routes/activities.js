@@ -177,12 +177,11 @@ const router = express.Router();
         let userId = req.body.userId;
         let upvoters = await Activities.getUpvoters(id);
         let downvoters = await Activities.getDownvoters(id);
-        if (upvoters.includes(id)) {
+        if (upvoters.includes(userId)) {
           res.status(400).json({
             error: `Activity already upvoted.`,
           }).end();
-        }
-        else if (downvoters.includes(id)) {
+        } else if (downvoters.includes(userId)) {
           let upvote = await Activities.removeDownvote(id, userId);
           res.status(200).json(upvote).end();
         } else {
@@ -232,12 +231,13 @@ const router = express.Router();
         let userId = req.body.userId;
         let upvoters = await Activities.getUpvoters(id);
         let downvoters = await Activities.getDownvoters(id);
-        if (downvoters.includes(id)) {
+        if (downvoters.includes(userId)) {
           res.status(400).json({
             error: `Activity already downvoted.`,
           }).end();
         }
-        else if (upvoters.includes(id)) {
+        else if (upvoters.includes(userId)) {
+          // console.log("WOTT");
           let downvote = await Activities.removeUpvote(id, userId);
           res.status(200).json(downvote).end();
         } else {

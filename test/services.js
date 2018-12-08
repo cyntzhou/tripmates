@@ -353,29 +353,29 @@ async function filterActivities(tripId, category) {
 }
 
 /**
- * @param {object} voteInfo
+ * @param {int} id
+ * @param {object} userId
  * {
- *    id: int
  *    userId: int
  * }
  */
-async function upvote(voteInfo) {
+async function upvote(id, userId) {
   return requestApp
-    .put('/api/activities/upvote')
-    .send(voteInfo);
+    .put(`/api/activities/${id}/upvote`)
+    .send(userId);
 }
 
 /**
- * @param {object} voteInfo
+ * @param {int} id
+ * @param {object} userId
  * {
- *    id: int
  *    userId: int
  * }
  */
-async function downvote(voteInfo) {
+async function downvote(id, userId) {
   return requestApp
-    .put('/api/activities/downvote')
-    .send(voteInfo);
+    .put(`/api/activities/${id}/downvote`)
+    .send(userId);
 }
 
 module.exports = {

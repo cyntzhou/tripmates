@@ -246,6 +246,50 @@ describe('Test /api/activities', () => {
     expect(getPlaceRes.body.address).toBe(newPlace.address);
   });
 
+  // test voting on an activity
+  test('GET /api/activities/:id and PUT /api/activities/:id to edit activity duration and category, etc', async () => {
+    // upvote, vote count should be 1
+    const userId = {
+      userId: 0
+    }
+
+    let upvoteRes1 = await upvote(6, userId);
+    expect(upvoteRes1.statusCode).toBe(200);
+    let activityRes1 = await getActivity(6);
+    expect(activityRes1.body.votes).toBe(1);
+    expect(activityRes1.body.upvoters.length).toBe(1);
+
+    // upvote again, check error
+    let upvoteRes2 = await upvote(6, userId);
+    expect(upvoteRes2.statusCode).toBe(400);
+    let activityRes2 = await getActivity(6);
+    expect(activityRes2.body.votes).toBe(1);
+    expect(activityRes2.body.upvoters.length).toBe(1);
+
+    // downvote once, vote count should be 0
+    let downvoteRes1 = await downvote(6, userId);
+    expect(downvoteRes1.statusCode).toBe(200);
+    let activityRes3 = await getActivity(6);
+    // expect(activityRes3.body.votes).toBe(0);
+    expect(activityRes3.body.upvoters.length).toBe(0);
+    expect(activityRes3.body.downvoters.length).toBe(0);
+
+    // downvote again, vote count should be -1
+    let downvoteRes2 = await downvote(6, userId);
+    expect(downvoteRes2.statusCode).toBe(200);
+    let activityRes4 = await getActivity(6);
+    expect(activityRes4.body.votes).toBe(-1);
+    expect(activityRes4.body.upvoters.length).toBe(0);
+    expect(activityRes4.body.downvoters.length).toBe(1);
+
+    // downvote again, check error
+    let downvoteRes3 = await downvote(6, userId);
+    expect(downvoteRes3.statusCode).toBe(400);
+    let activityRes5 = await getActivity(6);
+    expect(activityRes5.body.votes).toBe(-1);
+    expect(activityRes5.body.upvoters.length).toBe(0);
+    expect(activityRes5.body.downvoters.length).toBe(1);
+  });
 });
 
 afterAll(async () => {
