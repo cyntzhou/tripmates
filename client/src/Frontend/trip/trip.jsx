@@ -133,7 +133,7 @@ class Trip extends React.Component {
   toggleCreateActivityModal = () => {
     this.setState({showCreateActivity: !this.state.showCreateActivity});
   }
-  toggleEditActivityModal = (activity) => {
+  toggleEditActivityModal = (activity = null) => {
     this.setState({
       showEditActivity: !this.state.showEditActivity,
       activityToEdit: activity

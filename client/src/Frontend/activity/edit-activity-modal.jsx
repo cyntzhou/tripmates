@@ -119,11 +119,11 @@ constructor(props) {
           .then(() => {
             axios.put(`/api/activities/${activity.id}`, bodyContext)
             .then(() => {
-              this.props.hideEditModal(null);
+              this.props.toggleModal(null);
             }).catch(err => {
               console.log(err);
               if (err.response.status === 404) {
-                this.props.hideEditModal(null);
+                this.props.toggleModal(null);
                 alert("Another user has deleted this activity.");
               }
             });
@@ -141,18 +141,18 @@ constructor(props) {
           newPlaceId = res.data.insertId;
           axios.put(`/api/activities/${this.props.activity.id}`, bodyContext)
           .then(() => {
-            this.props.hideEditModal(null);
+            this.props.toggleModal(null);
           }).catch(err => {
             console.log(err);
             if (err.response.status === 404) {
-              this.props.hideEditModal(null);
+              this.props.toggleModal(null);
               alert("Another user has deleted this activity.");
             }
           });
         }).catch(err => {
           console.log(err);
           if (err.response.status === 404) {
-            this.props.hideEditModal(null);
+            this.props.toggleModal(null);
             alert("Another user has deleted this activity.");
           }
         });
@@ -165,11 +165,11 @@ constructor(props) {
     } else {
       axios.put(`/api/activities/${this.props.activity.id}`, bodyContext)
       .then(() => {
-        this.props.hideEditModal(null);
+        this.props.toggleModal(null);
       }).catch(err => {
         console.log(err);
         if (err.response.status === 404) {
-          this.props.hideEditModal(null);
+          this.props.toggleModal(null);
           alert("Another user has deleted this activity.");
         }
         if (errors.length > 0) {
@@ -183,10 +183,10 @@ constructor(props) {
 
   onDelete = () => {
     axios.delete(`/api/activities/${this.props.activity.id}`).then(() => {
-      this.props.hideEditModal(null);
+      this.props.toggleModal(null);
     }).catch(err => {
       console.log(err);
-      this.props.hideEditModal(null);
+      this.props.toggleModal(null);
       alert("Another user has already deleted this activity.");
     })
   }
