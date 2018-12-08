@@ -70,33 +70,28 @@ class Trips extends React.Component {
 
     return (
       <div className="trips">
-        {showCreateTripModal ? (
-          <CreateTripModal 
-            hideModal={this.hideModal} 
-          />
-        ) : (
-          <>
-            <div className="trip-header">
-              <h1>My Trips</h1>
-              <AddButton onButtonClick={this.showCreateTripModal}/>
-            </div>
-            <div className="trip-body">
-              {this.state.tripsList.map((trip, index) => {
-                return <TripItem 
-                  key={index}
-                  trip={trip}
-                  toggleShareTripModal={this.toggleShareTripModal}
-                />
-              })}
-            </div>
-
-            <ShareTripModal
-              showModal={showShareTripModal}
-              toggleModal={this.toggleShareTripModal}
-              trip={selectedTrip}
+        <div className="trip-header">
+          <h1>My Trips</h1>
+          <AddButton onButtonClick={this.showCreateTripModal}/>
+        </div>
+        <div className="trip-body">
+          {this.state.tripsList.map((trip, index) => {
+            return <TripItem 
+              key={index}
+              trip={trip}
+              toggleShareTripModal={this.toggleShareTripModal}
             />
-          </>
-        )}
+          })}
+        </div>
+        <CreateTripModal 
+          showModal={showCreateTripModal}
+          toggleModal={this.hideModal} 
+        />
+        <ShareTripModal
+          showModal={showShareTripModal}
+          toggleModal={this.toggleShareTripModal}
+          trip={selectedTrip}
+        />
       </div>
     )
   }

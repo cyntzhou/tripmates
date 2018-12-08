@@ -37,14 +37,16 @@ class JoinTrip extends React.Component {
       errors
     } = this.state;
     return (
-      <div className="form-container">
-        <h3>Join Trip</h3>
-        <p>
+      <div className="join-container">
+        <h3 id="title">Join Trip</h3>
+        <p id="join-description">
           Ask the trip creator for the trip's 6-digit code and enter it here: 
-          <input type="text" value={codeValue} onChange={this.onChange} placeholder="XXXXXX"/>
         </p>
-        <Button label="Cancel" onButtonClick={this.props.hideModal}/>
-        <Button label="Join" onButtonClick={this.handleJoin}/>
+        <input id="code-input" type="text" value={codeValue} onChange={this.onChange} placeholder="XXXXXX"/>
+        <div className="join-btns">
+          <Button colorClassName="btn-gray-background" label="Cancel" onButtonClick={this.props.hideModal}/>
+          <Button colorClassName="btn-yellow-background" label="Join" onButtonClick={this.handleJoin}/>
+        </div>
 
         {errors.length > 0 &&
           <div className="settings-error-message">

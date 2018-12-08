@@ -66,9 +66,9 @@ class CreateNewTrip extends React.Component {
 
   render() {
     return (
-      <div>
-        <h3>Create New Trip</h3>
-        <form>
+      <div className="create-container">
+        <h3 id="title">Create New Trip</h3>
+        <form className="create-form-container">
           <label className="required">Trip Name:
             <input type="text" name="name" onChange={this.setName} maxLength="40" required/>
           </label>
@@ -79,8 +79,10 @@ class CreateNewTrip extends React.Component {
             <DayPickerInput onDayChange={this.setEndDate}/>
           </label>
         </form>
-        <Button label="Cancel" onButtonClick={this.props.hideModal}/>
-        <Button label="Save" onButtonClick={this.onSave}/>
+        <div className="create-btns">
+          <Button colorClassName="btn-gray-background" label="Cancel" onButtonClick={this.props.hideModal}/>
+          <Button label="Create" onButtonClick={this.onSave}/>
+        </div>
       </div>
     )
   }
