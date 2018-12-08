@@ -2,27 +2,35 @@
   display: flex;
   background-color: var(--mid-green);
   color: var(--dark-brown);
-  width: 50%;
-  margin: auto;
+  width: 45%;
+  margin: 1em auto;
   padding: 0.5em;
   text-align: center;
   justify-content: space-between;
 }
 
 .trip-details {
+  display: flex;
+  flex-direction: column;
   margin: auto;
+  padding: 0.2em;
+}
+
+#date {
+  vertical-align: middle;
+  padding: 0.5em;
 }
 
 .date {
   background-color: var(--white);
-  width: 20%;
+  width: 22%;
   padding: 0.5em;
   margin: 0.5em;
   border-radius: 5px;
 }
 
 .fa-users {
-  padding: 0.5em;
+  padding: 0.2em;
 }
 
 a {
