@@ -28,23 +28,25 @@ class Activities extends React.Component {
       showEditModal,
       showCreateModal,
       toggleCreateEventModal,
-      activitiesList
+      activitiesList,
+      userId
     } = this.props
     return (
       <div className="activities-container">
         <div className="activity-header">
           <h2>Activities</h2>
-          <AddButton 
-            className="add-btn" 
+          <AddButton
+            className="add-btn"
             onButtonClick={showCreateModal}
           />
         </div>
           {activitiesList.map(function(act, index){
-            return (<ActivityItem 
+            return (<ActivityItem
               key={index}
-              showEditModal={showEditModal} 
+              showEditModal={showEditModal}
               activity={act}
               toggleCreateEventModal={toggleCreateEventModal}
+              userId={userId}
             />)
           })}
       </div>

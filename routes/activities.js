@@ -227,7 +227,7 @@ const router = express.Router();
         let userId = req.body.userId;
         let upvoters = await Activities.getUpvoters(id);
         let downvoters = await Activities.getDownvoters(id);
-        if (downvoters.includes(userId)) {
+        if (downvoters.includes(req.body.userId)) {
           res.status(400).json({
             error: `Activity already downvoted.`,
           }).end();
@@ -266,18 +266,17 @@ const router = express.Router();
       const activity = await Activities.getActivity(parseInt(req.params.id));
       const user = await Users.findOne(req.session.name);
       if (user === undefined) {
+        console.log("here");
         res.status(404).json({
           error: `No user with given username.`,
         }).end();
-      } else if (trip === undefined) {
-        res.status(404).json({
-          error: `Trip not found.`,
-        }).end();
       } else if (activity === undefined) {
+        console.log("here");
         res.status(404).json({
           error: `Activity not found.`,
         }).end();
       } else if (!await Trips.findOneById(activity.tripId)) {
+        console.log("here");
         res.status(404).json({
           error: `Trip not found.`,
         }).end();
@@ -313,13 +312,12 @@ const router = express.Router();
   if (req.session.name !== undefined) {
     const activity = await Activities.getActivity(parseInt(req.params.id));
     const user = await Users.findOne(req.session.name);
+    console.log(req.session.name);
+    console.log(user);
     if (user === undefined) {
+      console.log("HERE!!SDAFSDF");
       res.status(404).json({
         error: `No user with given username.`,
-      }).end();
-    } else if (trip === undefined) {
-      res.status(404).json({
-        error: `Trip not found.`,
       }).end();
     } else if (activity === undefined) {
       res.status(404).json({
@@ -332,7 +330,6 @@ const router = express.Router();
     } else if (await Trips.checkMembership(req.session.name, activity.tripId)) {
       let id = req.params.id;
       let userId = user.id;
-      console.log(userId);
       let upvoters = await Activities.getUpvoters(id);
       let isUpvoter = upvoters.includes(userId)
       res.status(200).json(isUpvoter).end();
