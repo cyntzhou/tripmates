@@ -111,7 +111,7 @@ class Trip extends React.Component {
     const tripId = this.props.match.params.id;
     return axios.get(`/api/trips/${tripId}/activities`).then(res => {
       this.setState({ activities: res.data });
-      // console.log('activities', res.data);
+      console.log(this.state.activities);
       if (callBack) callBack();
     });
   }
@@ -277,6 +277,7 @@ class Trip extends React.Component {
               showEditModal={this.toggleEditActivityModal}
               tripId={tripId}
               toggleCreateEventModal={this.toggleCreateEventModal}
+              activitiesList={activities}
             />
 
             <CreateActivityModal
