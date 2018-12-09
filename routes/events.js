@@ -48,8 +48,7 @@ router.post('/', async (req, res) => {
           } else {
             if (await Trips.validDateTimeRange(req.body.start, req.body.end)) {
               const trip = await Trips.findOneById(itinerary.tripId);
-              if (await Trips.validDateTimeRange(trip.startDate, req.body.start.substring(0, 10)) && Trips.validDateTimeRange(req.body.end.substring(0,10), trip.endDate)) {
-                
+              if (await Trips.validDateTimeRange(trip.startDate, req.body.start.substring(0, 10)) && await Trips.validDateTimeRange(req.body.end.substring(0,10), trip.endDate)) {
                 if (await Events.duringOpenHours(req.body.start, req.body.end, req.body.activityId)) {
                   const event = await Events.addOne(req.body.itineraryId, req.body.activityId, req.body.start, req.body.end);
                   res.status(200).json(event).end();
