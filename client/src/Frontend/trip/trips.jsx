@@ -8,7 +8,7 @@ import ShareTripModal from "./share-trip-modal.jsx";
 
 class Trips extends React.Component {
   constructor() {
-    super() 
+    super()
     this.state = {
       showCreateTripModal: false,
       showShareTripModal: false,
@@ -25,7 +25,7 @@ class Trips extends React.Component {
   getTrips(){
     const userId = this.props.cookies.get("user-id");
     const tripObjs = [];
-    
+
     axios.get(`/api/users/${userId}/trips`).then(res => {
       const trips = res.data;
       const getTripDataRequests = trips.map((trip) => {
@@ -86,9 +86,9 @@ class Trips extends React.Component {
             <p id="add-prompt">Get started by adding a trip!</p>
           }
         </div>
-        <CreateTripModal 
+        <CreateTripModal
           showModal={showCreateTripModal}
-          toggleModal={this.hideModal} 
+          toggleModal={this.hideModal}
         />
         <ShareTripModal
           showModal={showShareTripModal}

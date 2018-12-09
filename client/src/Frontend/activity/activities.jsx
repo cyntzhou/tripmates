@@ -62,6 +62,7 @@ class Activities extends React.Component {
       showEditModal,
       showCreateModal,
       toggleCreateEventModal,
+      userId,
       activitiesList
     } = this.props;
 
@@ -121,12 +122,11 @@ class Activities extends React.Component {
       <div className="activities-container">
         <div className="activity-header">
           <h2>Activities</h2>
-          <AddButton 
-            className="add-btn" 
+          <AddButton
+            className="add-btn"
             onButtonClick={showCreateModal}
           />
         </div>
-
         <div className="activities-filter-category" onClick={this.toggleCategoriesSelection}>
           Filter by Category 
           {!showCategoriesSelection &&
@@ -154,9 +154,10 @@ class Activities extends React.Component {
           {displayedActivitiesList.map(function(act, index){
             return (<ActivityItem 
               key={index}
-              showEditModal={showEditModal} 
+              showEditModal={showEditModal}
               activity={act}
               toggleCreateEventModal={toggleCreateEventModal}
+              userId={userId}
             />)
           })}
         </div>

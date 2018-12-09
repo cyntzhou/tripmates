@@ -148,7 +148,7 @@ class Trip extends React.Component {
       showEditActivity: !this.state.showEditActivity,
       activityToEdit: activity
     });
-    
+
   }
   toggleEditTripModal = () => {
     this.setState({showEditTrip: !this.state.showEditTrip});
@@ -240,6 +240,7 @@ class Trip extends React.Component {
       : "";
     const defaultStart = trip ? defaultDate + "T12:00" : "";
     const defaultEnd = defaultDate + "T13:00";
+    const userId = this.props.cookies.get("user-id");
 
     if (!this.props.location.state || !this.props.location.state.trip || notFound) {
       return (
@@ -280,6 +281,7 @@ class Trip extends React.Component {
               tripId={tripId}
               toggleCreateEventModal={this.toggleCreateEventModal}
               activitiesList={activities}
+              userId={userId}
             />
 
             <CreateActivityModal

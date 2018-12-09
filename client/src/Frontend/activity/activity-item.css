@@ -9,3 +9,17 @@ h3 {
   font-size: 1em;
   margin: 0.5em;
 }
+
+i {
+  margin-left: .1em;
+  margin-right: .1em;
+  cursor: pointer;
+}
+
+.positive-vote {
+  color: green;
+}
+
+.negative-vote {
+  color: red;
+}

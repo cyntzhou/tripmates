@@ -3,6 +3,7 @@ import { DragSource } from 'react-dnd';
 import { ITEM } from '../itemTypes';
 import moment from 'moment';
 import styles from "./activity-item.css";
+import axios from "axios";
 
 const source = {
 	beginDrag(props) {
@@ -26,9 +27,16 @@ class ActivityItem extends React.Component {
   constructor() {
     super()
     this.state = {
-      expand: false
+      expand: false,
+			isUpvoter: false,
+			isDownvoter: false
     }
   }
+
+	componentDidMount() {
+		this.isUpvoter();
+		this.isDownvoter();
+	}
 
   toggleDetails = () => {
     this.setState({
@@ -58,11 +66,70 @@ class ActivityItem extends React.Component {
     return hours
   }
 
+	upvote = () => {
+		const { activity, userId } = this.props;
+		const bodyContent = {
+				userId: userId
+		};
+		return axios.put(`/api/activities/${activity.id}/upvote`, bodyContent).then(res => {
+      // this.setState({ activities: res.data });
+			this.isUpvoter();
+			this.isDownvoter();
+		});
+	}
+
+	downvote = () => {
+		const { activity, userId } = this.props;
+		const bodyContent = {
+				userId: userId
+		};
+		return axios.put(`/api/activities/${activity.id}/downvote`, bodyContent).then(res => {
+      // this.setState({ activities: res.data });
+			this.isUpvoter();
+			this.isDownvoter();
+		});
+	}
+
+	resetVotes = () => {
+		const { activity, userId } = this.props;
+		const bodyContent = {
+				userId: userId
+		};
+		return axios.put(`/api/activities/${activity.id}/votes`, bodyContent).then(res => {
+      // this.setState({ activities: res.data });
+			this.isUpvoter();
+			this.isDownvoter();
+		});
+	}
+
+	isUpvoter = () => {
+		const { activity } = this.props;
+		axios.get(`/api/activities/${activity.id}/upvote`).then(res => {
+      this.setState({ isUpvoter: res.data });
+			// this.isUpvoter();
+			// this.isDownvoter();
+		});
+	}
+
+	isDownvoter = () => {
+		const { activity } = this.props;
+		axios.get(`/api/activities/${activity.id}/downvote`).then(res => {
+      this.setState({ isDownvoter: res.data });
+			// this.isUpvoter();
+			// this.isDownvoter();
+		});
+	}
+
+
   render() {
+		const {
+			isUpvoter,
+			isDownvoter
+		} = this.state;
     const {
       activity,
       showEditModal,
-      connectDragSource, 
+      connectDragSource,
       isDragging
     } = this.props;
     const {
@@ -70,28 +137,71 @@ class ActivityItem extends React.Component {
       category,
       suggestedDuration,
       address,
-      placeName
+      placeName,
+			votes,
+			upvoters,
+			downvoters
     } = activity;
+		console.log(activity);
 
     const suggestedHours = Math.floor(suggestedDuration/60) || 0;
     const suggestedMin = suggestedDuration%60;
     activity['formatedHours'] = this.getOpenHours();
 
     return connectDragSource(
-      <div 
-        className="activity-item-container" 
+      <div
+        className="activity-item-container"
         onClick={this.toggleDetails}
-        style={{ 
+        style={{
           opacity: isDragging ? 0.25 : 1,
         }}
       >
         <h3>{name}</h3>
-        {this.state.expand && 
+				{votes > 0 &&
+					<p className="positive-vote">+{votes}</p>
+				}
+				{votes < 0 &&
+					<p className="negative-vote">{votes}</p>
+				}
+				{votes == 0 &&
+					<p>{votes}</p>
+				}
+
+        {this.state.expand &&
           <div className="details">
             {category && <p>Category: {category}</p>}
             {suggestedDuration !== 0 && <p>Suggested Duration: {suggestedHours} Hrs {suggestedMin} Min</p>}
             {placeName && <p>Place: {placeName}</p>}
             {address && <p>Address: {address}</p>}
+						{isDownvoter &&
+							<i
+								className="fas fa-thumbs-down"
+								onClick={this.resetVotes}
+								title="Downvote"
+							></i>
+						}
+						{!isDownvoter &&
+							<i
+								className="far fa-thumbs-down"
+								onClick={this.downvote}
+								title="Downvote"
+							></i>
+						}
+
+						{isUpvoter &&
+							<i
+								className="fas fa-thumbs-up"
+								onClick={this.resetVotes}
+								title="Upvote"
+							></i>
+						}
+						{!isUpvoter &&
+							<i
+								className="far fa-thumbs-up"
+								onClick={this.upvote}
+								title="Upvote"
+							></i>
+						}
             <i onClick={() => showEditModal(this.props.activity)} className="fa fa-edit"/>
           </div>
         }
