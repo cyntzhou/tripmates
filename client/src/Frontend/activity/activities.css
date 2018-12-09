@@ -8,3 +8,11 @@
   display: flex;
   justify-content: center;
 }
+
+.activities-filter-category {
+  cursor: pointer;
+}
+
+.activities-list {
+  margin-top: 0.5em;
+}

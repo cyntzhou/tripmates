@@ -5,6 +5,7 @@ import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 import styles from "./edit-trip.css";
 import Button from "../components/button.jsx";
+import Modal from '../components/modal.jsx';
 
 var moment = require('moment');
 
@@ -49,13 +50,13 @@ class EditTripModal extends React.Component {
     if (moment(endDate).isSameOrAfter(startDate)) {
       const bodyContext = {newName: name, newStart: startDate, newEnd: endDate};
       axios.put(`/api/trips/${tripId}`, bodyContext).then(() => {
-        this.props.hideModal();
+        this.props.toggleModal();
         this.props.editTripDone();
       }).catch(err => {
         console.log(err);
         if (err.response.status === 403 || err.response.status === 404) {
           alert("You cannot update this trip since another user has deleted it.");
-          this.props.hideModal();
+          this.props.toggleModal();
           // TODO lead back to trips page? if doesn't already...
         }
       })
@@ -72,7 +73,7 @@ class EditTripModal extends React.Component {
       console.log(err);
       if (err.response.status === 403 || err.response.status === 404) {
         alert("Another user has already deleted this trip.");
-        this.props.hideModal();
+        this.props.toggleModal();
         // TODO lead back to trips page? if doesn't already...
       }
     })
@@ -83,17 +84,23 @@ class EditTripModal extends React.Component {
     const {
       members,
       startDate,
-      endDate
+      endDate,
+      joinCode
     } = this.props.trip;
+
+    const {
+      showModal,
+      toggleModal
+    } = this.props;
 
     const {
       name
     } = this.state;
 
     return (
-      <div>
-        <h3>Edit Trip Details</h3>
-        <form>
+      <Modal show={showModal} handleClose={toggleModal}>
+        <h3 id="title">Edit Trip Details</h3>
+        <form className="edit-trip-form">
           <label className="required">Trip Name:
             <input type="text" name="name" onChange={this.setName} placeholder="name" value={name} maxLength="40" required/>
           </label>
@@ -103,15 +110,23 @@ class EditTripModal extends React.Component {
           <label className="required">End Date:
             <DayPickerInput onDayChange={this.setEndDate} value={endDate}/>
           </label>
+          <div className="trip-users">
+            <i className="fa fa-users"/>
+            {members}
+          </div>
+          <div id="join">
+            <p>Join Code:</p>
+            <p id="code">{joinCode}</p>
+          </div>
         </form>
-        <div className="trip-users">
-          <i className="fa fa-users"/>
-          {members}
+        <div className="edit-trip-btns">
+          <Button colorClassName="btn-red-background" label="Delete" onButtonClick={this.onDelete}/>
+          <div id="save-cancel">
+            <Button colorClassName="btn-gray-background" label="Cancel" onButtonClick={toggleModal}/>
+            <Button label="Save" onButtonClick={this.onSave}/>
+          </div>
         </div>
-        <Button label="Cancel" onButtonClick={this.props.hideModal}/>
-        <Button label="Save" onButtonClick={this.onSave}/>
-        <Button label="Delete" onButtonClick={this.onDelete}/>
-      </div>
+      </Modal>
     )
   }
 }

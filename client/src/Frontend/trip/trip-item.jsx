@@ -26,7 +26,11 @@ class TripItem extends React.Component {
 
     return (
         <div className="trip-item-container">
-          <div className="date">{formatStart + ' - ' + formatEnd}</div>
+          <div className="date">
+            <div id="date">
+              {formatStart + ' - ' + formatEnd}
+            </div>
+          </div>
           <Link to={{pathname: `/trips/${tripId}`, state: { trip: this.props.trip} }}>
           <div className="trip-details">
             <h3>{name}</h3>

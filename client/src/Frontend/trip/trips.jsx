@@ -75,13 +75,16 @@ class Trips extends React.Component {
           <AddButton onButtonClick={this.showCreateTripModal}/>
         </div>
         <div className="trip-body">
-          {this.state.tripsList.map((trip, index) => {
-            return <TripItem
+          {tripsList.length > 0 && tripsList.map((trip, index) => {
+            return <TripItem 
               key={index}
               trip={trip}
               toggleShareTripModal={this.toggleShareTripModal}
             />
           })}
+          {tripsList.length < 1 && 
+            <p id="add-prompt">Get started by adding a trip!</p>
+          }
         </div>
         <CreateTripModal
           showModal={showCreateTripModal}

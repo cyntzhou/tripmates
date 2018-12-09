@@ -261,7 +261,8 @@ class Trip extends React.Component {
     } else if (showEditTrip) {
       return (
         <EditTripModal
-          hideModal={this.toggleEditTripModal}
+          showModal={showEditTrip}
+          toggleModal={this.toggleEditTripModal}
           trip={trip}
           editTripDone={this.editTripDone}
         />
