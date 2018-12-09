@@ -255,7 +255,7 @@ const router = express.Router();
 
    /**
    * Remove votes for an activity.
-   * @name DELETE/api/activities/:id/votes
+   * @name PUT/api/activities/:id/votes
    * @param {string} id - id of the activity
    * @param {string} userId - id of the user
    * @return {Vote} - the vote
@@ -263,7 +263,7 @@ const router = express.Router();
    * @throws {403} - if user is not a member of trip this activity belongs to
    * @throws {404} - if activity or trip doesn't exist (invalid ID)
    */
-   router.delete('/:id/votes', async (req, res) => {
+   router.put('/:id/votes', async (req, res) => {
      if (req.session.name !== undefined) {
        const activity = await Activities.getActivity(parseInt(req.params.id));
        if (activity === undefined) {
@@ -278,7 +278,6 @@ const router = express.Router();
          let id = req.params.id;
          let userId = req.body.userId;
          let resetVotes = await Activities.resetVotes(id, userId);
-         console.log("WUUTTT");
          res.status(200).json(resetVotes).end();
        } else {
          res.status(403).json({
@@ -319,7 +318,6 @@ const router = express.Router();
       } else if (await Trips.checkMembership(req.session.name, activity.tripId)) {
         let id = req.params.id;
         let userId = req.session.name;
-        console.log(userId);
         let downvoters = await Activities.getDownvoters(id);
         let isDownvoter = downvoters.includes(userId)
         res.status(200).json(isDownvoter).end();
