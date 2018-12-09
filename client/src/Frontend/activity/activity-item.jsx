@@ -142,7 +142,6 @@ class ActivityItem extends React.Component {
 			upvoters,
 			downvoters
     } = activity;
-		console.log(activity);
 
     const suggestedHours = Math.floor(suggestedDuration/60) || 0;
     const suggestedMin = suggestedDuration%60;

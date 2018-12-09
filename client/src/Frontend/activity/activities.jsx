@@ -42,7 +42,9 @@ class Activities extends React.Component {
         checkedCategories: [...checkedCategories.slice(0,categoryIndex), ...checkedCategories.slice(categoryIndex+1)]
       });
     } else {
-      checkedCategories.push(category);
+      this.setState({
+        checkedCategories: [...checkedCategories, category]
+      });
     }
   }
   
@@ -95,7 +97,7 @@ class Activities extends React.Component {
         return 0;
       });
     } else if (sortedBy === "votes") {
-      displayedActivitiesList = sortBy(displayedActivitiesList, ['votes']);
+      displayedActivitiesList = reverse(sortBy(displayedActivitiesList, ['votes']));
     }
 
     const categoriesSelection = (
