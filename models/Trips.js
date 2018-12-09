@@ -164,7 +164,8 @@ const Activities = require('../models/Activities');
 	    		return false;
 	    	} else if (startMonth < endMonth) {
 	    		return true;
-	    	} else { // start and end in same month
+        } else { // start and end in same month
+          console.log(startDay, endDay, startDay > endDay, startDay < endDay);
 	    		if (startDay > endDay) {
 	    			return false;
 	    		} else if (startDay < endDay) {
