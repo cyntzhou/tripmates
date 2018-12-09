@@ -173,14 +173,16 @@ class ActivityItem extends React.Component {
             {placeName && <p>Place: {placeName}</p>}
             {address && <p>Address: {address}</p>}
 						{isDownvoter &&
-							<i
+							<i 
+								id="activity-btns"
 								className="fas fa-thumbs-down"
 								onClick={this.resetVotes}
 								title="Downvote"
 							></i>
 						}
 						{!isDownvoter &&
-							<i
+							<i 
+								id="activity-btns"
 								className="far fa-thumbs-down"
 								onClick={this.downvote}
 								title="Downvote"
@@ -188,7 +190,8 @@ class ActivityItem extends React.Component {
 						}
 
 						{isUpvoter &&
-							<i
+							<i 
+								id="activity-btns"
 								className="fas fa-thumbs-up"
 								onClick={this.resetVotes}
 								title="Upvote"
@@ -196,12 +199,17 @@ class ActivityItem extends React.Component {
 						}
 						{!isUpvoter &&
 							<i
+								id="activity-btns"
 								className="far fa-thumbs-up"
 								onClick={this.upvote}
 								title="Upvote"
 							></i>
 						}
-            <i onClick={() => showEditModal(this.props.activity)} className="fa fa-edit"/>
+						<i
+							id="activity-btns" 
+							onClick={() => showEditModal(this.props.activity)} 
+							className="fa fa-edit"
+						/>
           </div>
         }
       </div>
