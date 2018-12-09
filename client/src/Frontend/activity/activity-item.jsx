@@ -83,8 +83,21 @@ class ActivityItem extends React.Component {
 		const bodyContent = {
 				userId: userId
 		};
+		console.log("down");
 		return axios.put(`/api/activities/${activity.id}/downvote`, bodyContent).then(res => {
       this.setState({ activities: res.data });
+			this.isUpvoter();
+			this.isDownvoter();
+		});
+	}
+
+	resetVotes = () => {
+		const { activity, userId } = this.props;
+		const bodyContent = {
+				userId: userId
+		};
+		return axios.delete(`/api/activities/${activity.id}/votes`, bodyContent).then(res => {
+			this.setState({ activities: res.data });
 			this.isUpvoter();
 			this.isDownvoter();
 		});
@@ -164,7 +177,7 @@ class ActivityItem extends React.Component {
 						{isDownvoter &&
 							<i
 								className="fas fa-thumbs-down"
-								onClick={this.upvote}
+								onClick={this.resetVotes}
 								title="Downvote"
 							></i>
 						}
@@ -179,7 +192,7 @@ class ActivityItem extends React.Component {
 						{isUpvoter &&
 							<i
 								className="fas fa-thumbs-up"
-								onClick={this.downvote}
+								onClick={this.resetVotes}
 								title="Upvote"
 							></i>
 						}

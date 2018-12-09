@@ -178,13 +178,14 @@ const router = express.Router();
         let userId = req.body.userId;
         let upvoters = await Activities.getUpvoters(id);
         let downvoters = await Activities.getDownvoters(id);
-        if (upvoters.includes(userId)) {
+        if (upvoters.includes(parseInt(req.body.userId))) {
           res.status(400).json({
             error: `Activity already upvoted.`,
           }).end();
-        } else if (downvoters.includes(userId)) {
+        } else if (downvoters.includes(parseInt(req.body.userId))) {
           let upvote = await Activities.removeDownvote(id, userId);
-          res.status(200).json(upvote).end();
+          let upvote2 = await Activities.upvote(id, userId);
+          res.status(200).json(upvote2).end();
         } else {
           let upvote = await Activities.upvote(id, userId);
           res.status(200).json(upvote).end();
@@ -212,7 +213,6 @@ const router = express.Router();
    * @throws {404} - if activity or trip doesn't exist (invalid ID)
  */
    router.put('/:id/downvote', async (req, res) => {
-    console.log("good");
     if (req.session.name !== undefined) {
       const activity = await Activities.getActivity(parseInt(req.params.id));
       if (activity === undefined) {
@@ -228,22 +228,16 @@ const router = express.Router();
         let userId = req.body.userId;
         let upvoters = await Activities.getUpvoters(id);
         let downvoters = await Activities.getDownvoters(id);
-        console.log("okkkk");
-        console.log(upvoters);
-        console.log(userId);
-        console.log("-----");
         if (downvoters.includes(parseInt(req.body.userId))) {
-          console.log("??? here?");
           res.status(400).json({
             error: `Activity already downvoted.`,
           }).end();
         }
         else if (upvoters.includes(parseInt(req.body.userId))) {
-          console.log("should go here!!!!!!");
           let downvote = await Activities.removeUpvote(id, userId);
-          res.status(200).json(downvote).end();
+          let downvote2 = await Activities.downvote(id, userId);
+          res.status(200).json(downvote2).end();
         } else {
-          console.log("??? wtf?");
           let downvote = await Activities.downvote(id, userId);
           res.status(200).json(downvote).end();
         }
@@ -257,6 +251,45 @@ const router = express.Router();
         error: `Must be logged in to downvote activity.`,
       }).end();
     }
+   });
+
+   /**
+   * Remove votes for an activity.
+   * @name DELETE/api/activities/:id/votes
+   * @param {string} id - id of the activity
+   * @param {string} userId - id of the user
+   * @return {Vote} - the vote
+   * @throws {401} - if user not logged in
+   * @throws {403} - if user is not a member of trip this activity belongs to
+   * @throws {404} - if activity or trip doesn't exist (invalid ID)
+   */
+   router.delete('/:id/votes', async (req, res) => {
+     if (req.session.name !== undefined) {
+       const activity = await Activities.getActivity(parseInt(req.params.id));
+       if (activity === undefined) {
+         res.status(404).json({
+           error: `Activity not found.`,
+         }).end();
+       } else if (!await Trips.findOneById(activity.tripId)) {
+         res.status(404).json({
+           error: `Trip not found.`,
+         }).end();
+       } else if (await Trips.checkMembership(req.session.name, activity.tripId)) {
+         let id = req.params.id;
+         let userId = req.body.userId;
+         let resetVotes = await Activities.resetVotes(id, userId);
+         console.log("WUUTTT");
+         res.status(200).json(resetVotes).end();
+       } else {
+         res.status(403).json({
+           error: `Must be member of activity's trip to reset votes for activity.`,
+         }).end();
+       }
+     } else {
+       res.status(401).json({
+         error: `Must be logged in to reset votes.`,
+       }).end();
+     }
    });
 
  /**

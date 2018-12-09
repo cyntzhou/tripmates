@@ -234,6 +234,21 @@ class Activities {
   }
 
   /**
+   * Reset votes for an activity for a user
+   * @param {int} aId - id of activity to upvoted
+   * @param {string} userId - username of upvoting User
+   */
+  static async resetVotes(activityId, userId) {
+    try {
+      const sql = `DELETE FROM activityVotes WHERE activityId=? AND userId=?`;
+      const response = await database.query(sql, [activityId, userId]);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
    * Get upvoters of activity
    * @param {int} id - id of activity
    * @return {String[]} - upvoter ids
@@ -261,7 +276,7 @@ class Activities {
   static async getDownvoters(id) {
     let downvoters = [];
     try {
-      const sql = `SELECT userId FROM activityVotes WHERE activityId=? AND value='-1';`;
+      const sql = `SELECT userId FROM activityVotes WHERE activityId=? AND value=-1;`;
       const response = await database.query(sql, [id]);
       for (let i = 0; i < response.length; i++) {
         downvoters.push(parseInt(response[i].userId));
