@@ -272,23 +272,15 @@ describe('Test /api/activities', () => {
     let activityRes3 = await getActivity(6);
     // expect(activityRes3.body.votes).toBe(0);
     expect(activityRes3.body.upvoters.length).toBe(0);
-    expect(activityRes3.body.downvoters.length).toBe(0);
+    expect(activityRes3.body.downvoters.length).toBe(1);
 
-    // downvote again, vote count should be -1
+    // downvote again, should be error
     let downvoteRes2 = await downvote(6, userId);
-    expect(downvoteRes2.statusCode).toBe(200);
+    expect(downvoteRes2.statusCode).toBe(400);
     let activityRes4 = await getActivity(6);
     expect(activityRes4.body.votes).toBe(-1);
     expect(activityRes4.body.upvoters.length).toBe(0);
     expect(activityRes4.body.downvoters.length).toBe(1);
-
-    // downvote again, check error
-    let downvoteRes3 = await downvote(6, userId);
-    expect(downvoteRes3.statusCode).toBe(400);
-    let activityRes5 = await getActivity(6);
-    expect(activityRes5.body.votes).toBe(-1);
-    expect(activityRes5.body.upvoters.length).toBe(0);
-    expect(activityRes5.body.downvoters.length).toBe(1);
   });
 });
 
