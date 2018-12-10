@@ -156,15 +156,51 @@ class ActivityItem extends React.Component {
         }}
       >
         <h3>{name}</h3>
-				{votes > 0 &&
-					<p className="positive-vote">+{votes}</p>
-				}
-				{votes < 0 &&
-					<p className="negative-vote">{votes}</p>
-				}
-				{votes == 0 &&
-					<p>{votes}</p>
-				}
+				<div className="activity-item-votes">
+					{votes > 0 &&
+						<p className="positive-vote activity-item-vote-number">+{votes}</p>
+					}
+					{votes < 0 &&
+						<p className="negative-vote activity-item-vote-number">{votes}</p>
+					}
+					{votes == 0 &&
+						<p>{votes}</p>
+					}
+
+					{isUpvoter &&
+						<i 
+							id="activity-btns"
+							className="fas fa-thumbs-up activity-item-vote-thumb"
+							onClick={this.resetVotes}
+							title={upvoters}
+						></i>
+					}
+					{!isUpvoter &&
+						<i
+							id="activity-btns"
+							className="far fa-thumbs-up activity-item-vote-thumb"
+							onClick={this.upvote}
+							title={upvoters}
+						></i>
+					}
+
+					{isDownvoter &&
+						<i 
+							id="activity-btns"
+							className="fas fa-thumbs-down activity-item-vote-thumb"
+							onClick={this.resetVotes}
+							title={downvoters}
+						></i>
+					}
+					{!isDownvoter &&
+						<i 
+							id="activity-btns"
+							className="far fa-thumbs-down activity-item-vote-thumb"
+							onClick={this.downvote}
+							title={downvoters}
+						></i>
+					}
+				</div>
 
         {this.state.expand &&
           <div className="details">
@@ -172,39 +208,6 @@ class ActivityItem extends React.Component {
             {suggestedDuration !== 0 && <p>Suggested Duration: {suggestedHours} Hrs {suggestedMin} Min</p>}
             {placeName && <p>Place: {placeName}</p>}
             {address && <p>Address: {address}</p>}
-						{isDownvoter &&
-							<i 
-								id="activity-btns"
-								className="fas fa-thumbs-down"
-								onClick={this.resetVotes}
-								title={downvoters}
-							></i>
-						}
-						{!isDownvoter &&
-							<i 
-								id="activity-btns"
-								className="far fa-thumbs-down"
-								onClick={this.downvote}
-								title={downvoters}
-							></i>
-						}
-
-						{isUpvoter &&
-							<i 
-								id="activity-btns"
-								className="fas fa-thumbs-up"
-								onClick={this.resetVotes}
-								title={upvoters}
-							></i>
-						}
-						{!isUpvoter &&
-							<i
-								id="activity-btns"
-								className="far fa-thumbs-up"
-								onClick={this.upvote}
-								title={upvoters}
-							></i>
-						}
 						<i
 							id="activity-btns" 
 							onClick={() => showEditModal(this.props.activity)} 
