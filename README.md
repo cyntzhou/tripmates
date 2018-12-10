@@ -47,6 +47,8 @@ Version 2:
 https://juicy-buns-tripmates-norefresh.herokuapp.com/ 
 This version does not reload the components every 5 seconds. Therefore, you don't see other users' edits until you make an edit yourself, at which point your page fetches all the components again. This version is best for actively making edits, since the information you see is as up to date as the last time you made an edit.
 
+Note that both these versions are connected to the same database, so you can access your account and trips at either of these links.
+
 ## Authorship of files:
 Sophia Kwon: All files in models, routes, and test, relating to events, itineraries, and trips
 
