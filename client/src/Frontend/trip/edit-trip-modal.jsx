@@ -112,7 +112,7 @@ class EditTripModal extends React.Component {
           </label>
           <div className="trip-users">
             <i className="fa fa-users"/>
-            {members}
+            {members.join(',')}
           </div>
           <div id="join">
             <p>Join Code:</p>
