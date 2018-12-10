@@ -75,7 +75,6 @@ class ChangePasswordForm extends React.Component {
           errors: [],
           showSuccessMessage: true 
         });
-        // eventBus.$emit('change-username-success', true);
       })
       .catch(err => {
         const errors = [err.response.data.error];

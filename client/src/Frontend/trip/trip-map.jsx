@@ -61,33 +61,31 @@ class TripMap extends React.Component {
       toggleMap
     } = this.props
     return (
-      // <Modal showModal={showModal} handleClose={toggleModal}>
-        <div id="trip-map">
-          <Map center={this.state.center} zoom={this.state.zoom}>
-            <TileLayer
-              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
-            />
-            {
-              positions.map((act, index) => {
-                return (
-                  <Marker position={act.pos} key={index}>
-                    <Popup>
-                      {act.activityName} <br /> {act.placeName} <br/> {act.address}
-                    </Popup>
-                  </Marker>
-                )
-              })
-            }
-          </Map>
-          <i 
-            id="hide-map-btn" 
-            className="fa fa-map" 
-            aria-hidden="true"
-            onClick={toggleMap}
-          > Hide Map </i>
-        </div>
-      // </Modal>
+      <div id="trip-map">
+        <Map center={this.state.center} zoom={this.state.zoom}>
+          <TileLayer
+            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
+          />
+          {
+            positions.map((act, index) => {
+              return (
+                <Marker position={act.pos} key={index}>
+                  <Popup>
+                    {act.activityName} <br /> {act.placeName} <br/> {act.address}
+                  </Popup>
+                </Marker>
+              )
+            })
+          }
+        </Map>
+        <i 
+          id="hide-map-btn" 
+          className="fa fa-map" 
+          aria-hidden="true"
+          onClick={toggleMap}
+        > Hide Map </i>
+      </div>
     );
   }
 }

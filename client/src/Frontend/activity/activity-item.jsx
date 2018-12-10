@@ -72,7 +72,6 @@ class ActivityItem extends React.Component {
 				userId: userId
 		};
 		return axios.put(`/api/activities/${activity.id}/upvote`, bodyContent).then(res => {
-      // this.setState({ activities: res.data });
 			this.isUpvoter();
 			this.isDownvoter();
 		});
@@ -84,7 +83,6 @@ class ActivityItem extends React.Component {
 				userId: userId
 		};
 		return axios.put(`/api/activities/${activity.id}/downvote`, bodyContent).then(res => {
-      // this.setState({ activities: res.data });
 			this.isUpvoter();
 			this.isDownvoter();
 		});
@@ -96,7 +94,6 @@ class ActivityItem extends React.Component {
 				userId: userId
 		};
 		return axios.put(`/api/activities/${activity.id}/votes`, bodyContent).then(res => {
-      // this.setState({ activities: res.data });
 			this.isUpvoter();
 			this.isDownvoter();
 		});
@@ -106,8 +103,6 @@ class ActivityItem extends React.Component {
 		const { activity } = this.props;
 		axios.get(`/api/activities/${activity.id}/upvote`).then(res => {
       this.setState({ isUpvoter: res.data });
-			// this.isUpvoter();
-			// this.isDownvoter();
 		});
 	}
 
@@ -115,8 +110,6 @@ class ActivityItem extends React.Component {
 		const { activity } = this.props;
 		axios.get(`/api/activities/${activity.id}/downvote`).then(res => {
       this.setState({ isDownvoter: res.data });
-			// this.isUpvoter();
-			// this.isDownvoter();
 		});
 	}
 

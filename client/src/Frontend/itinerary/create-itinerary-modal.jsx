@@ -42,7 +42,6 @@ class CreateItineraryModal extends React.Component {
         const itinerary = res.data;
         toggleModal();
         editItinerariesDone(itinerary);
-        // eventBus.$emit('change-username-success', true);
       })
       .catch(err => {
         console.log(err);

@@ -16,16 +16,6 @@ class Activities extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.getActivities();
-  }
-
-  getActivities = () => {
-    // axios.get(`/api/trips/${this.props.tripId}/activities`).then(res => {
-    //   this.setState({activitiesList: res.data})
-    // })
-  }
-
   toggleCategoriesSelection = () => {
     this.setState({
       showCategoriesSelection: !this.state.showCategoriesSelection

@@ -126,8 +126,6 @@ class CreateEventModal extends React.Component {
           <input
             type="datetime-local"
             value={start}
-            // min="2018-06-07T00:00"
-            // max="2018-06-14T00:00"
             onChange={this.handleChangeStart}
             required
           />
@@ -138,8 +136,6 @@ class CreateEventModal extends React.Component {
           <input
             type="datetime-local"
             value={end}
-            // min="2018-06-07T00:00"
-            // max="2018-06-14T00:00"
             onChange={this.handleChangeEnd}
             required
           />

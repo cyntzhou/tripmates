@@ -15,7 +15,6 @@ const localizer = BigCalendar.momentLocalizer(moment) // or globalizeLocalizer
 
 const target = {
   drop(props) {
-    // const {} = props;
     return ({
     });
   }

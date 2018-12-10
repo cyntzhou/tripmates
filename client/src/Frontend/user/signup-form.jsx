@@ -72,7 +72,6 @@ class SignupForm extends React.Component {
           errors: [],
           showSuccessMessage: true
         })
-        // eventBus.$emit("create-account-success", user);
       })
       .catch((err) => {
         this.setState({
@@ -82,7 +81,6 @@ class SignupForm extends React.Component {
       })
       .then(() => {
         this.resetForm();
-        // this.clearMessages();
       });
   }
 
