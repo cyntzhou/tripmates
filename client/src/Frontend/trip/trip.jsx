@@ -47,7 +47,7 @@ class Trip extends React.Component {
     this.getActivities(this.getItineraries);
     this.getTrip();
 
-    this.intervalCallback(this.getActivities, this.getItineraries, this.getTrip); // Refreshes all components every 5 seconds
+    // this.intervalCallback(this.getActivities, this.getItineraries, this.getTrip); // Refreshes all components every 5 seconds
   }
 
   intervalCallback(cb1, cb2, cb3) {
