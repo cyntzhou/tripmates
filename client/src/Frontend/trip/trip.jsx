@@ -28,6 +28,7 @@ class Trip extends React.Component {
       showEditItinerary: false,
       showCreateEvent: false,
       showEditEvent: false,
+      showMap: false,
       activities: [],
       itineraries: [],
       itinerary: null,
@@ -173,6 +174,10 @@ class Trip extends React.Component {
     this.setState({showEditEvent: !this.state.showEditEvent});
   }
 
+  toggleMap = () => {
+    this.setState({showMap: !this.state.showMap});
+  }
+
   editItinerariesDone = (itinerary) => {
     this.getItineraries(itinerary);
   }
@@ -227,6 +232,7 @@ class Trip extends React.Component {
       showEditItinerary,
       showCreateEvent,
       showEditEvent,
+      showMap,
       createEventEnd,
       createEventStart,
       tripName,
@@ -292,20 +298,35 @@ class Trip extends React.Component {
             />
 
             <div className="itin-map">
-              <Itinerary
-                toggleCreateItineraryModal={this.toggleCreateItineraryModal}
-                toggleEditItineraryModal={this.toggleEditItineraryModal}
-                toggleCreateEventModal={this.toggleCreateEventModal}
-                itinerary={itinerary}
-                itineraries={itineraries}
-                existingEvents={existingEvents}
-                handleSelectItinerary={this.handleSelectItinerary}
-                handleSelectEvent={this.handleSelectEvent}
-                defaultDate={defaultDate}
-                starItinerary={this.starItinerary}
-                unstarItinerary={this.unstarItinerary}
-              />
-              <TripMap tripId={tripId} activities={activities}/>
+              {showMap? (
+                  <TripMap 
+                    toggleMap={this.toggleMap}
+                    tripId={tripId} 
+                    activities={activities}
+                  />
+              ) : (
+                <>
+                  <Itinerary
+                    toggleCreateItineraryModal={this.toggleCreateItineraryModal}
+                    toggleEditItineraryModal={this.toggleEditItineraryModal}
+                    toggleCreateEventModal={this.toggleCreateEventModal}
+                    itinerary={itinerary}
+                    itineraries={itineraries}
+                    existingEvents={existingEvents}
+                    handleSelectItinerary={this.handleSelectItinerary}
+                    handleSelectEvent={this.handleSelectEvent}
+                    defaultDate={defaultDate}
+                    starItinerary={this.starItinerary}
+                    unstarItinerary={this.unstarItinerary}
+                  />
+                  <i 
+                    id="map-btn" 
+                    className="fa fa-map" 
+                    aria-hidden="true"
+                    onClick={this.toggleMap}
+                  > Show Map </i>
+                </>
+              ) }
             </div>
 
             <CreateItineraryModal

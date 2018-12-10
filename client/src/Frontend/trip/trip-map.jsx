@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import styles from "./trip-map.css";
+import Modal from "../components/modal.jsx";
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 
@@ -56,26 +57,37 @@ class TripMap extends React.Component {
     const {
       positions,
     } = this.state
+    const {
+      toggleMap
+    } = this.props
     return (
-      <div id="trip-map">
-        <Map center={this.state.center} zoom={this.state.zoom}>
-          <TileLayer
-            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
-          />
-          {
-            positions.map((act, index) => {
-              return (
-                <Marker position={act.pos} key={index}>
-                  <Popup>
-                    {act.activityName} <br /> {act.placeName} <br/> {act.address}
-                  </Popup>
-                </Marker>
-              )
-            })
-          }
-        </Map>
-      </div>
+      // <Modal showModal={showModal} handleClose={toggleModal}>
+        <div id="trip-map">
+          <Map center={this.state.center} zoom={this.state.zoom}>
+            <TileLayer
+              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
+            />
+            {
+              positions.map((act, index) => {
+                return (
+                  <Marker position={act.pos} key={index}>
+                    <Popup>
+                      {act.activityName} <br /> {act.placeName} <br/> {act.address}
+                    </Popup>
+                  </Marker>
+                )
+              })
+            }
+          </Map>
+          <i 
+            id="hide-map-btn" 
+            className="fa fa-map" 
+            aria-hidden="true"
+            onClick={toggleMap}
+          > Hide Map </i>
+        </div>
+      // </Modal>
     );
   }
 }

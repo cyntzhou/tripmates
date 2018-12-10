@@ -11,7 +11,7 @@
 
 .trip-details {
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   margin: auto;
   padding: 0.2em;
 }

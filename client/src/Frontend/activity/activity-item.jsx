@@ -142,7 +142,6 @@ class ActivityItem extends React.Component {
 			upvoters,
 			downvoters
     } = activity;
-		console.log(activity);
 
     const suggestedHours = Math.floor(suggestedDuration/60) || 0;
     const suggestedMin = suggestedDuration%60;
@@ -174,14 +173,16 @@ class ActivityItem extends React.Component {
             {placeName && <p>Place: {placeName}</p>}
             {address && <p>Address: {address}</p>}
 						{isDownvoter &&
-							<i
+							<i 
+								id="activity-btns"
 								className="fas fa-thumbs-down"
 								onClick={this.resetVotes}
 								title={downvoters}
 							></i>
 						}
 						{!isDownvoter &&
-							<i
+							<i 
+								id="activity-btns"
 								className="far fa-thumbs-down"
 								onClick={this.downvote}
 								title={downvoters}
@@ -189,7 +190,8 @@ class ActivityItem extends React.Component {
 						}
 
 						{isUpvoter &&
-							<i
+							<i 
+								id="activity-btns"
 								className="fas fa-thumbs-up"
 								onClick={this.resetVotes}
 								title={upvoters}
@@ -197,12 +199,17 @@ class ActivityItem extends React.Component {
 						}
 						{!isUpvoter &&
 							<i
+								id="activity-btns"
 								className="far fa-thumbs-up"
 								onClick={this.upvote}
 								title={upvoters}
 							></i>
 						}
-            <i onClick={() => showEditModal(this.props.activity)} className="fa fa-edit"/>
+						<i
+							id="activity-btns" 
+							onClick={() => showEditModal(this.props.activity)} 
+							className="fa fa-edit"
+						/>
           </div>
         }
       </div>

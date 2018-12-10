@@ -1,9 +1,17 @@
 #trip-map {
-  padding: 100px;
+  display: flex;
   margin: auto;
 }
 
+#hide-map-btn {
+  margin: auto;
+  padding-left: 1em;
+  font-size: 1.5em;
+  cursor: pointer;
+
+}
+
 .leaflet-container {
-  height: 600px;
-  width: 800px;
+  height: 500px;
+  width: 700px;
 }

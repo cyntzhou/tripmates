@@ -11,5 +11,10 @@
 .itin-map {
   display: flex;
   width: 100%;
-  flex-direction: column;
+}
+
+#map-btn {
+  margin:auto;
+  font-size: 1.5em;
+  cursor: pointer;
 }
