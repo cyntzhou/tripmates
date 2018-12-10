@@ -53,7 +53,6 @@ class EditTripModal extends React.Component {
         this.props.toggleModal();
         this.props.editTripDone();
       }).catch(err => {
-        console.log(err);
         if (err.response.status === 403 || err.response.status === 404) {
           alert("You cannot update this trip since another user has deleted it.");
           this.props.toggleModal();
@@ -70,7 +69,6 @@ class EditTripModal extends React.Component {
     axios.delete(`/api/trips/${tripId}`).then(() => {
       this.props.history.push('/trips');
     }).catch(err => {
-      console.log(err);
       if (err.response.status === 403 || err.response.status === 404) {
         alert("Another user has already deleted this trip.");
         this.props.toggleModal();

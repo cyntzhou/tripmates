@@ -50,7 +50,6 @@ class Calendar extends React.Component {
       .then(res => {
       })
       .catch(err => {
-        console.log(err);
         if (err.response.status === 403) {
           alert("You cannot edit this event since another user has deleted this trip.");
           // TODO lead back to trips page

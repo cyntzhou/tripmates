@@ -44,7 +44,6 @@ class CreateItineraryModal extends React.Component {
         editItinerariesDone(itinerary);
       })
       .catch(err => {
-        console.log(err);
         if (err.response.status === 403) {
           alert("You cannot create an itinerary since another user has deleted this trip.");
           // TODO lead back to trips page
