@@ -39,7 +39,6 @@ class CreateActivityModal extends React.Component{
       axios.post(`/api/places/${this.state.placeId}/hours`, hoursBody)
         .then()
         .catch(err => {
-          console.log(err);
         })
     })
   }
@@ -103,7 +102,6 @@ class CreateActivityModal extends React.Component{
           this.props.toggleModal();
           this.props.editActivitiesDone();
         }).catch(err => {
-          console.log(err);
           if (err.response.status === 403) {
             this.props.toggleModal();
             alert("You cannot create an activity since another user has deleted this trip.");
@@ -123,7 +121,6 @@ class CreateActivityModal extends React.Component{
         this.props.toggleModal();
         this.props.editActivitiesDone();
       }).catch(err => {
-        console.log(err);
         if (err.response.status === 403) {
           this.props.toggleModal();
           alert("You cannot create an activity since another user has deleted this trip.");

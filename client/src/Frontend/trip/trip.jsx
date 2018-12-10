@@ -126,7 +126,6 @@ class Trip extends React.Component {
         trip: trip
       });
     }).catch(err => {
-      console.log(err);
       if (err.response.status === 403 || err.response.status === 404) {
         this.setState({ notFound: true });
       }

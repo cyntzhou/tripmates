@@ -41,8 +41,6 @@ class App extends Component {
     const { cookies } = this.props;
     cookies.set('username', user.username, { path: '/', maxAge: COOKIE_AGE });
     cookies.set('user-id', user.id, { path: '/', maxAge: COOKIE_AGE });
-    console.log("User logged in");
-    console.log(user);
   }
 
   logout = () => {
