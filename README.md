@@ -33,6 +33,10 @@ Leading to trips page if a trip is deleted (currently sometimes stays on trip pa
 
 Change editing an activity's place, possibly allow for removing a place from activity.
 
+## Notes for Milestone 3: Finished Product
+
+We cut out some "extras" from our project plan, such as showing when users are online, adding avatars/profile pictures, and autofilling places.
+
 ## Deployed app
 http://juicy-buns-tripmates.herokuapp.com/
 
