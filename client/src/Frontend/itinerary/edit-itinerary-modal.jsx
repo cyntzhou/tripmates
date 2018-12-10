@@ -48,11 +48,8 @@ class EditItineraryModal extends React.Component {
         const itinerary = res.data;
         toggleModal();
         editItinerariesDone(itinerary);
-        // eventBus.$emit('change-username-success', true);
       })
       .catch(err => {
-        console.log(err);
-
         if (err.response.status === 403) {
           alert("You cannot edit this itinerary since another user has deleted this trip.");
           // TODO lead back to trips page
@@ -76,10 +73,8 @@ class EditItineraryModal extends React.Component {
     axios
       .delete(`/api/itineraries/${itinerary.id}`)
       .then(res => {
-        console.log(res);
       })
       .catch(err => {
-        console.log(err);
         if (err.response.status === 403) {
           alert("You cannot delete this itinerary since another user has deleted this trip.");
           // TODO lead back to trips page
@@ -144,7 +139,7 @@ class EditItineraryModal extends React.Component {
         <div>
           <Button
             label="Delete Itinerary"
-            colorClassName="btn-red"
+            colorClassName="btn-red-background"
             onButtonClick={this.handleDelete}
           />
         </div>

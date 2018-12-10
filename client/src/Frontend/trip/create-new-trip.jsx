@@ -56,7 +56,6 @@ class CreateNewTrip extends React.Component {
         axios.post('/api/trips', bodyContext).then(() => {
           this.props.hideModal();
         }).catch(
-          err => console.log(err)
         );
       } else {
         alert('please choose valid dates')

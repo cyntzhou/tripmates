@@ -7,12 +7,6 @@ class TripnameBar extends React.Component {
     super(props);
   }
 
-  // toggleUserDropdown = () => {
-  //   this.setState(previousState => (
-  //     { showUserDropdown: !previousState.showUserDropdown }
-  //   ));
-  // }
-
   render() {
     const { 
       toggleEditTripModal,

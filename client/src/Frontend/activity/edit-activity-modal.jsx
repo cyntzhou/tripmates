@@ -53,7 +53,6 @@ constructor(props) {
       axios.post(`/api/places/${placeId}/hours`, hoursBody)
         .then()
         .catch(err => {
-          console.log(err);
         })
     })
   }
@@ -122,7 +121,6 @@ constructor(props) {
               this.props.toggleModal(null);
               this.props.editActivitiesDone();
             }).catch(err => {
-              console.log(err);
               if (err.response.status === 404) {
                 this.props.toggleModal(null);
                 this.props.editActivitiesDone();
@@ -146,7 +144,6 @@ constructor(props) {
             this.props.toggleModal(null);
             this.props.editActivitiesDone();
           }).catch(err => {
-            console.log(err);
             if (err.response.status === 404) {
               this.props.toggleModal(null);
               this.props.editActivitiesDone();
@@ -154,7 +151,6 @@ constructor(props) {
             }
           });
         }).catch(err => {
-          console.log(err);
           if (err.response.status === 404) {
             this.props.toggleModal(null);
             this.props.editActivitiesDone();
@@ -173,7 +169,6 @@ constructor(props) {
         this.props.toggleModal(null);
         this.props.editActivitiesDone();
       }).catch(err => {
-        console.log(err);
         if (err.response.status === 404) {
           this.props.toggleModal(null);
           this.props.editActivitiesDone();
@@ -193,7 +188,6 @@ constructor(props) {
       this.props.toggleModal(null);
       this.props.editActivitiesDone();
     }).catch(err => {
-      console.log(err);
       this.props.toggleModal(null);
       this.props.editActivitiesDone();
       alert("Another user has already deleted this activity.");

@@ -32,11 +32,3 @@
   color: var(--white);
   background-color: var(--red);
 }
-
-.btn-red {
-  color: var(--white);
-  background-color: red;
-}
-
-/* .btn:active {
-} */

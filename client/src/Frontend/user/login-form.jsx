@@ -67,7 +67,6 @@ class LoginForm extends React.Component {
       .then((res) => {
         this.props.userHasAuthenticated(res.data);
         this.props.redirectToHomepage();
-        // eventBus.$emit("sigin-success", res.data);
       })
       .catch((err) => {
         console.log(err);

@@ -132,12 +132,8 @@ describe('Test /api/activities', () => {
     expect(createResponse.statusCode).toBe(200);
 
     const foundActivitiesH = await database.query(`SELECT * FROM activity WHERE name='hiking'`);
-    // console.log("THE NUMBER OF ACTIVITIES WITH NAME HIKING IS:");
-    // console.log(foundActivitiesH.length);
 
     const foundActivitiesB = await database.query(`SELECT * FROM activity WHERE name='boating'`);
-    // console.log("THE NUMBER OF ACTIVITIES WITH NAME BOATING IS:");
-    // console.log(foundActivitiesB.length);
 
     const createdActivity = foundActivitiesH[0];
     expect(createdActivity.id).toBe(createResponse.body.insertId);
@@ -188,7 +184,6 @@ describe('Test /api/activities', () => {
     expect(createResponse4.statusCode).toBe(200);
 
     const allActivities = await getAllActivities(3);
-    // console.log(allActivities.body);
 
     expect(allActivities.body.length).toBe(3)
   });
@@ -205,7 +200,6 @@ describe('Test /api/activities', () => {
     let aId = createResponse.body.insertId;
 
     let activityRes = await getActivity(aId);
-    // console.log(activityRes.body);
     expect(activityRes.body.name).toBe(activity5.name);
     expect(activityRes.body.category).toBe(activity5.category);
     expect(activityRes.body.suggestedDuration).toBe(activity5.suggestedDuration);

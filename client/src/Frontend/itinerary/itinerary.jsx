@@ -5,20 +5,10 @@ import Calendar from './calendar.jsx';
 import AddButton from "../components/add-button.jsx";
 import CreateItineraryModal from "./create-itinerary-modal.jsx";
 
-// const existingEvents = [
-//   {
-//     title: "Dim sum",
-//     start: new Date(2018, 10, 19, 10, 30),
-//     end: new Date(2018, 10, 19, 12, 30),
-//     allDay: false
-//   }
-// ]
-
 class Itinerary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // existingEvents: existingEvents,
       showDropdown: false
     }
   }
@@ -31,7 +21,6 @@ class Itinerary extends React.Component {
 
   render() {
     const {
-      // existingEvents,
       showDropdown
     } = this.state;
 

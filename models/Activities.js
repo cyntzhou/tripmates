@@ -28,8 +28,6 @@ class Activities {
     try {
       const sanitizedName = sanitizer.sanitize(name);
       const sanitizedCategory = sanitizer.sanitize(category);
-      // const sql = `INSERT INTO activity (name, suggestedDuration, placeId, tripId, category) VALUES ('${sanitizedName}', '${suggestedDuration}', '${placeId}', '${tripId}', '${sanitizedCategory}');`;
-      // const response = await database.query(sql);
       const sql = `INSERT INTO activity (name, suggestedDuration, placeId, tripId, category) VALUES (?, ?, ?, ?, ?);`;
       const response = await database.query(sql, [sanitizedName, suggestedDuration, placeId, tripId, sanitizedCategory]);
       return response;

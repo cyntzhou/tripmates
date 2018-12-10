@@ -62,7 +62,6 @@ class ChangeUsernameForm extends React.Component {
           showSuccessMessage: true 
         });
         this.props.usernameChanged(username);
-        // eventBus.$emit('change-username-success', true);
       })
       .catch(err => {
         const errors = [err.response.data.error];

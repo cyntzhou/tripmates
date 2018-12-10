@@ -16,7 +16,6 @@ class Navbar extends React.Component {
 
   handleLogout = () => {
     this.props.logout();
-    // this.props.history.push("/");
   }
 
   render() {
@@ -25,7 +24,6 @@ class Navbar extends React.Component {
     return (
       <div>
         <ul className="navbar-ul">
-          {/* <li className="navbar-li"><a href="/">Tripmates</a></li> */}
           <li className="navbar-li">
             <Link to="/">
               Tripmates

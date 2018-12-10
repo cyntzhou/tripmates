@@ -54,7 +54,6 @@ class CreateEventModal extends React.Component {
       start: formattedStart,
       end: formattedEnd
     };
-    console.log(bodyContent);
     axios
       .post(`/api/events`, bodyContent)
       .then(res => {
@@ -62,8 +61,6 @@ class CreateEventModal extends React.Component {
         editEventsDone();
       })
       .catch(err => {
-        console.log(err);
-        console.log(err);
         if (err.response.status === 403) {
           alert("You cannot edit this event since another user has deleted this trip.");
           // TODO lead back to trips page
@@ -126,8 +123,6 @@ class CreateEventModal extends React.Component {
           <input
             type="datetime-local"
             value={start}
-            // min="2018-06-07T00:00"
-            // max="2018-06-14T00:00"
             onChange={this.handleChangeStart}
             required
           />
@@ -138,8 +133,6 @@ class CreateEventModal extends React.Component {
           <input
             type="datetime-local"
             value={end}
-            // min="2018-06-07T00:00"
-            // max="2018-06-14T00:00"
             onChange={this.handleChangeEnd}
             required
           />

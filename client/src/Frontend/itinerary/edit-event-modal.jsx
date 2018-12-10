@@ -48,7 +48,6 @@ class EditEventModal extends React.Component {
         editEventsDone();
       })
       .catch(err => {
-        console.log(err);
         if (err.response.status === 403) {
           alert("You cannot edit this event since another user has deleted this trip.");
           // TODO lead back to trips page
@@ -74,7 +73,6 @@ class EditEventModal extends React.Component {
         editEventsDone();
       })
       .catch(err => {
-        console.log(err);
         if (err.response.status === 403) {
           alert("You cannot delete this event since another user has deleted this trip.");
           // TODO lead back to trips page
@@ -118,8 +116,6 @@ class EditEventModal extends React.Component {
           <input
             type="datetime-local"
             value={start}
-            // min="2018-06-07T00:00"
-            // max="2018-06-14T00:00"
             onChange={this.handleChangeStart}
           />
         </div>
@@ -129,8 +125,6 @@ class EditEventModal extends React.Component {
           <input
             type="datetime-local"
             value={end}
-            // min="2018-06-07T00:00"
-            // max="2018-06-14T00:00"
             onChange={this.handleChangeEnd}
           />
         </div>
@@ -160,7 +154,7 @@ class EditEventModal extends React.Component {
         <Button
           label="Delete"
           onButtonClick={this.handleDelete}
-          colorClassName="btn-red"
+          colorClassName="btn-red-background"
         />
       </Modal>
     )
