@@ -101,6 +101,8 @@ const hours2 = {
   endTime: '13:00'
 };
 
+var ogUserId;
+
 describe('Test /api/activities', () => {
   beforeAll(async () => {
     await database.createTables();
@@ -249,8 +251,9 @@ describe('Test /api/activities', () => {
   // test voting on an activity
   test('GET /api/activities/:id and PUT /api/activities/:id to edit activity duration and category, etc', async () => {
     // upvote, vote count should be 1
+
     const userId = {
-      userId: 0
+      userId: 1
     }
 
     let upvoteRes1 = await upvote(6, userId);
