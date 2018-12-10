@@ -45,7 +45,6 @@ class CreateItineraryModal extends React.Component {
         // eventBus.$emit('change-username-success', true);
       })
       .catch(err => {
-        console.log(err);
         if (err.response.status === 403) {
           alert("You cannot create an itinerary since another user has deleted this trip.");
           // TODO lead back to trips page

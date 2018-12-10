@@ -48,7 +48,6 @@ class EditEventModal extends React.Component {
         editEventsDone();
       })
       .catch(err => {
-        console.log(err);
         if (err.response.status === 403) {
           alert("You cannot edit this event since another user has deleted this trip.");
           // TODO lead back to trips page
@@ -74,7 +73,6 @@ class EditEventModal extends React.Component {
         editEventsDone();
       })
       .catch(err => {
-        console.log(err);
         if (err.response.status === 403) {
           alert("You cannot delete this event since another user has deleted this trip.");
           // TODO lead back to trips page
@@ -160,7 +158,7 @@ class EditEventModal extends React.Component {
         <Button
           label="Delete"
           onButtonClick={this.handleDelete}
-          colorClassName="btn-red"
+          colorClassName="btn-red-background"
         />
       </Modal>
     )

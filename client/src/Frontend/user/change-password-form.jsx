@@ -70,7 +70,6 @@ class ChangePasswordForm extends React.Component {
     axios
       .put(`/api/users/${userId}/password`, bodyContent)
       .then(res => {
-        console.log(res);
         this.setState({ 
           errors: [],
           showSuccessMessage: true 
