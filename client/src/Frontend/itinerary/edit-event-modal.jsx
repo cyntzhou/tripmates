@@ -160,7 +160,7 @@ class EditEventModal extends React.Component {
         <Button
           label="Delete"
           onButtonClick={this.handleDelete}
-          colorClassName="btn-red"
+          colorClassName="btn-red-background"
         />
       </Modal>
     )

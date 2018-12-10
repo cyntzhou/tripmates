@@ -144,7 +144,7 @@ class EditItineraryModal extends React.Component {
         <div>
           <Button
             label="Delete Itinerary"
-            colorClassName="btn-red"
+            colorClassName="btn-red-background"
             onButtonClick={this.handleDelete}
           />
         </div>
