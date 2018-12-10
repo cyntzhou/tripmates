@@ -177,7 +177,7 @@ class ActivityItem extends React.Component {
 								id="activity-btns"
 								className="fas fa-thumbs-down"
 								onClick={this.resetVotes}
-								title="Downvote"
+								title={downvoters}
 							></i>
 						}
 						{!isDownvoter &&
@@ -185,7 +185,7 @@ class ActivityItem extends React.Component {
 								id="activity-btns"
 								className="far fa-thumbs-down"
 								onClick={this.downvote}
-								title="Downvote"
+								title={downvoters}
 							></i>
 						}
 
@@ -194,7 +194,7 @@ class ActivityItem extends React.Component {
 								id="activity-btns"
 								className="fas fa-thumbs-up"
 								onClick={this.resetVotes}
-								title="Upvote"
+								title={upvoters}
 							></i>
 						}
 						{!isUpvoter &&
@@ -202,7 +202,7 @@ class ActivityItem extends React.Component {
 								id="activity-btns"
 								className="far fa-thumbs-up"
 								onClick={this.upvote}
-								title="Upvote"
+								title={upvoters}
 							></i>
 						}
 						<i
