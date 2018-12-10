@@ -32,7 +32,7 @@ class TripItem extends React.Component {
             </div>
           </div>
           <Link to={{pathname: `/trips/${tripId}`, state: { trip: this.props.trip} }}>
-          <div className="trip-details">
+          <div className="trip-item-details">
             <h3>{name}</h3>
             <div className="trip-users">
               <i className="fa fa-users"/>
