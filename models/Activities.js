@@ -1,5 +1,6 @@
 const database = require('../database');
 const sanitizer = require('sanitizer');
+const Users = require('../models/Users');
 
 /**
  * @typedef Activity
@@ -78,8 +79,22 @@ class Activities {
 
         // votes
         let votes = await Activities.numVotes(id);
-        let upvoters = await Activities.getUpvoters(id);
-        let downvoters = await Activities.getDownvoters(id);
+        let upvoters = []
+        let downvoters = []
+
+        let upvoters_ids = await Activities.getUpvoters(id);
+        for (let i = 0; i < upvoters_ids.length; i++) {
+          let current_id = upvoters_ids[i];
+          let user = await Users.findOneById(current_id);
+          upvoters.push(user.username);
+        }
+
+        let downvoters_ids = await Activities.getDownvoters(id);
+        for (let i = 0; i < downvoters_ids.length; i++) {
+          let current_id = downvoters_ids[i];
+          let user = await Users.findOneById(current_id);
+          downvoters.push(user.username);
+        }
 
         return { id, tripId, name, suggestedDuration, category, placeId, placeName, address, openHours, votes, upvoters, downvoters };
       }
@@ -134,8 +149,22 @@ class Activities {
 
       // votes
       let votes = await Activities.numVotes(id);
-      let upvoters = await Activities.getUpvoters(id);
-      let downvoters = await Activities.getDownvoters(id);
+      let upvoters = []
+      let downvoters = []
+
+      let upvoters_ids = await Activities.getUpvoters(id);
+      for (let i = 0; i < upvoters_ids.length; i++) {
+        let current_id = upvoters_ids[i];
+        let user = await Users.findOneById(current_id);
+        upvoters.push(user.username);
+      }
+
+      let downvoters_ids = await Activities.getDownvoters(id);
+      for (let i = 0; i < downvoters_ids.length; i++) {
+        let current_id = downvoters_ids[i];
+        let user = await Users.findOneById(current_id);
+        downvoters.push(user.username);
+      }
 
       all_activities.push({ id, tripId, name, suggestedDuration, category, placeId, placeName, address, openHours, votes, upvoters, downvoters });
     }
@@ -362,8 +391,22 @@ class Activities {
 
         // votes
         let votes = await Activities.numVotes(id);
-        let upvoters = await Activities.getUpvoters(id);
-        let downvoters = await Activities.getDownvoters(id);
+        let upvoters = []
+        let downvoters = []
+
+        let upvoters_ids = await Activities.getUpvoters(id);
+        for (let i = 0; i < upvoters_ids.length; i++) {
+          let current_id = upvoters_ids[i];
+          let user = await Users.findOneById(current_id);
+          upvoters.push(user.username);
+        }
+
+        let downvoters_ids = await Activities.getDownvoters(id);
+        for (let i = 0; i < downvoters_ids.length; i++) {
+          let current_id = downvoters_ids[i];
+          let user = await Users.findOneById(current_id);
+          downvoters.push(user.username);
+        }
 
         activities.push({ id, tripId, name, suggestedDuration, category, placeId, placeName, address, openHours, votes, upvoters, downvoters });
       }
