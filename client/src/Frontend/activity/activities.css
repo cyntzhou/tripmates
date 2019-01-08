@@ -1,7 +1,8 @@
 .activities-container {
   width: 15%;
-  height: 100vh;
+  height: 90vh;
   border-right: 5px solid var(--dark-brown);
+  overflow-y: auto;
 }
 
 .activity-header {
