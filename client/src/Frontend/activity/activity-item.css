@@ -1,0 +1,38 @@
+.activity-item-container {
+  text-align: center;
+  background-color: var(--mid-green);
+  border-top: 0.5px solid var(--dark-green);
+  border-bottom: 0.5px solid var(--dark-green);
+}
+
+h3 {
+  font-size: 1em;
+  margin: 0.5em;
+}
+
+#activity-btns {
+  margin-left: .1em;
+  margin-right: .1em;
+  cursor: pointer;
+}
+
+.positive-vote {
+  color: green;
+}
+
+.negative-vote {
+  color: red;
+}
+
+.activity-item-votes {
+  display: flex;
+  justify-content: center;
+  margin: -0.5em;
+}
+
+.activity-item-vote-thumb {
+  margin-left: 1em;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}

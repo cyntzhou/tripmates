@@ -1,0 +1,4 @@
+.required:before {
+  content:"*";
+  font-weight:bold;
+}

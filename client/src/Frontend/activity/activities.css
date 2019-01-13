@@ -1,0 +1,19 @@
+.activities-container {
+  width: 15%;
+  height: 90vh;
+  border-right: 5px solid var(--dark-brown);
+  overflow-y: auto;
+}
+
+.activity-header {
+  display: flex;
+  justify-content: center;
+}
+
+.activities-filter-category {
+  cursor: pointer;
+}
+
+.activities-list {
+  margin-top: 0.5em;
+}

@@ -1,0 +1,39 @@
+#create-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#hours, #mins {
+  width: 5em;
+}
+
+#title {
+  text-align: center;
+  font-size: 1.5em;
+}
+
+#optional-details {
+  text-align: center;
+}
+
+.btns-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
+}
+
+.error-message {
+  color: red;
+}
+
+.required:before {
+  content:"*";
+  font-weight:bold;
+}
+
+.hours-cal {
+  height: 22em;
+  width: 90%;
+  padding: 0 1em;
+}

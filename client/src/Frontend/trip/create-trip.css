@@ -1,0 +1,62 @@
+#title {
+  text-align: center;
+}
+
+#join-description {
+  text-align: center;
+}
+
+#code-input {
+  margin: auto;
+}
+
+.modal-container {
+  display: flex;
+}
+
+.join-container {
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--dark-green);
+  padding: 1.2em;
+}
+
+.join-btns {
+  display: flex;
+  justify-content: center;
+  margin: 2.2em 0;
+}
+
+.create-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.create-form-container label {
+  margin: 0.5em;
+}
+
+.create-form-container input {
+  padding: 0.5em;
+  margin-left: 1.2em;
+}
+
+.create-btns {
+  display: flex;
+  justify-content: center;
+  margin: 2.2em 0;
+}
+
+.create-container {
+  display: flex;
+  flex-direction: column;
+  padding: 1.2em;
+  width: 80%;
+}
+
+.required:before {
+  content:"*";
+  font-weight:bold;
+}
