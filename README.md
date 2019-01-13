@@ -44,7 +44,7 @@ http://juicy-buns-tripmates.herokuapp.com/
 This version reloads all components of a trip's page once every 5 seconds, to reflect other users' edits. This may be a bit difficult to use to actively edit a trip because the create event modals, etc. also go back to their default values every 5 seconds. This version is best for seeing other users' edits in pseudo real time.
 
 Version 2: 
-https://juicy-buns-tripmates-norefresh.herokuapp.com/ 
+https://juicy-tripmates.herokuapp.com/ 
 This version does not reload the components every 5 seconds. Therefore, you don't see other users' edits until you make an edit yourself, at which point your page fetches all the components again. This version is best for actively making edits, since the information you see is as up to date as the last time you made an edit.
 
 Note that both these versions are connected to the same database, so you can access your account and trips at either of these links.
