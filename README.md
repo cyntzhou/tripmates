@@ -14,10 +14,10 @@ Tripmates is an online tool to collaboratively plan trips with a group of people
 * Add and contribute to itineraries (drag and drop activities onto calendar in week view to quickly create an event)
 * Toggle "show/hide map" button to display map with pins in locations of activities
 * Input open hours of a location to automatically ensure that any itinerary events that take place there don't happen while it is closed
-* See helpful error messages if any conflicts arise due to concurrent editing, user error, etc.
 * Upvote or downvote activities to share your interests with your tripmates, and hover to see who up/downvoted each activity
 * Search for activities by name, or filter activities list by category, number of votes, recently added, etc.
 * Usable, appealing interface
+* See helpful error messages if any conflicts arise due to concurrent editing, user error, etc.
 
 ## Deployed app
 
