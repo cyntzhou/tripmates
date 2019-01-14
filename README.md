@@ -1,21 +1,21 @@
-# Tripmates: JuiCy buNS
+# Tripmates: Collaborative Trip Planner by JuiCy buNS
 Janice Lee  
 Cynthia Zhou  
 Nancy Luong  
 Sophia Kwon
 
 ## Description
-Tripmates is an online tool to collaboratively plan trips with other people. It provides an organized way for everyone involved in a trip to list activities they’re interested in, as well as an interface to collaboratively construct an itinerary for the trip.
+Tripmates is an online tool to collaboratively plan trips with a group of people. It provides an organized way for everyone involved in a trip to list activities they’re interested in, as well as an interface to collaboratively construct an itinerary for the trip.
 
 ## Features:
 * Create trips
 * Join existing trips with unique 6-digit join code
 * Add ideas for activities
-* Add and contribute to itineraries (drag and drop activities onto calendar in week view to create an event)
+* Add and contribute to itineraries (drag and drop activities onto calendar in week view to quickly create an event)
 * Toggle "show/hide map" button to display map with pins in locations of activities
 * Input open hours of a location to automatically ensure that any itinerary events that take place there don't happen while it is closed
 * See helpful error messages if any conflicts arise due to concurrent editing, user error, etc.
-* Upvote or downvote activities to share your opinions with your tripmates, and see who else up/downvoted each activity
+* Upvote or downvote activities to share your interests with your tripmates, and hover to see who up/downvoted each activity
 * Search for activities by name, or filter activities list by category, number of votes, recently added, etc.
 * Usable, appealing interface
 
